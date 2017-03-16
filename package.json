@@ -4,7 +4,7 @@
   "description": "A-Painter",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
-    "start": "webpack-dev-server --host 0.0.0.0 --watch",
+    "start": "webpack-dev-server --host 0.0.0.0",
     "lint": "semistandard -v | snazzy"
   },
   "repository": "aframevr/a-painter",
@@ -18,10 +18,14 @@
     "cross-env": "^2.0.1",
     "semistandard": "^9.0.0",
     "snazzy": "^4.0.1",
-    "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.1"
+    "webpack": "^2.2.1"
   },
   "dependencies": {
+    "extract-text-webpack-plugin": "^2.0.0",
+    "glsl-colormap": "^1.0.1",
+    "glslify": "^6.0.1",
+    "glslify-loader": "^1.0.2",
+    "raw-loader": "^0.5.1",
     "whatwg-fetch": "^2.0.3"
   }
 }

@@ -28,7 +28,7 @@
         <a-asset-item id="logoobj" src="assets/models/logo.obj"></a-asset-item>
         <a-asset-item id="logomtl" src="assets/models/logo.mtl"></a-asset-item>
         <a-asset-item id="uiobj" src="assets/models/ui.obj"></a-asset-item>
-
+        <!-- <a-asset-item id="stardataBin" src="assets/data/stardata.bin"></a-asset-item> -->
         <a-asset-item id="hitEntityObj" src="assets/models/teleportHitEntity.obj"></a-asset-item>
       </a-assets>
       <a-light type="point" light="color: #fff; intensity:0.6" position="3 10 1"></a-light>
@@ -42,7 +42,7 @@
 
       <a-entity geometry="primitive: box; width: 2; height: 1; depth: .1" position="0 1.5 -1" material="shader: flat; src: #logotex; transparent: true"></a-entity>
 
-      <a-entity starfield="src: /assets/data/stardata.json" scale=".1 .1 .1" position="0 1.5 0"></a-entity>
+      <a-entity starfield="src: /assets/data/stardata.json" scale=".001 .001 .001" position="0 1 0"></a-entity>
 
       <a-entity id="ground"
                 geometry="primitive: box; width: 12; height: 0.01; depth: 12"

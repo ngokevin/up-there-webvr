@@ -1,4 +1,5 @@
 // var stardata = require('../../data/stardata.json')
+var fields = ['x','y','z','absmag','ci']; // all float32s
 
 /* globals AFRAME THREE */
 AFRAME.registerComponent('starfield', {
@@ -7,39 +8,66 @@ AFRAME.registerComponent('starfield', {
   },
 
   init: function () {
-    // this.objectLoader = new THREE.ObjectLoader();
-    // this.objectLoader.setCrossOrigin('');
-    console.log("INIT");
+
+    this.starfieldMat = new THREE.ShaderMaterial({
+        uniforms: {
+        },
+        vertexShader: require('../glsl/starfield.vert'),
+        fragmentShader: require('../glsl/starfield.frag'),
+      })
+
+  },
+
+  buildStarfieldGeometry: function() {
+
+    console.log(`Processing ${this.stardataraw.byteLength} bytes of stardata...`);
+
+    var starCount = this.stardata.length / fields.length;
+    console.log(starCount);
+    var geo = new THREE.BufferGeometry();
+    var verts = new Float32Array(starCount * 3);
+    var absmag = new Float32Array(starCount);
+    var ci = new Float32Array(starCount);
+
+    // create buffers for each of the data fields packed into our bin file
+    for(var i = 0; i < starCount; i++) {
+      verts[(i * 3) + 0] = this.stardata[(i * fields.length) + 0];
+      verts[(i * 3) + 1] = this.stardata[(i * fields.length) + 1];
+      verts[(i * 3) + 2] = this.stardata[(i * fields.length) + 2];
+      absmag[i] = this.stardata[(i * fields.length) + 3];
+      ci[i] = this.stardata[(i * fields.length) + 4];
+    }
+
+    geo.addAttribute( 'position', new THREE.BufferAttribute(verts, 3) );
+    geo.addAttribute( 'absmag', new THREE.BufferAttribute(absmag, 1) );
+    geo.addAttribute( 'ci', new THREE.BufferAttribute(ci, 1) );
+
+    this.geo = geo;
+
   },
 
   update: function (oldData) {
-    // var self = this;
-    fetch(this.data.src)
-      .then(function(response) {
-        return response.json()
-      }).then( (json) => {
+
+    fetch('/assets/data/stardata.bin')
+      .then( (res) => {
+        return res.arrayBuffer();
+      })
+      .then( b => {
+        this.stardataraw = b;
+        this.stardata = new Float32Array(b);
+        this.buildStarfieldGeometry();
 
         var mesh = new THREE.Object3D();
+        console.log('building mesh');
 
-        for(c in json) {
-          let geo = new THREE.BufferGeometry();
-          let verts = new Float32Array(json[c]);
-          geo.addAttribute( 'position', new THREE.BufferAttribute(verts, 3) );
-          let m = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0x33aaff }));
-          mesh.add(m);
-        }
+        let m = new THREE.Points(this.geo, this.starfieldMat);
+        mesh.add(m);
+        console.log(m);
         this.el.setObject3D('mesh', mesh);
-      }).catch(function(ex) {
-        console.log('parsing failed', ex)
-      })
-    // this.objectLoader.load(this.data.src, function (group) {
-    //   var Rotation = new THREE.Matrix4().makeRotationX(-Math.PI / 2);
-    //   group.traverse(function (child) {
-    //     if (!(child instanceof THREE.Mesh)) { return; }
-    //     child.position.applyMatrix4(Rotation);
-    //   });
-    //   self.el.setObject3D('mesh', group);
-    //   self.el.emit('model-loaded', {format: 'json', model: group, src: src});
-    // });
+      });
+
+  },
+  tick: function(time, delta) {
+
   }
 });
