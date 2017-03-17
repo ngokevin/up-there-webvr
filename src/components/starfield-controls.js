@@ -104,7 +104,6 @@ AFRAME.registerComponent('starfield-controls', {
   },
 
   onButtonChanged: function (evt) {
-    console.log(evt);
     var button = this.mapping['button' + evt.detail.id];
     var value;
     if (button !== 'trigger' || !this.buttonMeshes) { return; }

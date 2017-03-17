@@ -1,14 +1,15 @@
 const IDLE = 'IDLE'
     , ACTIVE = 'ACTIVE';
-var debounce = require('debounce');
+
 
 /* globals AFRAME THREE */
-AFRAME.registerComponent('scale-ui', {
+AFRAME.registerComponent('translate-ui', {
   schema: {
     start: {type: 'vec3', default: '0 0 0'},
-    startDistance: {type: 'float', default: 0},
+    startPosition: {type: 'vec3', default: '0 0 0'},
     startScale: {type: 'float', default: 1.0},
     active: {type: 'boolean', default: false},
+    activeHand: {type: 'int', default: 0},
     state: {type: 'string', default: IDLE}
   },
 
@@ -25,16 +26,14 @@ AFRAME.registerComponent('scale-ui', {
 
     this.hands.map( (h,i) => {
       h.addEventListener('buttonchanged', (evt) => {
-        if(evt.detail.id === 0) {
+        if(evt.detail.id === 2) {
           this.handleHandChange(i, evt.detail.state.value);
         }
       })
     })
 
     this.data.startScale = this.el.getAttribute('scale').x;
-    this.tick = this.tick.bind(this);
 
-    this.dbUpdate = debounce(this.updateState, 200);
   },
 
   handleHandChange(hand, value) {
@@ -62,60 +61,80 @@ AFRAME.registerComponent('scale-ui', {
   },
 
   getHandsCenterpoint: function() {
-    if(this.scratch === undefined) {
-      this.scratch = {};
-      this.scratch.h0 = new THREE.Vector3();
-      this.scratch.h1 = new THREE.Vector3();
-    }
-
-
     let rpos = this.hands[0].getAttribute('position');
     let lpos = this.hands[1].getAttribute('position');
 
-    this.scratch.h0.set(rpos.x, rpos.y, rpos.z);
-    this.scratch.h1.set(lpos.x, lpos.y, lpos.z);
-
+    let vecPositions = [rpos,lpos].map( hp => {
+      return new THREE.Vector3(hp.x, hp.y, hp.z);
+    });
 
     // midpoint, in vec3 form
-    return this.scratch.h0.add(this.scratch.h1).divideScalar(2).clone();
+    return new THREE.Vector3().addVectors(vecPositions[0], vecPositions[1]).divideScalar(2);
   },
 
   getHandsDistance: function() {
-    let rpos = this.hands[0].getAttribute('position');
-    let lpos = this.hands[1].getAttribute('position');
+    let hands = this.getHandVectorPositions();
 
-    this.scratch.h0.set(rpos.x, rpos.y, rpos.z);
-    this.scratch.h1.set(lpos.x, lpos.y, lpos.z);
-
-
-    return this.scratch.h0.distanceTo(this.scratch.h1);
+    return hands[0].distanceTo(hands[1]);
   },
 
-  updateState: function() {
+  getNewPosition: function() {
+
+    if(this.scratch === undefined) {
+      this.scratch = {};
+      this.scratch.pvec = new THREE.Vector3();
+
+      this.scratch.spvec = new THREE.Vector3();
+
+      this.scratch.diff = new THREE.Vector3();
+      this.scratch.cpvec = new THREE.Vector3();
+    }
+
+    let p = this.hands[this.data.activeHand].getAttribute('position');
+    this.scratch.pvec.set(p.x, p.y, p.z);
+
+    let sp = this.data.start;
+    this.scratch.spvec.set(sp.x, sp.y, sp.z);
+
+    let diff = this.scratch.pvec.sub(this.scratch.spvec);
+
+    let cp = this.data.startPosition;
+    this.scratch.cpvec.set(cp.x,cp.y,cp.z).add(diff);
+
+    return this.scratch.cpvec.clone();
+  },
+
+  tick: function(time, timeDelta) {
+    // debugger;
     switch(this.data.state) {
       case IDLE:
+        let hid = -1;
+
         // if we're idle and both hands are active
-        if(this.handStates[0] && this.handStates[1]) {
+        if(this.handStates[0]) {
+          hid = 0;
+        } else if(this.handStates[1]) {
+          hid = 1;
+        }
+
+        if(hid > -1) {
+          this.data.activeHand = hid;
           // get the current centerpoint for zooming between the two hands
-          this.el.setAttribute('scale-ui', 'start', this.getHandsCenterpoint())
-          this.el.setAttribute('scale-ui', 'startDistance', this.getHandsDistance())
-          this.data.startScale = this.el.getAttribute('scale').x;
+          this.el.setAttribute('translate-ui', 'start', this.hands[hid].getAttribute('position'));
+          this.data.startPosition = this.el.getAttribute('position');
           this.setState(ACTIVE);
         }
         break;
       case ACTIVE:
-        if(!this.handStates[0] || !this.handStates[1]) {
+        if(!this.handStates[0] && !this.handStates[1]) {
           this.setState(IDLE);
         } else {
-          let s = (this.getHandsDistance() / this.data.startDistance) * this.data.startScale;
-          this.el.setAttribute('scale', `${s} ${s} ${s}`);
+          let p = this.getNewPosition();
+          this.el.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
+          // console.log(p);
         }
         break;
     }
-  },
-
-  tick: function(time, timeDelta) {
-    this.updateState();
   }
 
 });

@@ -25,6 +25,7 @@
     "aframe-extras": "^3.3.4",
     "aframe-stats-in-vr-component": "^0.1.7",
     "aframe-ui-widgets": "^1.0.2",
+    "debounce": "^1.0.0",
     "extract-text-webpack-plugin": "^2.0.0",
     "glsl-colormap": "^1.0.1",
     "glslify": "^6.0.1",

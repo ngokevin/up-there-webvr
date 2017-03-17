@@ -24,6 +24,7 @@ require('./components/line.js');
 require('./components/look-controls-alt.js');
 require('./components/orbit-controls.js');
 require('./components/scale-ui.js');
+require('./components/translate-ui.js');
 require('./components/scale-ui-controls.js');
 require('./components/starfield-controls.js');
 require('./components/starfield.js');
