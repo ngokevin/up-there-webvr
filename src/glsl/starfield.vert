@@ -7,6 +7,6 @@ attribute float ci;
 void main() {
   vUv = uv;
   vCi = ci;
-  gl_PointSize = absmag;
+  gl_PointSize = mix(5.0, 1.0, min(1.,((5. + absmag) / 4.) ) );
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }

@@ -79,9 +79,10 @@ AFRAME.registerComponent('translate-ui', {
   },
 
   getNewPosition: function() {
-
+  // debugger;
     if(this.scratch === undefined) {
       this.scratch = {};
+
       this.scratch.pvec = new THREE.Vector3();
 
       this.scratch.spvec = new THREE.Vector3();
@@ -101,7 +102,7 @@ AFRAME.registerComponent('translate-ui', {
     let cp = this.data.startPosition;
     this.scratch.cpvec.set(cp.x,cp.y,cp.z).add(diff);
 
-    return this.scratch.cpvec.clone();
+    return { x: this.scratch.cpvec.x, y: this.scratch.cpvec.z, y: this.scratch.cpvec.z };
   },
 
   tick: function(time, timeDelta) {

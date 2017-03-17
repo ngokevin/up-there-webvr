@@ -26,6 +26,7 @@ require('./components/orbit-controls.js');
 require('./components/scale-ui.js');
 require('./components/translate-ui.js');
 require('./components/scale-ui-controls.js');
+require('./components/star-selector.js');
 require('./components/starfield-controls.js');
 require('./components/starfield.js');
 require('./components/ui.js');

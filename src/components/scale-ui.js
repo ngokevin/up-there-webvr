@@ -13,6 +13,8 @@ AFRAME.registerComponent('scale-ui', {
   },
 
   init: function () {
+
+    // Control mechanisms for motion controllers
     this.hands = [
       document.getElementById('right-hand'),
       document.getElementById('left-hand')
@@ -23,6 +25,11 @@ AFRAME.registerComponent('scale-ui', {
       false
     ]
 
+    this.keyState = {
+      zoomIn: false,
+      zoomOut: false
+    }
+
     this.hands.map( (h,i) => {
       h.addEventListener('buttonchanged', (evt) => {
         if(evt.detail.id === 0) {
@@ -31,10 +38,27 @@ AFRAME.registerComponent('scale-ui', {
       })
     })
 
+    this.handleKeyChange = this.handleKeyChange.bind(this);
+
+    // Control mechanisms for keyboard
+    document.addEventListener('keydown', (evt) => { this.handleKeyChange(evt.code, true); });
+    document.addEventListener('keyup', (evt) => { this.handleKeyChange(evt.code, false); });
+
     this.data.startScale = this.el.getAttribute('scale').x;
     this.tick = this.tick.bind(this);
 
     this.dbUpdate = debounce(this.updateState, 200);
+  },
+
+  handleKeyChange(code, state) {
+    switch(code) {
+      case 'KeyZ':
+        this.keyState.zoomIn = state;
+        break;
+      case 'KeyX':
+        this.keyState.zoomOut = state;
+        break;
+    }
   },
 
   handleHandChange(hand, value) {
@@ -111,6 +135,14 @@ AFRAME.registerComponent('scale-ui', {
           this.el.setAttribute('scale', `${s} ${s} ${s}`);
         }
         break;
+    }
+
+    if(this.keyState.zoomIn) {
+      let s = this.el.getAttribute('scale').x * 1.01;
+      this.el.setAttribute('scale', `${s} ${s} ${s}`);
+    } else if(this.keyState.zoomOut) {
+      let s = this.el.getAttribute('scale').x * .99;
+      this.el.setAttribute('scale', `${s} ${s} ${s}`);
     }
   },
 
