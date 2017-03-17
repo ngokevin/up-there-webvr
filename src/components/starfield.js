@@ -17,13 +17,8 @@ AFRAME.registerComponent('starfield', {
         fragmentShader: require('../glsl/starfield.frag'),
       });
 
+    this.tick = this.tick.bind(this);
     this.changeStarfieldScale = this.changeStarfieldScale.bind(this);
-
-    var leftHand = document.getElementById("left-hand");
-    var rightHand = document.getElementById("right-hand");
-
-    rightHand.addEventListener('brushsize-changed', (evt) => { this.changeStarfieldScale(evt.detail.size); });
-    leftHand.addEventListener('brushsize-changed', (evt) => { this.changeStarfieldScale(evt.detail.size); });
 
   },
 
@@ -56,7 +51,7 @@ AFRAME.registerComponent('starfield', {
     geo.addAttribute( 'ci', new THREE.BufferAttribute(ci, 1) );
 
     this.geo = geo;
-
+    window.sel = this.el;
   },
 
   update: function (oldData) {
@@ -81,6 +76,7 @@ AFRAME.registerComponent('starfield', {
 
   },
   tick: function(time, delta) {
-
+    window.sel = this.el;
+    // this.object3D.rotation.y += 1 * Math.PI / 180;
   }
 });

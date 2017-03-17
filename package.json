@@ -21,11 +21,16 @@
     "webpack": "^2.2.1"
   },
   "dependencies": {
+    "aframe": "^0.5.0",
+    "aframe-extras": "^3.3.4",
+    "aframe-stats-in-vr-component": "^0.1.7",
+    "aframe-ui-widgets": "^1.0.2",
     "extract-text-webpack-plugin": "^2.0.0",
     "glsl-colormap": "^1.0.1",
     "glslify": "^6.0.1",
     "glslify-loader": "^1.0.2",
     "raw-loader": "^0.5.1",
+    "super-hands": "^0.3.1",
     "whatwg-fetch": "^2.0.3"
   }
 }

@@ -1,4 +1,9 @@
-require('../vendor/aframe-master.min.js');
+// require('../vendor/aframe-master.min.js');
+require('aframe');
+
+//require('aframe-ui-widgets');
+require('aframe-stats-in-vr-component');
+//require('super-hands');
 
 window.saveAs = require('../vendor/saveas.js').saveAs;
 require('./dragndrop.js');
@@ -18,6 +23,8 @@ require('./components/json-model.js');
 require('./components/line.js');
 require('./components/look-controls-alt.js');
 require('./components/orbit-controls.js');
+require('./components/scale-ui.js');
+require('./components/scale-ui-controls.js');
 require('./components/starfield-controls.js');
 require('./components/starfield.js');
 require('./components/ui.js');

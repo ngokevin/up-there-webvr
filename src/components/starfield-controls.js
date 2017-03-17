@@ -58,7 +58,7 @@ AFRAME.registerComponent('starfield-controls', {
 
   changeBrushSize: function (size) {
     var scale = size / 2 * 10;
-    this.buttonMeshes.sizeHint.scale.set(scale, scale, 1);
+    // this.buttonMeshes.sizeHint.scale.set(scale, scale, 1);
   },
 
   // buttonId
