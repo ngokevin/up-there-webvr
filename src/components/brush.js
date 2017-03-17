@@ -2,7 +2,7 @@
 AFRAME.registerComponent('brush', {
   schema: {
     color: {type: 'color', default: '#ef2d5e'},
-    size: {default: 0.01, min: 0.0, max: 0.3},
+    size: {default: 0.01, min: 0.01, max: 10.0},
     brush: {default: 'flat'},
     enabled: { default: true }
   },

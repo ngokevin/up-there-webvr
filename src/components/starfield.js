@@ -8,14 +8,27 @@ AFRAME.registerComponent('starfield', {
   },
 
   init: function () {
+    var el = this.el;
 
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
-      })
+      });
 
+    this.changeStarfieldScale = this.changeStarfieldScale.bind(this);
+
+    var leftHand = document.getElementById("left-hand");
+    var rightHand = document.getElementById("right-hand");
+
+    rightHand.addEventListener('brushsize-changed', (evt) => { this.changeStarfieldScale(evt.detail.size); });
+    leftHand.addEventListener('brushsize-changed', (evt) => { this.changeStarfieldScale(evt.detail.size); });
+
+  },
+
+  changeStarfieldScale: function(size) {
+    this.el.setAttribute('scale', `${size} ${size} ${size}`);
   },
 
   buildStarfieldGeometry: function() {

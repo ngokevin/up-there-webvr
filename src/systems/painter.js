@@ -85,7 +85,7 @@ AFRAME.registerSystem('painter', {
       }
       if (event.keyCode === 78) {
         // Next brush (n)
-        var hands = document.querySelectorAll('[paint-controls]');
+        var hands = document.querySelectorAll('[starfield-controls]');
         var brushesNames = Object.keys(AFRAME.BRUSHES);
         var index = brushesNames.indexOf(hands[0].components.brush.data.brush);
         index = (index + 1) % brushesNames.length;
