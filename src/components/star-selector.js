@@ -5,7 +5,7 @@ AFRAME.registerComponent('star-selector', {
   },
 
   init: function () {
-    console.log("STAR SELECTOR")
+    
   },
 
   update: function (oldData) {

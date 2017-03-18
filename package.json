@@ -22,8 +22,11 @@
   },
   "dependencies": {
     "aframe": "^0.5.0",
+    "aframe-auto-detect-controllers-component": "^0.1.4",
     "aframe-extras": "^3.3.4",
+    "aframe-gearvr-controls-component": "^0.1.6",
     "aframe-stats-in-vr-component": "^0.1.7",
+    "aframe-text-geometry-component": "^0.5.1",
     "aframe-ui-widgets": "^1.0.2",
     "debounce": "^1.0.0",
     "extract-text-webpack-plugin": "^2.0.0",

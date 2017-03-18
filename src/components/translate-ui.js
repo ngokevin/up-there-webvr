@@ -34,6 +34,14 @@ AFRAME.registerComponent('translate-ui', {
 
     this.data.startScale = this.el.getAttribute('scale').x;
 
+    this.scratch = {};
+
+    this.scratch.pvec = new THREE.Vector3();
+    this.scratch.spvec = new THREE.Vector3();
+
+    this.scratch.diff = new THREE.Vector3();
+    this.scratch.cpvec = new THREE.Vector3();
+
   },
 
   handleHandChange(hand, value) {
@@ -79,17 +87,6 @@ AFRAME.registerComponent('translate-ui', {
   },
 
   getNewPosition: function() {
-  // debugger;
-    if(this.scratch === undefined) {
-      this.scratch = {};
-
-      this.scratch.pvec = new THREE.Vector3();
-
-      this.scratch.spvec = new THREE.Vector3();
-
-      this.scratch.diff = new THREE.Vector3();
-      this.scratch.cpvec = new THREE.Vector3();
-    }
 
     let p = this.hands[this.data.activeHand].getAttribute('position');
     this.scratch.pvec.set(p.x, p.y, p.z);
@@ -102,7 +99,10 @@ AFRAME.registerComponent('translate-ui', {
     let cp = this.data.startPosition;
     this.scratch.cpvec.set(cp.x,cp.y,cp.z).add(diff);
 
-    return { x: this.scratch.cpvec.x, y: this.scratch.cpvec.z, y: this.scratch.cpvec.z };
+    return { x: this.scratch.cpvec.x, y: this.scratch.cpvec.y, z: this.scratch.cpvec.z };
+
+  // new position = startPos + (currentPos - startPos)
+
   },
 
   tick: function(time, timeDelta) {
@@ -131,8 +131,8 @@ AFRAME.registerComponent('translate-ui', {
           this.setState(IDLE);
         } else {
           let p = this.getNewPosition();
-          this.el.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
-          // console.log(p);
+          let pos = `${p.x} ${p.y} ${p.z}`;
+          this.el.setAttribute('position', pos);
         }
         break;
     }
