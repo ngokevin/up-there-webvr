@@ -1,6 +1,6 @@
 // var stardata = require('../../data/stardata.json')
 var fields = ['x','y','z','absmag','ci']; // all float32s
-
+var stardata = require('../../assets/data/stardata.json');
 /* globals AFRAME THREE */
 AFRAME.registerComponent('starfield', {
   schema: {
@@ -12,9 +12,12 @@ AFRAME.registerComponent('starfield', {
 
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
+          "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
+          "starDecal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/star-decal.png" ) }
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
+        transparent: true
       });
 
     this.tick = this.tick.bind(this);
@@ -22,6 +25,8 @@ AFRAME.registerComponent('starfield', {
     this.starLocations = [];
     this.spatialHash = {};
     this.hashResolution = 5.0;
+
+    this.camera = document.getElementById('acamera');
   },
 
   changeStarfieldScale: function(size) {
@@ -101,7 +106,7 @@ AFRAME.registerComponent('starfield', {
 
   update: function (oldData) {
 
-    fetch('/assets/data/stardata.bin')
+    fetch('./assets/data/stardata.bin')
       .then( (res) => {
         return res.arrayBuffer();
       })
@@ -115,14 +120,21 @@ AFRAME.registerComponent('starfield', {
 
         let m = new THREE.Points(this.geo, this.starfieldMat);
         mesh.add(m);
-        console.log(m);
         this.el.setObject3D('mesh', mesh);
+
+        // var entity;
+        // for(c in stardata) {
+        //   entity = document.createElement('a-entity');
+        //   entity.setAttribute('constellation', `name: ${c};`);
+        //   entity.setAttribute('scale', '.25 .25 .25')
+        //   this.el.appendChild(entity);
+        // }
       });
 
   },
   tick: function(time, delta) {
-    // window.sel = this.el;
-
-    // this.object3D.rotation.y += 1 * Math.PI / 180;
+    let p = this.camera.getAttribute('position');
+    this.starfieldMat.uniforms['cameraPosition'].value = new THREE.Vector3(p.x, p.y, p.z);
+    // this.starfieldMat.needsUpdate = true;
   }
 });
