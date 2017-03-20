@@ -1,6 +1,7 @@
 // var stardata = require('../../data/stardata.json')
 var fields = ['x','y','z','absmag','ci']; // all float32s
 var stardata = require('../../assets/data/stardata.json');
+
 /* globals AFRAME THREE */
 AFRAME.registerComponent('starfield', {
   schema: {
@@ -73,8 +74,10 @@ AFRAME.registerComponent('starfield', {
       var p1 = new THREE.Vector3(pos.x, pos.y, pos.z);
       var p2 = new THREE.Vector3();
       let x = s.sort( (a,b) => {
-        let da = p2.set(a.x, a.y, a.z).distanceTo(p1);
-        let db = p2.set(b.x, b.y, b.z).distanceTo(p1);
+        let ap = this.getStarPosition(a);
+        let bp = this.getStarPosition(b);
+        let da = p2.set(ap.x, ap.y, ap.z).distanceTo(p1);
+        let db = p2.set(bp.x, bp.y, bp.z).distanceTo(p1);
         if(da < db) {
           return -1;
         } else if(da > db) {
@@ -82,8 +85,7 @@ AFRAME.registerComponent('starfield', {
         }
         return 0;
       });
-      return this.getStarPosition(x[0]);
-      // return this.getStarPositionVec3(s[0]);
+      return { id: x[0], pos: this.getStarPosition(x[0]) };
     } else {
       return false;
     }

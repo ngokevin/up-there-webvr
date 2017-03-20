@@ -1,12 +1,8 @@
-// require('../vendor/aframe-master.min.js');
 require('aframe');
 require('aframe-extras');
-//require('aframe-ui-widgets');
-// require('aframe-stats-in-vr-component');
-// require('aframe-text-component');
+
 require('aframe-gearvr-controls-component');
 require('aframe-auto-detect-controllers-component');
-//require('super-hands');
 
 window.saveAs = require('../vendor/saveas.js').saveAs;
 require('./dragndrop.js');
@@ -35,8 +31,6 @@ require('./components/star-selector.js');
 require('./components/starfield-controls.js');
 require('./components/gearvr-fly-controls.js');
 require('./components/starfield.js');
-// require('./components/ui.js');
-// require('./components/ui-raycaster.js');
 
 require('./brushes/line.js');
 require('./brushes/stamp.js');

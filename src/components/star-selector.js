@@ -1,3 +1,5 @@
+var starnames = require('../../assets/data/starnames.json');
+
 /* globals AFRAME THREE */
 AFRAME.registerComponent('star-selector', {
   schema: {
@@ -10,6 +12,8 @@ AFRAME.registerComponent('star-selector', {
 
     this.lastCursorPos = "";//this.getPosString(cursor.getAttribute('position'));
     this.tick = this.tick.bind(this);
+
+    this.camera = document.getElementById('acamera');
   },
 
   update: function (oldData) {
@@ -26,14 +30,21 @@ AFRAME.registerComponent('star-selector', {
     return `${p.x} ${p.y} ${p.z}`
   },
 
+  getNameString: function(n) {
+    if(n === "U") {
+      return "Unnamed"
+    } else {
+      return n
+    }
+  },
+
   tick(time, timeDelta) {
-    // debugger;
     let p = this.starfield.getNearestStarPosition(this.cursor.object3D.getWorldPosition());
-    if(p && this.getPosString(p) !== this.lastCursorPos) {
+    if(p && this.getPosString(p.pos) !== this.lastCursorPos) {
       this.lastCursorPos = this.getPosString(p);
-      this.label.setAttribute('text', 'value', `Star ${p.x}`);
-      this.label.object3D.lookAt(this.cursor.object3D);
-      this.el.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
+      this.label.setAttribute('text', 'value', `${this.getNameString(starnames[p.id])}`);
+      this.el.object3D.lookAt(this.camera.object3D.position);
+      this.el.setAttribute('position', p.pos);
     }
   }
 });
