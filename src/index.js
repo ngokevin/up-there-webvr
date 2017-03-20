@@ -1,6 +1,6 @@
 // require('../vendor/aframe-master.min.js');
 require('aframe');
-
+require('aframe-extras');
 //require('aframe-ui-widgets');
 require('aframe-stats-in-vr-component');
 require('aframe-gearvr-controls-component');
@@ -21,6 +21,7 @@ require('./systems/painter.js');
 
 require('./components/brush.js');
 require('./components/constellation.js');
+require('./components/cursor-listener.js');
 require('./components/if-no-vr-headset.js');
 require('./components/json-model.js');
 require('./components/line.js');

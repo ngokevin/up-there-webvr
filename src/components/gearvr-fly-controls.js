@@ -16,7 +16,7 @@ AFRAME.registerComponent('gearvr-fly-controls', {
 
     this.tick = this.tick.bind(this);
     this.direction = new THREE.Vector3(0, 0, 1);
-    this.speed = .01;
+    this.speed = .05;
   },
 
   handleControlChange(state, evt) {

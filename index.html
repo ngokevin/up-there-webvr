@@ -30,6 +30,7 @@
         <a-asset-item id="logomtl" src="assets/models/logo.mtl"></a-asset-item>
         <a-asset-item id="uiobj" src="assets/models/ui.obj"></a-asset-item>
         <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item>
+
         <!-- <a-asset-item id="stardataBin" src="assets/data/stardata.bin"></a-asset-item> -->
         <!-- <a-asset-item id="hitEntityObj" src="assets/models/teleportHitEntity.obj"></a-asset-item> -->
       </a-assets>
@@ -41,9 +42,11 @@
       <a-entity id="hitEntityLeft" material="shader:flat; color: #ff3468" obj-model="obj: #hitEntityObj"></a-entity>
       <a-entity id="hitEntityRight" material="shader:flat; color: #ff3468" obj-model="obj: #hitEntityObj"></a-entity>
 
-      <a-entity geometry="primitive: box; width: 2; height: 1; depth: .01" position="0 1 -2" material="shader: flat; src: #logotex; transparent: true"></a-entity>
+      <!-- <a-entity id="TestObj" three-model="src: url(./assets/models/animation-test.json)" material="shader:flat; color: #ff3468" ></a-entity> -->
 
-      <a-entity starfield="src: /assets/data/stardata.json" scale=".1 .1 .1" position="0 0 0" scale-ui translate-ui></a-entity>
+      <a-entity geometry="primitive: plane; width: 2; height: 1;" position="0 1 -2" material="shader: flat; src: #logotex; transparent: true; depthWrite: false; depthTest: false"></a-entity>
+
+      <a-entity id="starfield" starfield="src: /assets/data/stardata.json" position="0 0 0" scale-ui translate-ui></a-entity>
 
       <!-- <a-entity id="ground"
                 geometry="primitive: box; width: 12; height: 0.01; depth: 12"
@@ -54,7 +57,6 @@
                 if-no-vr-headset="visible: false"
                 auto-detect-controllers="hand:left"
                 ui>
-
       </a-entity>
       <a-entity id="right-hand"
                 brush
@@ -62,11 +64,12 @@
                 auto-detect-controllers="hand:right"
                 gearvr-controls
                 ui>
-
       </a-entity>
-      <a-box id="selectionCubeLeft" scale=".01 .01 .01" position="0 0 0" material="shader:flat; color: #ff66aa; wireframe: true"></a-box>
+      <a-box id="selectionCubeLeft" star-selector scale=".1 .1 .1" position="0 0 0" material="shader:flat; color: #ff66aa; wireframe: true"></a-box>
+      <a-box id="constellationButton" cursor-listener scale=".1 .1 .1" position="0 -.5 -1" material="shader:flat; color: #0099ff"></a-box>
+
       <!-- <a-entity id="sky" geometry="primitive:sphere; radius:10e2; phiLength:360; phiStart:0; thetaLength:90" material="shader:flat; side:back; height:2048; src:#skymap; width:2048; renderDepth: 1e20"></a-entity> -->
-      <a-entity id="acamera" camera look-controls-alt orbit-controls gearvr-fly-controls>
+      <a-entity id="acamera" camera look-controls gearvr-fly-controls>
         <a-cursor id="acursor" material="color: #ffffff; shader: flat"></a-cursor>
       </a-entity>
       <!-- <a-entity id="acamera" position="0 1 0" camera look-controls wasd-controls></a-entity> -->

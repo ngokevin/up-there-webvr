@@ -24,9 +24,11 @@ AFRAME.registerComponent('starfield', {
     this.changeStarfieldScale = this.changeStarfieldScale.bind(this);
     this.starLocations = [];
     this.spatialHash = {};
-    this.hashResolution = 5.0;
+    this.hashResolution = 1.0;
 
     this.camera = document.getElementById('acamera');
+
+    this.el.getNearestStarPosition = this.getNearestStarPosition.bind(this);
   },
 
   changeStarfieldScale: function(size) {
@@ -55,12 +57,36 @@ AFRAME.registerComponent('starfield', {
   },
 
   getStarPosition: function(id) {
+
     return this.starLocations[id];
   },
 
   getStarPositionVec3: function(id) {
-    let p = this.starLocations[id];
+    // console.log(id);
+    let p = this.getStarPosition(id);
     return new THREE.Vector3(p.x, p.y, p.z);
+  },
+
+  getNearestStarPosition: function(pos) {
+    let s = this.getStarsNearLocation(pos);
+    if(s.length > 0) {
+      var p1 = new THREE.Vector3(pos.x, pos.y, pos.z);
+      var p2 = new THREE.Vector3();
+      let x = s.sort( (a,b) => {
+        let da = p2.set(a.x, a.y, a.z).distanceTo(p1);
+        let db = p2.set(b.x, b.y, b.z).distanceTo(p1);
+        if(da < db) {
+          return -1;
+        } else if(da > db) {
+          return 1;
+        }
+        return 0;
+      });
+      return this.getStarPosition(x[0]);
+      // return this.getStarPositionVec3(s[0]);
+    } else {
+      return false;
+    }
   },
 
   buildStarfieldGeometry: function() {
@@ -90,7 +116,7 @@ AFRAME.registerComponent('starfield', {
       this.addStarToHash(p, i);
 
       // also add its position to the id lookup array
-      this.starLocations.push(p);
+      this.starLocations.push(Object.assign({}, p));
 
     }
 
@@ -121,20 +147,11 @@ AFRAME.registerComponent('starfield', {
         let m = new THREE.Points(this.geo, this.starfieldMat);
         mesh.add(m);
         this.el.setObject3D('mesh', mesh);
-
-        // var entity;
-        // for(c in stardata) {
-        //   entity = document.createElement('a-entity');
-        //   entity.setAttribute('constellation', `name: ${c};`);
-        //   entity.setAttribute('scale', '.25 .25 .25')
-        //   this.el.appendChild(entity);
-        // }
       });
 
   },
   tick: function(time, delta) {
     let p = this.camera.getAttribute('position');
     this.starfieldMat.uniforms['cameraPosition'].value = new THREE.Vector3(p.x, p.y, p.z);
-    // this.starfieldMat.needsUpdate = true;
   }
 });
