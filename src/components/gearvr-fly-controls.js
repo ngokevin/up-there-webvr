@@ -8,13 +8,20 @@ AFRAME.registerComponent('gearvr-fly-controls', {
   init: function () {
 
     this.handleControlChange = this.handleControlChange.bind(this);
-
+    this.cursor = document.getElementById('acursor');
     this.hand = document.getElementById('right-hand');
     // this.hand.addEventListener('trackpadup', (evt) => { this.handleControlChange(false, evt) });
     // this.hand.addEventListener('trackpaddown', (evt) => { this.handleControlChange(true, evt) });
 
     this.hand.addEventListener('axismove', (evt) => {
       this.handleControlChange(evt.detail.axis[0], evt);
+    })
+
+    this.hand.addEventListener('buttonchanged', (evt) => {
+      console.log("CLICK", evt)
+      if(evt.state) {
+        this.cursor.dispatchEvent('click');
+      }
     })
 
     this.cursor = document.getElementById('acursor');

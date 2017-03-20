@@ -16,14 +16,17 @@ require('./systems/brush.js');
 require('./systems/ui.js');
 require('./systems/painter.js');
 
+require('./components/blend-model.js');
 require('./components/brush.js');
 require('./components/constellation.js');
 require('./components/cursor-listener.js');
+require('./components/follow-entity.js');
 require('./components/if-no-vr-headset.js');
 require('./components/json-model.js');
 require('./components/line.js');
 require('./components/look-controls-alt.js');
 require('./components/orbit-controls.js');
+require('./components/player-controls.js');
 require('./components/scale-ui.js');
 require('./components/translate-ui.js');
 require('./components/scale-ui-controls.js');
