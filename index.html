@@ -52,7 +52,7 @@
               </a-entity>
               <a-entity position="0 -.55 -.75" rotation="35 0 0" blend-model="src: assets/models/indicator-light.json;" indicator-light="target: constellationToggle">
               </a-entity>
-              <a-entity id="constellationToggle" position="0 -.75 -.75" rotation="35 0 0" blend-model="src: assets/models/toggle-switch.json; morphTargets: true" toggle-switch="morph: On" class="clickable">
+              <a-entity id="constellationToggle" position="0 -.75 -.75" rotation="35 0 0" blend-model="src: assets/models/toggle-switch.json; morphTargets: true" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" class="clickable">
                 <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
               </a-entity>
               <a-entity position=".25 -.75 -.75" rotation="35 0 0" blend-model="src: assets/models/toggle-switch.json; morphTargets: true" toggle-switch="morph: On" class="clickable">
@@ -63,7 +63,7 @@
       <a-entity id="starfield" starfield="src: /assets/data/stardata.json" position="0 0 0" scale-ui translate-ui>
 
       </a-entity>
-      <a-entity constellations></a-entity>
+      <a-entity id="constellations" constellations visible="false"></a-entity>
       <!-- <a-entity id="ground"
                 geometry="primitive: box; width: 12; height: 0.01; depth: 12"
                 material="shader: flat; src: #floor">
