@@ -18,7 +18,7 @@ AFRAME.registerComponent('star-selector', {
 
   update: function (oldData) {
     var label = this.label = document.createElement('a-entity');
-    label.setAttribute('text', 'value', 'Hello World!');
+    label.setAttribute('text', 'value', 'Up There');
     label.setAttribute('text', 'width', '20');
     label.setAttribute('text', 'anchor', 'center');
     label.setAttribute('text', 'align', 'center');

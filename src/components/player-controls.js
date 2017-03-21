@@ -16,10 +16,12 @@ AFRAME.registerComponent('player-controls', {
         this.dbClick();
       }
     })
+    document.addEventListener('click', (evt) => {
+        this.dbClick();
+    })
     this.currentTarget = false;
   },
   update: function() {
-
     this.el.addEventListener('raycaster-intersection', (evt) => {
       evt.detail.els.sort( e => {
         if(e.object3D !== undefined) {
@@ -37,9 +39,5 @@ AFRAME.registerComponent('player-controls', {
     if(this.currentTarget) {
       this.currentTarget.emit('click');
     }
-
-  },
-  tick: function() {
-
   }
 });
