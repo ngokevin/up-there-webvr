@@ -1,4 +1,4 @@
-var Constellation = require('../Constellation');
+var Constellation = require('../Constellation')(THREE);
 var stardata = require('../../assets/data/stardata.json');
 //
 // module.exports = function(AFRAME) {
@@ -16,10 +16,18 @@ var stardata = require('../../assets/data/stardata.json');
   });
 
   AFRAME.registerComponent('constellations', {
+    init: function() {
+      Object.keys(stardata).map( c => {
+        let e = document.createElement('a-entity');
+        e.setAttribute('constellation', 'name', c);
+        this.el.appendChild(e);
+      })
+    },
     update: function () {
-      var mesh = this.el.getOrCreateObject3D('object3D', THREE.Object3D);
-      var c = new Constellation(this.data.name, stardata[this.data.name]);
-      mesh.add(c);
+
+      // debugger;
+      // var mesh = this.el.setObject3D('mesh', new Constellation(this.data.name, stardata[this.data.name]));
+      // mesh.add(c);
     }
   })
 // }
