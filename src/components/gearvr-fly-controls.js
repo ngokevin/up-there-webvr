@@ -17,13 +17,6 @@ AFRAME.registerComponent('gearvr-fly-controls', {
       this.handleControlChange(evt.detail.axis[0], evt);
     })
 
-    this.hand.addEventListener('buttonchanged', (evt) => {
-      console.log("CLICK", evt)
-      if(evt.state) {
-        this.cursor.dispatchEvent('click');
-      }
-    })
-
     this.cursor = document.getElementById('acursor');
 
     this.tick = this.tick.bind(this);
