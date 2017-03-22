@@ -4,13 +4,15 @@ var stardata = require('../assets/data/stardata.json');
 const ACTIVE_COLOR = 0xff9933;
 const INACTIVE_COLOR = 0x77ccff;
 
+var mat = this.mat = new THREE.LineBasicMaterial({ color: 0x77ccff, linewidth: 2 });
+
+
 module.exports = function(THREE) {
   class Constellation extends THREE.Object3D {
 
     constructor(name, vertexArray) {
       super();
-      var colMat = new THREE.MeshBasicMaterial({ color: 0x33ff66, transparent: true, opacity: .0, depthTest: false });
-      var mat = this.mat = new THREE.LineBasicMaterial({ color: 0x77ccff, linewidth: 2 });
+      //var colMat = new THREE.MeshBasicMaterial({ color: 0x33ff66, transparent: true, opacity: .0, depthTest: false });
 
       this.name = name;
       this.vertexArray = vertexArray;
@@ -37,14 +39,14 @@ module.exports = function(THREE) {
     }
 
     update(time) {
-      this.t = time;
-      if(this.mesh.userData.active) {
-        this.mesh.material.color.set( ACTIVE_COLOR );
-        this.mesh.userData.active = false;
-      } else {
-        this.mesh.material.color.set( INACTIVE_COLOR );
-      }
-      return false;
+      // this.t = time;
+      // if(this.mesh.userData.active) {
+      //   this.mesh.material.color.set( ACTIVE_COLOR );
+      //   this.mesh.userData.active = false;
+      // } else {
+      //   this.mesh.material.color.set( INACTIVE_COLOR );
+      // }
+      // return false;
     }
 
   }
