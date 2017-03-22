@@ -1,7 +1,7 @@
 // var stardata = require('../../data/stardata.json')
 var fields = ['x','y','z','absmag','ci']; // all float32s
 var stardata = require('../../assets/data/stardata.json');
-
+var colorTable = require('../colorTable.json');
 /* globals AFRAME THREE */
 AFRAME.registerComponent('starfield', {
   schema: {
@@ -10,11 +10,13 @@ AFRAME.registerComponent('starfield', {
 
   init: function () {
     var el = this.el;
+    this.starDB = this.el.starDB = [];
 
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
           "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
-          "starDecal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/star-decal.png" ) }
+          "starDecal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/star-decal.png" ) },
+          "starfieldScale": { type: "f", value: this.el.getAttribute('scale').x }
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
@@ -29,7 +31,11 @@ AFRAME.registerComponent('starfield', {
 
     this.camera = document.getElementById('acamera');
 
-    this.el.getNearestStarPosition = this.getNearestStarPosition.bind(this);
+    this.getNearestStarPosition = this.getNearestStarPosition.bind(this);
+    // this.getNearestStarId = this.getNearestStarId.bind(this);
+    this.getStarWorldLocation = this.getStarWorldLocation.bind(this);
+    this.el.getNearestStarId = this.getNearestStarId.bind(this);
+    this.el.getNearestStarWorldLocation = this.getNearestStarWorldLocation.bind(this);
   },
 
   changeStarfieldScale: function(size) {
@@ -58,7 +64,6 @@ AFRAME.registerComponent('starfield', {
   },
 
   getStarPosition: function(id) {
-
     return this.starLocations[id];
   },
 
@@ -68,10 +73,16 @@ AFRAME.registerComponent('starfield', {
     return new THREE.Vector3(p.x, p.y, p.z);
   },
 
+  getStarWorldLocation: function(id) {
+    let p = this.getStarPosition(id);
+    return this.el.object3D.localToWorld(new THREE.Vector3(p.x, p.y, p.z));
+  },
+
   getNearestStarPosition: function(pos) {
-    let s = this.getStarsNearLocation(pos);
+    let p = this.el.object3D.worldToLocal(pos);
+    let s = this.getStarsNearLocation(p);
     if(s.length > 0) {
-      var p1 = new THREE.Vector3(pos.x, pos.y, pos.z);
+      var p1 = new THREE.Vector3(p.x, p.y, p.z);
       var p2 = new THREE.Vector3();
       let x = s.sort( (a,b) => {
         let ap = this.getStarPosition(a);
@@ -91,6 +102,44 @@ AFRAME.registerComponent('starfield', {
     }
   },
 
+  getNearestStarWorldLocation: function(pos) {
+    let p = this.getNearestStarPosition(pos);
+    if(p) {
+      return { id: p.id, pos: this.el.object3D.localToWorld(new THREE.Vector3(p.pos.x, p.pos.y, p.pos.z)) };
+    } else {
+      return false;
+    }
+  },
+
+  getNearestStarId: function(pos) {
+    let p = this.getNearestStarPosition(pos);
+    if(p) {
+      return p.id;
+    } else {
+      return -1;
+    }
+  },
+
+  getColorForTemp: function(temp) {
+    let tempRound = Math.floor((temp/100))*100;
+    tempRound = Math.max(1000, Math.min(40000, tempRound));
+    let i = Math.floor(tempRound/100) - 10;
+    let c = colorTable[i];
+    return new THREE.Vector4(c[1], c[2], c[3], 1.0);
+  },
+
+  logScale: function(value) {
+    function handleLog(x, b) {
+      return Math.log(Math.max(x, 0.0)) / Math.log(Math.max(b, 0.0));
+    }
+
+    function scaleLog(base, value, min, max) {
+      return handleLog(value - min, base) / handleLog(max - min, base);
+    }
+
+    return scaleLog(10, value, -1.77, 12);
+  },
+
   buildStarfieldGeometry: function() {
 
     console.log(`Processing ${this.stardataraw.byteLength} bytes of stardata...`);
@@ -101,12 +150,14 @@ AFRAME.registerComponent('starfield', {
     var verts = new Float32Array(starCount * 3);
     var absmag = new Float32Array(starCount);
     var ci = new Float32Array(starCount);
+    var color = new Float32Array(starCount * 4);
+    var starScale = new Float32Array(starCount);
 
     let p = {};
 
     // create buffers for each of the data fields packed into our bin file
     for(var i = 0; i < starCount; i++) {
-
+      let starRec = {};
       // construct GPU buffers for each value
       p.x = verts[(i * 3) + 0] = this.stardata[(i * fields.length) + 0];
       p.y = verts[(i * 3) + 1] = this.stardata[(i * fields.length) + 1];
@@ -114,19 +165,34 @@ AFRAME.registerComponent('starfield', {
       absmag[i] = this.stardata[(i * fields.length) + 3];
       ci[i] = this.stardata[(i * fields.length) + 4];
 
+      // precalculate the color of the star based on its temperature
+      let c = this.getColorForTemp(this.stardata[(i * fields.length) + 4]).multiplyScalar(1.15)
+      color[(i * 4) + 0] = c.x;
+      color[(i * 4) + 1] = c.y;
+      color[(i * 4) + 2] = c.z;
+      color[(i * 4) + 3] = c.w;
+
+      // precalculate the star scale offset based on its magnitude
+      starScale[i] = Math.max(.5, Math.min(5.0, 7.0 * (1.0 - this.logScale(absmag[i]))));
+
+      starRec.position = { x: p.x, y: p.y, z: p.z };
+      starRec.absMag = absmag[i];
+      starRec.color = c;
+      starRec.temp = this.stardata[(i * fields.length) + 4];
+
       // add the star to the local spatial hash for fast querying
       this.addStarToHash(p, i);
 
       // also add its position to the id lookup array
       this.starLocations.push(Object.assign({}, p));
-
+      this.starDB.push(starRec);
     }
-
-    console.log("Len: " + Object.keys(this.spatialHash).length);
 
     geo.addAttribute( 'position', new THREE.BufferAttribute(verts, 3) );
     geo.addAttribute( 'absmag', new THREE.BufferAttribute(absmag, 1) );
     geo.addAttribute( 'ci', new THREE.BufferAttribute(ci, 1) );
+    geo.addAttribute( 'starColor', new THREE.BufferAttribute(color, 4) );
+    geo.addAttribute( 'starScale', new THREE.BufferAttribute(starScale, 1) );
 
     this.geo = geo;
     window.sel = this.el;
@@ -154,6 +220,6 @@ AFRAME.registerComponent('starfield', {
   },
   tick: function(time, delta) {
     let p = this.camera.getAttribute('position');
-    this.starfieldMat.uniforms['cameraPosition'].value = new THREE.Vector3(p.x, p.y, p.z);
+    this.starfieldMat.uniforms['cameraPosition'].value = this.el.object3D.worldToLocal(new THREE.Vector3(p.x, p.y, p.z));
   }
 });

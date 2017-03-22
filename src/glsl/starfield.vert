@@ -1,18 +1,20 @@
 // uniform vec3 cameraPosition;
-#pragma glslify: blackbody = require("glsl-colormap/blackbody")
-#pragma glslify: scaleLog = require("glsl-scale-log")
+uniform float starfieldScale;
 
 varying vec2 vUv;
-varying vec4 starColor;
+varying vec4 vStarColor;
+varying float vPointSize;
 
 attribute float absmag;
 attribute float ci;
+attribute float starScale;
+attribute vec4 starColor;
 
 void main() {
   vUv = uv;
-  starColor = blackbody(ci / 10000.);
-  // float m = 1.0 - ((1.7 + absmag) / 25.);
-  gl_PointSize = min(10.0, 4.0 * (1.0 - scaleLog(100.0, max(0.0, absmag), vec2(0., 15.))));
+  vStarColor = starColor;
+  gl_PointSize = max(1.0, starScale);
   gl_PointSize = max(0.0, 15.0/distance(position, cameraPosition)) + gl_PointSize;
+  vPointSize = gl_PointSize;
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }

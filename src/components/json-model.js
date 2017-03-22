@@ -14,11 +14,11 @@ AFRAME.registerComponent('json-model', {
     var src = this.data.src;
     if (!src || src === oldData.src) { return; }
     this.objectLoader.load(this.data.src, function (group) {
-      var Rotation = new THREE.Matrix4().makeRotationX(-Math.PI / 2);
-      group.traverse(function (child) {
-        if (!(child instanceof THREE.Mesh)) { return; }
-        child.position.applyMatrix4(Rotation);
-      });
+      // var Rotation = new THREE.Matrix4().makeRotationX(-Math.PI / 2);
+      // group.traverse(function (child) {
+      //   if (!(child instanceof THREE.Mesh)) { return; }
+      //   child.position.applyMatrix4(Rotation);
+      // });
       self.el.setObject3D('mesh', group);
       self.el.emit('model-loaded', {format: 'json', model: group, src: src});
     });

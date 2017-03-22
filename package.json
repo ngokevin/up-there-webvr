@@ -33,6 +33,7 @@
     "debounce": "^1.0.0",
     "extract-text-webpack-plugin": "^2.0.0",
     "glsl-colormap": "^1.0.1",
+    "glsl-noise": "0.0.0",
     "glsl-scale-log": "^1.0.0",
     "glslify": "^6.0.1",
     "glslify-loader": "^1.0.2",

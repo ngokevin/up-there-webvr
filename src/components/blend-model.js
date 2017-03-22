@@ -7,7 +7,6 @@ AFRAME.registerComponent('blend-model', {
   init: function () {
     this.objectLoader = new THREE.ObjectLoader();
     this.objectLoader.setCrossOrigin('');
-    this.tick = this.tick.bind(this);
   },
 
   update: function (oldData) {
@@ -23,7 +22,5 @@ AFRAME.registerComponent('blend-model', {
       this.el.setObject3D('mesh', group.children[0]);
       this.el.emit('model-loaded', {format: 'json', model: group.children[0], src: src});
     });
-  },
-  tick: function(time, timeDelta) {
   }
 });

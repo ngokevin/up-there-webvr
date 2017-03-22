@@ -4,8 +4,7 @@ var stardata = require('../assets/data/stardata.json');
 const ACTIVE_COLOR = 0xff9933;
 const INACTIVE_COLOR = 0x77ccff;
 
-var mat = this.mat = new THREE.LineBasicMaterial({ color: 0x77ccff, linewidth: 2 });
-
+var mat = new THREE.LineBasicMaterial({ color: 0x77ccff, linewidth: 1 });
 
 module.exports = function(THREE) {
   class Constellation extends THREE.Object3D {

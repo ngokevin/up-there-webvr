@@ -1,9 +1,14 @@
-#pragma glslify: blackbody = require("glsl-colormap/blackbody")
 varying vec2 vUv;
-varying vec4 starColor;
+varying vec4 vStarColor;
+varying float vPointSize;
 
 uniform sampler2D starDecal;
 
 void main() {
-  gl_FragColor = texture2D(starDecal, gl_PointCoord) * vec4(starColor.xyz, 1.0);//blackbody(vCi / 10000.);
+  if(vPointSize > 1.0) {
+    gl_FragColor = texture2D(starDecal, gl_PointCoord) * vStarColor;
+  } else {
+    gl_FragColor = vStarColor;//texture2D(starDecal, gl_PointCoord) * vStarColor;
+  }
+
 }

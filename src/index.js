@@ -28,6 +28,7 @@ require('./components/toggle-switch.js');
 require('./components/translate-ui.js');
 require('./components/scale-ui-controls.js');
 require('./components/star-selector.js');
+require('./components/star-detail-view.js');
 require('./components/starfield-controls.js');
 require('./components/gearvr-fly-controls.js');
 require('./components/starfield.js');
