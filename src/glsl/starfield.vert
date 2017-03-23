@@ -13,8 +13,7 @@ attribute vec4 starColor;
 void main() {
   vUv = uv;
   vStarColor = starColor;
-  gl_PointSize = max(1.0, starScale);
-  gl_PointSize = max(0.0, 15.0/distance(position, cameraPosition)) + gl_PointSize;
+  gl_PointSize = min(200.0, max(0.0, 1.0/pow(distance(position, cameraPosition), 2.0)) + max(1.0, starScale));
   vPointSize = gl_PointSize;
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }

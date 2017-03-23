@@ -5,7 +5,8 @@ var colorTable = require('../colorTable.json');
 /* globals AFRAME THREE */
 AFRAME.registerComponent('starfield', {
   schema: {
-    src: {type: 'asset'}
+    src: {type: 'asset'},
+    scale: {type: 'float', default: 1.0}
   },
 
   init: function () {
@@ -16,17 +17,19 @@ AFRAME.registerComponent('starfield', {
         uniforms: {
           "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
           "starDecal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/star-decal.png" ) },
+          "sphereMask": { type: "t", value: new THREE.TextureLoader().load( "assets/images/sphere-mask.png" ) },
           "starfieldScale": { type: "f", value: this.el.getAttribute('scale').x },
-          "uTime": { type: "f", value: 0.0 }
+          "uTime": { type: "f", value: 0.1 },
+          "uDetailDrawDistance": { type: "f", value: 15.0 }
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
-        transparent: true,
-        alphaTest: .45
+        // depthWrite: false,
+        // depthTest: false,
+        transparent: true
       });
 
     this.tick = this.tick.bind(this);
-    this.changeStarfieldScale = this.changeStarfieldScale.bind(this);
     this.starLocations = [];
     this.spatialHash = {};
     this.hashResolution = 1.0;
@@ -40,16 +43,6 @@ AFRAME.registerComponent('starfield', {
     this.el.getNearestStarId = this.getNearestStarId.bind(this);
     this.el.getNearestStarWorldLocation = this.getNearestStarWorldLocation.bind(this);
 
-    this.el.addEventListener('scaleUp', (evt) => {
-      this.changeStarfieldScale(this.el.getAttribute('scale').x * 10);
-    })
-    this.el.addEventListener('scaleDown', (evt) => {
-      this.changeStarfieldScale(this.el.getAttribute('scale').x * .1);
-    })
-  },
-
-  changeStarfieldScale: function(size) {
-    this.el.setAttribute('scale', `${size} ${size} ${size}`);
   },
 
   getHashKey: function(pos) {
@@ -59,7 +52,7 @@ AFRAME.registerComponent('starfield', {
   getStarsNearLocation: function(pos) {
 
     let list = []
-      , h = "";
+      , h = '';
 
     for(let x = pos.x - this.hashStep; x < pos.x + this.hashStep; x += this.hashStep) {
       for(let y = pos.y - this.hashStep; y < pos.y + this.hashStep; y += this.hashStep) {
@@ -219,7 +212,7 @@ AFRAME.registerComponent('starfield', {
   },
 
   update: function (oldData) {
-
+    console.log(`Starfield updating...`);
     fetch('./assets/data/stardata.bin')
       .then( (res) => {
         return res.arrayBuffer();
@@ -240,6 +233,8 @@ AFRAME.registerComponent('starfield', {
   },
   tick: function(time, delta) {
     let p = this.camera.getAttribute('position');
+    let s = this.el.getAttribute('scale').x;
+    this.starfieldMat.uniforms['starfieldScale'].value = s;
     this.starfieldMat.uniforms['cameraPosition'].value = this.el.object3D.worldToLocal(new THREE.Vector3(p.x, p.y, p.z));
     this.starfieldMat.uniforms['uTime'].value = time;
   }

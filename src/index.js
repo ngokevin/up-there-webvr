@@ -4,12 +4,16 @@ require('aframe-html-shader');
 
 require('aframe-gearvr-controls-component');
 require('aframe-auto-detect-controllers-component');
+require('aframe-redux-component');
 
 require('../vendor/OrbitControls.js');
 
 require('./utils.js');
 require('./ui2d.js');
 
+require('./reducers/worldSettings.js');
+
+require('./components/action-dispatcher.js');
 require('./components/attribute-incrementer.js');
 require('./components/blend-model.js');
 require('./components/brush.js');

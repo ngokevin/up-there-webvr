@@ -26,6 +26,7 @@
     "aframe-extras": "^3.3.4",
     "aframe-gearvr-controls-component": "^0.1.6",
     "aframe-html-shader": "^0.1.1",
+    "aframe-redux-component": "^3.0.2",
     "aframe-stats-in-vr-component": "^0.1.7",
     "aframe-text-component": "^0.4.2",
     "aframe-text-geometry-component": "^0.5.1",
