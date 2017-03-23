@@ -2,7 +2,8 @@
 AFRAME.registerComponent('blend-model', {
   schema: {
     src: {type: 'string'},
-    morphTargets: {type: 'boolean', default: false}
+    morphTargets: {type: 'boolean', default: false},
+    targetObjectName: { type: 'string', default: undefined }
   },
   init: function () {
     this.objectLoader = new THREE.ObjectLoader();
@@ -14,13 +15,23 @@ AFRAME.registerComponent('blend-model', {
     var src = this.data.src;
     if (!src || src === oldData.src) { return; }
 
+    let obj;
+
     this.objectLoader.load(this.data.src, (group) => {
       if(this.data.morphTargets) {
-        group.children[0].updateMorphTargets();
-        group.children[0].material.morphTargets = true;
+        let o = group.getObjectByName(this.data.targetObjectName, true);
+        if(o !== undefined) {
+          o.updateMorphTargets();
+          o.material.morphTargets = true;
+        }
+        this.el.setObject3D('mesh', o);
+        obj = o;
+      } else {
+        this.el.setObject3D('mesh', group);
+        obj = group;
       }
-      this.el.setObject3D('mesh', group.children[0]);
-      this.el.emit('model-loaded', {format: 'json', model: group.children[0], src: src});
+
+      this.el.emit('model-loaded', {format: 'json', model: obj, src: src});
     });
   }
 });

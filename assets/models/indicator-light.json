@@ -1,102 +1,102 @@
 {
+    "images":[],
+    "textures":[],
+    "object":{
+        "uuid":"AEAF72AC-13EE-4CE6-A027-FC09C9802039",
+        "children":[{
+            "name":"IndicatorLight",
+            "uuid":"9618A695-1D0A-4731-AF75-5E5E54E0D699",
+            "matrix":[-1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+            "visible":true,
+            "type":"Mesh",
+            "material":"5F1B5793-2BD5-479C-81F0-2DC929B1E1C9",
+            "castShadow":true,
+            "receiveShadow":true,
+            "geometry":"165B6CC2-5638-43BD-B6DE-36618AA354D3"
+        }],
+        "type":"Scene",
+        "matrix":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
+    },
+    "metadata":{
+        "type":"Object",
+        "generator":"io_three",
+        "sourceFile":"indicator-light.blend",
+        "version":4.4
+    },
     "animations":[{
         "name":"default",
         "tracks":[],
         "fps":60
     }],
-    "metadata":{
-        "sourceFile":"indicator-light.blend",
-        "type":"Object",
-        "generator":"io_three",
-        "version":4.4
-    },
-    "textures":[],
     "materials":[{
-        "uuid":"DC184096-A9BA-43FB-B8F0-251B5EF1F885",
+        "name":"Light",
+        "vertexColors":0,
+        "uuid":"B6800B6C-2B89-4C3C-A4C3-C88B216EB578",
+        "blending":"NormalBlending",
+        "color":10685701,
         "depthTest":true,
         "specular":8355711,
-        "blending":"NormalBlending",
-        "depthWrite":true,
         "shininess":50,
-        "vertexColors":0,
+        "depthWrite":true,
         "type":"MeshPhongMaterial",
-        "color":10685701,
-        "name":"Light",
         "emissive":0
     },{
-        "uuid":"C15C1DB8-EB24-4B81-9D79-B5FFEBAF4740",
+        "name":"ShipBase",
+        "vertexColors":0,
+        "uuid":"5F1B5793-2BD5-479C-81F0-2DC929B1E1C9",
+        "blending":"NormalBlending",
+        "color":10724259,
         "depthTest":true,
         "specular":8355711,
-        "blending":"NormalBlending",
-        "depthWrite":true,
         "shininess":50,
-        "vertexColors":0,
+        "depthWrite":true,
         "type":"MeshPhongMaterial",
-        "color":10724259,
-        "name":"ShipBase",
         "emissive":0
     }],
-    "object":{
-        "uuid":"4474993C-AE8C-4F3D-9DE7-D5D5949EDE90",
-        "children":[{
-            "name":"IndicatorLight",
-            "uuid":"ABFEA0B5-4603-4DF4-BE34-8BE065893D2F",
-            "matrix":[-1,0,0,0,0,0,1,0,0,1,0,0,0,0.0188827,-5.72227e-11,1],
-            "visible":true,
-            "type":"Mesh",
-            "material":"C15C1DB8-EB24-4B81-9D79-B5FFEBAF4740",
-            "castShadow":true,
-            "receiveShadow":true,
-            "geometry":"DB681B6C-BDCA-4D1D-8E74-0AE763A7C170"
-        }],
-        "type":"Scene",
-        "matrix":[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]
-    },
-    "images":[],
     "geometries":[{
-        "uuid":"DB681B6C-BDCA-4D1D-8E74-0AE763A7C170",
-        "materials":[{
-            "colorDiffuse":[0.64,0.64,0.64],
-            "DbgColor":15658734,
-            "visible":true,
-            "specularCoef":50,
-            "opacity":1,
-            "shading":"phong",
-            "depthTest":true,
-            "wireframe":false,
-            "DbgName":"ShipBase",
-            "depthWrite":true,
-            "colorEmissive":[0,0,0],
-            "transparent":false,
-            "colorSpecular":[0.5,0.5,0.5],
-            "blending":"NormalBlending",
-            "DbgIndex":0
-        },{
-            "colorDiffuse":[0.64,0.0544642,0.0229213],
-            "DbgColor":15597568,
-            "visible":true,
-            "opacity":1,
-            "shading":"basic",
-            "depthTest":true,
-            "wireframe":false,
-            "DbgName":"Light",
-            "depthWrite":true,
-            "colorEmissive":[0,0,0],
-            "transparent":false,
-            "blending":"NormalBlending",
-            "DbgIndex":1
-        }],
-        "type":"Geometry",
+        "name":"Cube.009Geometry",
         "data":{
-            "vertices":[-0.06171,-0.0301394,0.0158369,-0.06171,0.0301394,0.0158369,0.06171,-0.0301394,0.0158369,0.06171,0.0301394,0.0158369,-0.0680941,-0.0353288,0.0178291,-0.0680941,0.0353288,0.0178291,0.0680941,-0.0353288,0.0178291,0.0680941,0.0353288,0.0178291,-0.0789324,-0.0409519,-0.0308766,-0.0789324,0.0409519,-0.0308766,0.0789324,-0.0409519,-0.0308766,0.0789324,0.0409519,-0.0308766],
             "faces":[43,3,2,6,7,0,0,1,2,3,0,0,0,0,43,0,1,5,4,0,4,5,6,7,1,1,1,1,43,2,0,4,6,0,8,9,10,11,2,2,2,2,43,1,3,7,5,0,12,13,14,15,3,3,3,3,43,4,5,9,8,0,7,6,16,17,4,4,4,4,43,6,4,8,10,0,11,10,18,19,5,5,5,5,43,5,7,11,9,0,15,14,20,21,6,6,6,6,43,7,6,10,11,0,3,2,22,23,7,7,7,7,43,0,2,3,1,1,26,27,24,25,8,8,8,8],
-            "morphTargets":[{
-                "vertices":[-0.06171,-0.0301394,-0.00416309,-0.06171,0.0301394,-0.00416309,0.06171,-0.0301394,-0.00416309,0.06171,0.0301394,-0.00416309,-0.0680941,-0.0353288,-0.00217093,-0.0680941,0.0353288,-0.00217093,0.0680941,-0.0353288,-0.00217093,0.0680941,0.0353288,-0.00217093,-0.0789324,-0.0409519,-0.0508766,-0.0789324,0.0409519,-0.0508766,0.0789324,-0.0409519,-0.0508766,0.0789324,0.0409519,-0.0508766],
-                "name":"Press"
-            }],
             "uvs":[[0.811527,0.730251,0.574751,0.730251,0.554367,0.703981,0.831911,0.703981,0.574751,0.761906,0.811527,0.761906,0.831911,0.788176,0.554367,0.788176,0.568271,0.230251,0.0834775,0.23025,0.0584005,0.208415,0.593349,0.208415,0.0834789,0.261906,0.568272,0.261907,0.593349,0.283742,0.0584005,0.283742,0.853999,0.984172,0.532279,0.984172,0.0158277,0.0158277,0.635922,0.0158278,0.635922,0.476329,0.0158277,0.476329,0.532279,0.507985,0.853999,0.507985,0.500624,0.744761,0.0158278,0.744761,0.0158277,0.507985,0.500624,0.507985]],
+            "vertices":[-0.06171,-0.0301394,0.0347196,-0.06171,0.0301394,0.0347196,0.06171,-0.0301394,0.0347196,0.06171,0.0301394,0.0347196,-0.0680941,-0.0353288,0.0367117,-0.0680941,0.0353288,0.0367117,0.0680941,-0.0353288,0.0367117,0.0680941,0.0353288,0.0367117,-0.0789324,-0.0409519,-0.011994,-0.0789324,0.0409519,-0.011994,0.0789324,-0.0409519,-0.011994,0.0789324,0.0409519,-0.011994],
+            "morphTargets":[{
+                "name":"Press",
+                "vertices":[-0.06171,-0.0301394,0.0147196,-0.06171,0.0301394,0.0147196,0.06171,-0.0301394,0.0147196,0.06171,0.0301394,0.0147196,-0.0680941,-0.0353288,0.0167117,-0.0680941,0.0353288,0.0167117,0.0680941,-0.0353288,0.0167117,0.0680941,0.0353288,0.0167117,-0.0789324,-0.0409519,-0.031994,-0.0789324,0.0409519,-0.031994,0.0789324,-0.0409519,-0.031994,0.0789324,0.0409519,-0.031994]
+            }],
             "normals":[-0.297884,0,0.954602,0.297884,0,0.954602,0,0.358391,0.933572,0,-0.358391,0.933572,-0.976124,0,0.217212,0,-0.993401,0.114689,0,0.993401,0.114689,0.976124,0,0.217212,0,0,1]
         },
-        "name":"Cube.009Geometry"
+        "uuid":"165B6CC2-5638-43BD-B6DE-36618AA354D3",
+        "materials":[{
+            "DbgColor":15658734,
+            "colorDiffuse":[0.64,0.64,0.64],
+            "wireframe":false,
+            "depthTest":true,
+            "DbgIndex":0,
+            "colorSpecular":[0.5,0.5,0.5],
+            "colorEmissive":[0,0,0],
+            "visible":true,
+            "blending":"NormalBlending",
+            "DbgName":"ShipBase",
+            "transparent":false,
+            "depthWrite":true,
+            "opacity":1,
+            "shading":"phong",
+            "specularCoef":50
+        },{
+            "DbgColor":15597568,
+            "colorDiffuse":[0.64,0.0544642,0.0229213],
+            "wireframe":false,
+            "depthTest":true,
+            "DbgIndex":1,
+            "colorEmissive":[0,0,0],
+            "visible":true,
+            "blending":"NormalBlending",
+            "DbgName":"Light",
+            "transparent":false,
+            "depthWrite":true,
+            "opacity":1,
+            "shading":"basic"
+        }],
+        "type":"Geometry"
     }]
 }

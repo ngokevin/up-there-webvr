@@ -16,11 +16,13 @@ AFRAME.registerComponent('starfield', {
         uniforms: {
           "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
           "starDecal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/star-decal.png" ) },
-          "starfieldScale": { type: "f", value: this.el.getAttribute('scale').x }
+          "starfieldScale": { type: "f", value: this.el.getAttribute('scale').x },
+          "uTime": { type: "f", value: 0.0 }
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
-        transparent: true
+        transparent: true,
+        alphaTest: .5
       });
 
     this.tick = this.tick.bind(this);
@@ -28,6 +30,8 @@ AFRAME.registerComponent('starfield', {
     this.starLocations = [];
     this.spatialHash = {};
     this.hashResolution = 1.0;
+    this.hashSearchRadius = 2;
+    this.hashStep = this.hashResolution * this.hashSearchRadius;
 
     this.camera = document.getElementById('acamera');
 
@@ -47,12 +51,22 @@ AFRAME.registerComponent('starfield', {
   },
 
   getStarsNearLocation: function(pos) {
-    let h = this.getHashKey(pos);
-    if(this.spatialHash[h] !== undefined) {
-      return this.spatialHash[h];
-    } else {
-      return [];
+
+    let list = []
+      , h = "";
+
+    for(let x = pos.x - this.hashStep; x < pos.x + this.hashStep; x += this.hashStep) {
+      for(let y = pos.y - this.hashStep; y < pos.y + this.hashStep; y += this.hashStep) {
+        for(let z = pos.z - this.hashStep; z < pos.z + this.hashStep; z += this.hashStep) {
+          h = this.getHashKey(pos);
+          if(this.spatialHash[h] !== undefined) {
+            list = list.concat(this.spatialHash[h]);
+          }
+        }
+      }
     }
+    // console.log(list);
+    return list;
   },
 
   addStarToHash: function(pos, idx) {
@@ -221,5 +235,6 @@ AFRAME.registerComponent('starfield', {
   tick: function(time, delta) {
     let p = this.camera.getAttribute('position');
     this.starfieldMat.uniforms['cameraPosition'].value = this.el.object3D.worldToLocal(new THREE.Vector3(p.x, p.y, p.z));
+    this.starfieldMat.uniforms['uTime'].value = time;
   }
 });
