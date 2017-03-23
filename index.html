@@ -32,7 +32,8 @@
         <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item>
       </a-assets>
 
-      <a-entity id="control-panel" position="0 -.25 -1.25" rotation="-35 0 0">
+      <a-entity follow-entity>
+      <a-entity id="control-panel" position="0 -1 -1" rotation="-45 0 0">
 
         <!-- CONSTELLATION CONTROLS -->
         <a-entity id="constellation-controls">
@@ -43,19 +44,20 @@
           </a-entity>
         </a-entity>
 
-        <!-- SCALE CONTROLS -->
-        <a-entity id="scale-controls" position=".25 0 0">
-          <a-entity position="0 .1 0" rotation="90 0 0" blend-model="src: assets/models/push-button.json; morphTargets: true; targetObjectName: Button" button-switch="morph: Push" class="clickable">
+        <!-- SPEED CONTROLS -->
+        <a-entity id="scale-controls" position=".5 0 0">
+          <a-entity position="0 .15 0" rotation="90 0 0" blend-model="src: assets/models/push-button.json; morphTargets: true; targetObjectName: Button" button-switch="morph: Push;" event-caller="target: acamera; eventName: speedUp" class="clickable">
             <a-animation attribute="button-switch.morphValue" dur="125" begin="buttonPressed" direction="alternate" repeat=1 from=0 to=1></a-animation>
           </a-entity>
-          <a-entity position="0 -.1 0" rotation="90 0 0" blend-model="src: assets/models/push-button.json; morphTargets: true; targetObjectName: Button" button-switch="morph: Push" class="clickable">
+          <a-entity position="0 -.15 0" rotation="90 0 0" blend-model="src: assets/models/push-button.json; morphTargets: true; targetObjectName: Button" button-switch="morph: Push;" event-caller="target: acamera; eventName: speedDown" class="clickable">
             <a-animation attribute="button-switch.morphValue" dur="125" begin="buttonPressed" direction="alternate" repeat=1 from=0 to=1></a-animation>
           </a-entity>
         </a-entity>
 
       </a-entity>
+    </a-entity>
 
-      <a-entity id="starfield" rotation="-90 0 0" scale="10 10 10" starfield="src: /assets/data/stardata.json">
+      <a-entity id="starfield" rotation="-90 0 0" scale="1 1 1" starfield="src: /assets/data/stardata.json">
         <a-entity id="constellations" constellations visible="false"></a-entity>
       </a-entity>
 
@@ -70,7 +72,7 @@
       </a-entity>
 
       <a-entity id="star-selector" star-selector>
-        <a-entity json-model="src: assets/models/star-detail.json" scale="3 3 3" star-detail-view></a-entity>
+        <a-entity json-model="src: assets/models/star-detail.json" scale=".5 .5 .5" star-detail-view></a-entity>
         <a-animation attribute="scale" dur="250" begin="starSelected" from="0 0 0" to="1 1 1"></a-animation>
       </a-entity>
 

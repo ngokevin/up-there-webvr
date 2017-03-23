@@ -4,7 +4,7 @@
       state: {type: "boolean", default: false},
       morph: {type: "string", default: ""},
       morphValue: {type: "float", default: 0.0},
-      isAnimating: {type: "boolean", default: false}
+      isAnimating: {type: "boolean", default: false},
     },
     init: function() {
       // bindings
@@ -22,7 +22,6 @@
       this.morphObject = g.getObjectByName('Button', true);
     },
     handleAnimationChange: function(state) {
-      console.log(`ANimationg ${state}`)
       this.el.setAttribute('button-switch', 'isAnimating', state);
     },
     toggleState: function() {

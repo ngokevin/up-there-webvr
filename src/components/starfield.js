@@ -22,7 +22,7 @@ AFRAME.registerComponent('starfield', {
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
         transparent: true,
-        alphaTest: .5
+        alphaTest: .45
       });
 
     this.tick = this.tick.bind(this);
@@ -36,10 +36,16 @@ AFRAME.registerComponent('starfield', {
     this.camera = document.getElementById('acamera');
 
     this.getNearestStarPosition = this.getNearestStarPosition.bind(this);
-    // this.getNearestStarId = this.getNearestStarId.bind(this);
     this.getStarWorldLocation = this.getStarWorldLocation.bind(this);
     this.el.getNearestStarId = this.getNearestStarId.bind(this);
     this.el.getNearestStarWorldLocation = this.getNearestStarWorldLocation.bind(this);
+
+    this.el.addEventListener('scaleUp', (evt) => {
+      this.changeStarfieldScale(this.el.getAttribute('scale').x * 10);
+    })
+    this.el.addEventListener('scaleDown', (evt) => {
+      this.changeStarfieldScale(this.el.getAttribute('scale').x * .1);
+    })
   },
 
   changeStarfieldScale: function(size) {
