@@ -19,17 +19,20 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body style="background-color: #030404">
-    <a-scene redux="reducers: worldSettings" antialias="true">
+    <a-scene redux="reducers: worldSettings" antialias="true" pool__cubes="mixin: wirecube; size : 10">
       <a-assets>
         <img id="skymap" src="assets/images/sky.jpg" crossOrigin="anonymous">
         <img id="uinormal" src="assets/images/ui-normal.png" crossOrigin="anonymous">
         <img id="floor" src="assets/images/floor.jpg" crossOrigin="anonymous">
-        <img id="logotex" src="assets/images/logo.png" crossOrigin="anonymous"></src>
+        <img id="logotex" src="assets/images/logo.png" crossOrigin="anonymous">
         <!-- <img id="stardecal" src="assets/images/star-decal.png" crossOrigin="anonymous"></src> -->
         <a-asset-item id="logoobj" src="assets/models/logo.obj"></a-asset-item>
         <a-asset-item id="logomtl" src="assets/models/logo.mtl"></a-asset-item>
         <a-asset-item id="uiobj" src="assets/models/ui.obj"></a-asset-item>
         <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item>
+
+        <!-- mixins -->
+        <a-mixin id="wirecube" geometry="primitive: box" scale="1 1 1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
       </a-assets>
 
       <!-- STARFIELD -->
@@ -37,6 +40,8 @@
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
       </a-entity>
+
+      <!-- <a-entity mixin="wirecube"></a-entity> -->
 
       <a-entity follow-entity>
       <a-entity id="control-panel" position="0 -1 -.35" rotation="-75 0 0">

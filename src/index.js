@@ -11,8 +11,10 @@ require('../vendor/OrbitControls.js');
 require('./utils.js');
 require('./ui2d.js');
 
+// reducers
 require('./reducers/worldSettings.js');
 
+// components
 require('./components/action-dispatcher.js');
 require('./components/attribute-incrementer.js');
 require('./components/blend-model.js');
@@ -38,8 +40,7 @@ require('./components/sync-local-location.js');
 require('./components/toggle-switch.js');
 require('./components/translate-ui.js');
 require('./components/scale-ui-controls.js');
+require('./components/starfield.js');
+require('./components/starfield-controls.js');
 require('./components/star-selector.js');
 require('./components/star-detail-view.js');
-require('./components/starfield-controls.js');
-
-require('./components/starfield.js');
