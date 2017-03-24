@@ -1,7 +1,7 @@
 import {TweenLite, Power2} from "gsap";
 
 // var stardata = require('../../data/stardata.json')
-var fields = ['x','y','z','vx','vy','vz','absmag','ci']; // all float32s
+var fields = ['x','y','z','vx','vy','vz','absmag','temp','radius','id']; // all float32s
 var stardata = require('../../assets/data/stardata.json');
 var colorTable = require('../colorTable.json');
 /* globals AFRAME THREE */
@@ -22,6 +22,7 @@ AFRAME.registerComponent('starfield', {
   init: function () {
     var el = this.el;
     this.starDB = this.el.starDB = [];
+    this.starIdLookup = {};
 
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
@@ -52,16 +53,12 @@ AFRAME.registerComponent('starfield', {
     this.update = this.update.bind(this);
 
     this.getNearestStarPosition = this.getNearestStarPosition.bind(this);
+    this.buildStarfieldGeometry = this.buildStarfieldGeometry.bind(this);
     this.getStarWorldLocation = this.getStarWorldLocation.bind(this);
+
+    this.el.getStarData = this.getStarData.bind(this);
     this.el.getNearestStarId = this.getNearestStarId.bind(this);
     this.el.getNearestStarWorldLocation = this.getNearestStarWorldLocation.bind(this);
-
-//    debugger;
-
-    // this.animation = this.el.getElementsByTagName('a-animation')[0];
-    // this.el.addEventListener('animationend', (evt) => {
-    //   this.el.setAttribute('starfield', { state: STARFIELD_READY });
-    // });
 
     this.tws = {
       val: 1
@@ -101,6 +98,10 @@ AFRAME.registerComponent('starfield', {
       this.spatialHash[h] = [];
     }
     this.spatialHash[h].push(idx);
+  },
+
+  getStarData: function(id) {
+    return this.starDB[id];
   },
 
   getStarPosition: function(id) {
@@ -191,10 +192,12 @@ AFRAME.registerComponent('starfield', {
     var geo = new THREE.BufferGeometry();
     var verts = new Float32Array(starCount * 3);
     var absmag = new Float32Array(starCount);
-    var ci = new Float32Array(starCount);
+    var temp = new Float32Array(starCount);
     var color = new Float32Array(starCount * 4);
     var starScale = new Float32Array(starCount);
     var velocity = new Float32Array(starCount * 3);
+    var radius = new Float32Array(starCount);
+    var id = new Float32Array(starCount);
 
     let p = {};
     let v = {};
@@ -212,7 +215,7 @@ AFRAME.registerComponent('starfield', {
       v.z = velocity[(i * 3) + 2] = this.stardata[(i * fields.length) + 5];
 
       absmag[i] = this.stardata[(i * fields.length) + 6];
-      ci[i] = this.stardata[(i * fields.length) + 7];
+      temp[i] = this.stardata[(i * fields.length) + 7];
 
       // precalculate the color of the star based on its temperature
       let c = this.getColorForTemp(this.stardata[(i * fields.length) + 7]).multiplyScalar(1.15)
@@ -221,28 +224,36 @@ AFRAME.registerComponent('starfield', {
       color[(i * 4) + 2] = c.z;
       color[(i * 4) + 3] = c.w;
 
+      radius[i] = this.stardata[(i * fields.length) + 8];
+      id[i] = this.stardata[(i * fields.length) + 9];
+
       // precalculate the star scale offset based on its magnitude
       starScale[i] = Math.max(.5, Math.min(5.0, 7.0 * (1.0 - this.logScale(absmag[i]))));
 
       starRec.position = { x: p.x, y: p.y, z: p.z };
-      starRec.absMag = absmag[i];
+      starRec.mag = absmag[i];
       starRec.color = c;
+      starRec.radius = radius[i];
       starRec.temp = this.stardata[(i * fields.length) + 4];
+      starRec.velocity = { x: v.x, y: v.y, z: v.z };
+      starRec.id = id[i];
 
       // add the star to the local spatial hash for fast querying
       this.addStarToHash(p, i);
 
       // also add its position to the id lookup array
       this.starLocations.push(Object.assign({}, p));
-      this.starDB.push(starRec);
+      this.starDB.push(Object.assign({}, starRec));
+      this.starIdLookup[id[i]] = i;
     }
 
     geo.addAttribute( 'position', new THREE.BufferAttribute(verts, 3) );
     geo.addAttribute( 'velocity', new THREE.BufferAttribute(velocity, 3) );
     geo.addAttribute( 'absmag', new THREE.BufferAttribute(absmag, 1) );
-    geo.addAttribute( 'ci', new THREE.BufferAttribute(ci, 1) );
+    geo.addAttribute( 'temp', new THREE.BufferAttribute(temp, 1) );
     geo.addAttribute( 'starColor', new THREE.BufferAttribute(color, 4) );
     geo.addAttribute( 'starScale', new THREE.BufferAttribute(starScale, 1) );
+    geo.addAttribute( 'radius', new THREE.BufferAttribute(radius, 1) );
 
     this.geo = geo;
     window.sel = this.el;
@@ -271,6 +282,9 @@ AFRAME.registerComponent('starfield', {
             mesh.add(m);
             this.el.setObject3D('mesh', mesh);
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
+            this.el.sceneEl.systems.redux.store.dispatch({
+              type: 'STARFIELD_READY'
+            })
           });
 
         break;

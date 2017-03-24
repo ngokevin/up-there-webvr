@@ -9,6 +9,7 @@ uniform sampler2D sphereMask;
 uniform float uTime;
 uniform float uDetailDrawDistance;
 
+// star surface shader with fake sphere mapping
 vec4 starSurface() {
     // return vec4( vStarColor.rgb * vec3(snoise3(vec3(gl_PointCoord * 10., uTime * .0005)) * .5 + .5), 1.);
     // float n2 = snoise3(vec3(gl_PointCoord * 25., uTime * .00075)) + .75;
