@@ -15,7 +15,8 @@ attribute vec3 velocity;
 void main() {
   vUv = uv;
   vStarColor = starColor;
-  gl_PointSize = min(201.0, max(0.0, 1.0/pow(distance(position, cameraPosition), 2.0)) + max(1.0, starScale));
+  vec3 newPos = position + (velocity * uStarfieldTime);
+  gl_PointSize = min(200.0, max(0.0, 1.0/pow(distance(newPos, cameraPosition), 2.0)) + max(1.0, starScale));
   vPointSize = gl_PointSize;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4( position + (velocity * uStarfieldTime), 1.0 );
+  gl_Position = projectionMatrix * modelViewMatrix * vec4( newPos, 1.0 );
 }
