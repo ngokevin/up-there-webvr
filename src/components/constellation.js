@@ -37,7 +37,6 @@ var stardata = require('../../assets/data/stardata.json');
         var mesh = this.el.getOrCreateObject3D('object3D', THREE.Object3D);
         mesh.add( new THREE.LineSegments(geo, this.constellationMat) );
       }
-      // console.log(action);
     },
     buildGeometry() {
       var vertArray = [];

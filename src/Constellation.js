@@ -19,7 +19,7 @@ module.exports = function(THREE) {
       this.geo = this.buildGeometry();
       this.mesh = new THREE.LineSegments( this.geo, mat );
 
-      this.mesh.userData.hoverTarget = true;
+      // this.mesh.userData.hoverTarget = true;
       this.mesh.userData.active = false;
       this.add(this.mesh);
     }

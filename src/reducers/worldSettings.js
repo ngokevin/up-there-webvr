@@ -6,7 +6,8 @@ AFRAME.registerReducer('worldSettings', {
     SPEED_UP: 'SPEED_UP',
     TIME_DOWN: 'TIME_DOWN',
     TIME_UP: 'TIME_UP',
-    STARFIELD_READY: 'STARFIELD_READY'
+    STARFIELD_READY: 'STARFIELD_READY',
+    UPDATE_CURSOR_POSITION: 'UPDATE_CURSOR_POSITION'
   },
 
   initialState: {
@@ -14,6 +15,7 @@ AFRAME.registerReducer('worldSettings', {
     speed: 50,
     time: 0,
     starfieldReady: false,
+    cursorPosition: { x: 0, y: 0, z: 0 },
     minScale: .001,
     minSpeed: 1
   },
@@ -21,6 +23,12 @@ AFRAME.registerReducer('worldSettings', {
   reducer: function (state, action) {
     state = state || this.initialState;
     switch (action.type) {
+
+      case this.actions.UPDATE_CURSOR_POSITION: {
+        var newState = Object.assign({}, state);
+        newState.cursorPosition = Object.assign({}, newState.cursorPosition, action.position);
+        return newState;
+      }
 
       case this.actions.STARFIELD_READY: {
         var newState = Object.assign({}, state);

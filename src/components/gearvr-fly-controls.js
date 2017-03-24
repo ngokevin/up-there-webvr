@@ -40,9 +40,9 @@ AFRAME.registerComponent('gearvr-fly-controls', {
   update: function (oldData) {
     // console.log('old', oldData);
     // console.log('new', this.data);
-    if(this.data.speed !== oldData.speed) {
+    if(this.data.warpSpeed !== oldData.warpSpeed) {
       this.setWarpSpeed(this.data.speed);
-      console.log('warp', this.data.warpSpeed);
+      // console.log('warp', this.data.warpSpeed);
     }
     this.data = Object.assign({}, oldData, { warpSpeed: this.data.warpSpeed });
   },

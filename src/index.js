@@ -34,6 +34,7 @@ require('./components/look-controls-alt.js');
 require('./components/orbit-controls.js');
 require('./components/player-controls.js');
 require('./components/scale-ui.js');
+require('./components/sync-local-location.js');
 require('./components/toggle-switch.js');
 require('./components/translate-ui.js');
 require('./components/scale-ui-controls.js');

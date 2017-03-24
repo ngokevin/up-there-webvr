@@ -261,7 +261,7 @@ AFRAME.registerComponent('starfield', {
 
   update: function (oldData) {
     // console.log(this.data, oldData);
-    console.log(this.data);
+    // console.log(this.data);
     switch(this.data.state) {
 
       case STARFIELD_DIRTY:
@@ -282,6 +282,7 @@ AFRAME.registerComponent('starfield', {
             mesh.add(m);
             this.el.setObject3D('mesh', mesh);
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
+            window.store = this.el.sceneEl.systems.redux.store;
             this.el.sceneEl.systems.redux.store.dispatch({
               type: 'STARFIELD_READY'
             })
@@ -290,9 +291,9 @@ AFRAME.registerComponent('starfield', {
         break;
 
       case STARFIELD_READY:
-      console.log(this.data.scale)
+      // console.log(this.data.scale)
         if(this.data.scale !== oldData.scale) {
-          console.log('NEW SCALE');
+          // console.log('NEW SCALE');
           // this.scaleParent.position.copy(this.camera.object3D.position);
           // THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
           TweenLite.to(this.tws, 1, {val: this.data.scale, ease: Power2.easeInOut, onComplete: () => {
