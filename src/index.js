@@ -44,3 +44,4 @@ require('./components/starfield.js');
 require('./components/starfield-controls.js');
 require('./components/star-selector.js');
 require('./components/star-detail-view.js');
+require('./components/star-detail-spawner.js');

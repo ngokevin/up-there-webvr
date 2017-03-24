@@ -44,8 +44,8 @@ AFRAME.registerComponent('starfield', {
     this.tick = this.tick.bind(this);
     this.starLocations = [];
     this.spatialHash = {};
-    this.hashResolution = 1.0;
-    this.hashSearchRadius = 2;
+    this.hashResolution = 2.0;
+    this.hashSearchRadius = 1;
     this.hashStep = this.hashResolution * this.hashSearchRadius;
 
     this.camera = document.getElementById('acamera');
@@ -78,9 +78,9 @@ AFRAME.registerComponent('starfield', {
     let list = []
       , h = '';
 
-    for(let x = pos.x - this.hashStep; x < pos.x + this.hashStep; x += this.hashStep) {
-      for(let y = pos.y - this.hashStep; y < pos.y + this.hashStep; y += this.hashStep) {
-        for(let z = pos.z - this.hashStep; z < pos.z + this.hashStep; z += this.hashStep) {
+    for(let x = pos.x - this.hashStep; x <= pos.x + this.hashStep; x += this.hashStep) {
+      for(let y = pos.y - this.hashStep; y <= pos.y + this.hashStep; y += this.hashStep) {
+        for(let z = pos.z - this.hashStep; z <= pos.z + this.hashStep; z += this.hashStep) {
           h = this.getHashKey(pos);
           if(this.spatialHash[h] !== undefined) {
             list = list.concat(this.spatialHash[h]);
@@ -88,7 +88,7 @@ AFRAME.registerComponent('starfield', {
         }
       }
     }
-    // console.log(list);
+
     return list;
   },
 
@@ -117,6 +117,10 @@ AFRAME.registerComponent('starfield', {
   getStarWorldLocation: function(id) {
     let p = this.getStarPosition(id);
     return this.el.object3D.localToWorld(new THREE.Vector3(p.x, p.y, p.z));
+  },
+
+  getStarsNearWorldLocation: function(pos) {
+    return [...new Set(this.getStarsNearLocation(this.el.object3D.worldToLocal(pos)))];
   },
 
   getNearestStarPosition: function(pos) {
