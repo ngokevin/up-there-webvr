@@ -33,8 +33,9 @@
       </a-assets>
 
       <!-- STARFIELD -->
-      <a-entity id="starfield" rotation="-90 0 0" scale="10 10 10" redux-bind="worldSettings.scale: starfield.scale" starfield="src: /assets/data/stardata.json">
+      <a-entity id="starfield" rotation="-90 0 0" scale="10 10 10" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time" starfield="src: /assets/data/stardata.json">
         <a-entity id="constellations" constellations visible="false"></a-entity>
+        <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
       </a-entity>
 
       <a-entity follow-entity>
@@ -89,7 +90,7 @@
       </a-entity>
 
       <a-entity id="sky" geometry="primitive:sphere; radius:10e9;" material="color: #000; shader:flat; side:back; height:2048; width:2048; renderDepth: 1e20"></a-entity>
-      <a-entity id="acamera" camera="far: 10e10" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
+      <a-entity id="acamera" camera="far: 10e10" position="0 0 1" look-controls wasd-controls="fly: true" gearvr-fly-controls gearvr-time-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
         <a-entity id="acursor"
           position="0 0 -1"
           geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"

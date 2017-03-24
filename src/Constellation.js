@@ -11,14 +11,13 @@ module.exports = function(THREE) {
 
     constructor(name, vertexArray) {
       super();
-      //var colMat = new THREE.MeshBasicMaterial({ color: 0x33ff66, transparent: true, opacity: .0, depthTest: false });
 
       this.name = name;
       this.vertexArray = vertexArray;
 
       // create and add the constellation lines
-      var geo = this.buildGeometry();
-      this.mesh = new THREE.LineSegments( geo, mat );
+      this.geo = this.buildGeometry();
+      this.mesh = new THREE.LineSegments( this.geo, mat );
 
       this.mesh.userData.hoverTarget = true;
       this.mesh.userData.active = false;

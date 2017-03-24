@@ -1,12 +1,22 @@
+import {TweenLite, Power2} from "gsap";
+
 // var stardata = require('../../data/stardata.json')
-var fields = ['x','y','z','absmag','ci']; // all float32s
+var fields = ['x','y','z','vx','vy','vz','absmag','ci']; // all float32s
 var stardata = require('../../assets/data/stardata.json');
 var colorTable = require('../colorTable.json');
 /* globals AFRAME THREE */
+
+const STARFIELD_DIRTY = 'STARFIELD_DIRTY';
+const STARFIELD_READY = 'STARFIELD_READY';
+const STARFIELD_BUILDING = 'STARFIELD_BUILDING';
+const STARFIELD_SCALING = 'STARFIELD_SCALING';
+
 AFRAME.registerComponent('starfield', {
   schema: {
     src: {type: 'asset'},
-    scale: {type: 'float', default: 1.0}
+    scale: {type: 'float', default: 1.0},
+    state: { type: 'string', default: STARFIELD_DIRTY },
+    time: { type: 'float', default: 0.0}
   },
 
   init: function () {
@@ -20,6 +30,7 @@ AFRAME.registerComponent('starfield', {
           "sphereMask": { type: "t", value: new THREE.TextureLoader().load( "assets/images/sphere-mask.png" ) },
           "starfieldScale": { type: "f", value: this.el.getAttribute('scale').x },
           "uTime": { type: "f", value: 0.1 },
+          "uStarfieldTime": { type: "f", value: 0.0 },
           "uDetailDrawDistance": { type: "f", value: 15.0 }
         },
         vertexShader: require('../glsl/starfield.vert'),
@@ -38,10 +49,26 @@ AFRAME.registerComponent('starfield', {
 
     this.camera = document.getElementById('acamera');
 
+    this.update = this.update.bind(this);
+
     this.getNearestStarPosition = this.getNearestStarPosition.bind(this);
     this.getStarWorldLocation = this.getStarWorldLocation.bind(this);
     this.el.getNearestStarId = this.getNearestStarId.bind(this);
     this.el.getNearestStarWorldLocation = this.getNearestStarWorldLocation.bind(this);
+
+//    debugger;
+
+    // this.animation = this.el.getElementsByTagName('a-animation')[0];
+    // this.el.addEventListener('animationend', (evt) => {
+    //   this.el.setAttribute('starfield', { state: STARFIELD_READY });
+    // });
+
+    this.tws = {
+      val: 1
+    }
+
+    this.scaleParent = new THREE.Object3D();
+    this.el.sceneEl.object3D.add(this.scaleParent);
 
   },
 
@@ -137,7 +164,9 @@ AFRAME.registerComponent('starfield', {
     let tempRound = Math.floor((temp/100))*100;
     tempRound = Math.max(1000, Math.min(40000, tempRound));
     let i = Math.floor(tempRound/100) - 10;
+      // console.log(i);
     let c = colorTable[i];
+
     return new THREE.Vector4(c[1], c[2], c[3], 1.0);
   },
 
@@ -165,8 +194,10 @@ AFRAME.registerComponent('starfield', {
     var ci = new Float32Array(starCount);
     var color = new Float32Array(starCount * 4);
     var starScale = new Float32Array(starCount);
+    var velocity = new Float32Array(starCount * 3);
 
     let p = {};
+    let v = {};
 
     // create buffers for each of the data fields packed into our bin file
     for(var i = 0; i < starCount; i++) {
@@ -175,11 +206,16 @@ AFRAME.registerComponent('starfield', {
       p.x = verts[(i * 3) + 0] = this.stardata[(i * fields.length) + 0];
       p.y = verts[(i * 3) + 1] = this.stardata[(i * fields.length) + 1];
       p.z = verts[(i * 3) + 2] = this.stardata[(i * fields.length) + 2];
-      absmag[i] = this.stardata[(i * fields.length) + 3];
-      ci[i] = this.stardata[(i * fields.length) + 4];
+
+      v.x = velocity[(i * 3) + 0] = this.stardata[(i * fields.length) + 3];
+      v.y = velocity[(i * 3) + 1] = this.stardata[(i * fields.length) + 4];
+      v.z = velocity[(i * 3) + 2] = this.stardata[(i * fields.length) + 5];
+
+      absmag[i] = this.stardata[(i * fields.length) + 6];
+      ci[i] = this.stardata[(i * fields.length) + 7];
 
       // precalculate the color of the star based on its temperature
-      let c = this.getColorForTemp(this.stardata[(i * fields.length) + 4]).multiplyScalar(1.15)
+      let c = this.getColorForTemp(this.stardata[(i * fields.length) + 7]).multiplyScalar(1.15)
       color[(i * 4) + 0] = c.x;
       color[(i * 4) + 1] = c.y;
       color[(i * 4) + 2] = c.z;
@@ -202,6 +238,7 @@ AFRAME.registerComponent('starfield', {
     }
 
     geo.addAttribute( 'position', new THREE.BufferAttribute(verts, 3) );
+    geo.addAttribute( 'velocity', new THREE.BufferAttribute(velocity, 3) );
     geo.addAttribute( 'absmag', new THREE.BufferAttribute(absmag, 1) );
     geo.addAttribute( 'ci', new THREE.BufferAttribute(ci, 1) );
     geo.addAttribute( 'starColor', new THREE.BufferAttribute(color, 4) );
@@ -212,30 +249,65 @@ AFRAME.registerComponent('starfield', {
   },
 
   update: function (oldData) {
-    console.log(`Starfield updating...`);
-    fetch('./assets/data/stardata.bin')
-      .then( (res) => {
-        return res.arrayBuffer();
-      })
-      .then( b => {
-        this.stardataraw = b;
-        this.stardata = new Float32Array(b);
-        this.buildStarfieldGeometry();
+    // console.log(this.data, oldData);
+    console.log(this.data);
+    switch(this.data.state) {
 
-        var mesh = new THREE.Object3D();
-        console.log('building mesh');
+      case STARFIELD_DIRTY:
+        this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
+        fetch('./assets/data/stardata.bin')
+          .then( (res) => {
+            return res.arrayBuffer();
+          })
+          .then( b => {
+            this.stardataraw = b;
+            this.stardata = new Float32Array(b);
+            this.buildStarfieldGeometry();
 
-        let m = new THREE.Points(this.geo, this.starfieldMat);
-        mesh.add(m);
-        this.el.setObject3D('mesh', mesh);
-      });
+            var mesh = new THREE.Object3D();
+            console.log('building mesh');
 
+            let m = new THREE.Points(this.geo, this.starfieldMat);
+            mesh.add(m);
+            this.el.setObject3D('mesh', mesh);
+            this.el.setAttribute('starfield', { state: STARFIELD_READY });
+          });
+
+        break;
+
+      case STARFIELD_READY:
+      console.log(this.data.scale)
+        if(this.data.scale !== oldData.scale) {
+          console.log('NEW SCALE');
+          // this.scaleParent.position.copy(this.camera.object3D.position);
+          // THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
+          TweenLite.to(this.tws, 1, {val: this.data.scale, ease: Power2.easeInOut, onComplete: () => {
+            // THREE.SceneUtils.detach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
+            this.el.setAttribute('starfield', { state: STARFIELD_READY });
+          }});
+          this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
+        }
+        break;
+
+      case STARFIELD_BUILDING:
+
+        break;
+
+      case STARFIELD_SCALING:
+
+        break;
+    }
   },
   tick: function(time, delta) {
     let p = this.camera.getAttribute('position');
     let s = this.el.getAttribute('scale').x;
-    this.starfieldMat.uniforms['starfieldScale'].value = s;
+    if(this.data.state === STARFIELD_SCALING) {
+      // this.scaleParent.scale.set(this.tws.val, this.tws.val, this.tws.val);
+      this.el.setAttribute('scale', `${this.tws.val} ${this.tws.val} ${this.tws.val}`)
+      this.starfieldMat.uniforms['starfieldScale'].value = this.tws.val;
+    }
     this.starfieldMat.uniforms['cameraPosition'].value = this.el.object3D.worldToLocal(new THREE.Vector3(p.x, p.y, p.z));
     this.starfieldMat.uniforms['uTime'].value = time;
+    this.starfieldMat.uniforms['uStarfieldTime'].value = this.data.time;
   }
 });

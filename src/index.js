@@ -23,6 +23,8 @@ require('./components/cursor-listener.js');
 require('./components/entity-visibility-toggle.js');
 require('./components/event-caller.js');
 require('./components/follow-entity.js');
+require('./components/gearvr-fly-controls.js');
+require('./components/gearvr-time-controls.js');
 require('./components/if-no-vr-headset.js');
 require('./components/indicator-light.js');
 require('./components/json-model.js');
@@ -38,5 +40,5 @@ require('./components/scale-ui-controls.js');
 require('./components/star-selector.js');
 require('./components/star-detail-view.js');
 require('./components/starfield-controls.js');
-require('./components/gearvr-fly-controls.js');
+
 require('./components/starfield.js');

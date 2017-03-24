@@ -3,12 +3,15 @@ AFRAME.registerReducer('worldSettings', {
     SCALE_DOWN: 'SCALE_DOWN',
     SCALE_UP: 'SCALE_UP',
     SPEED_DOWN: 'SPEED_DOWN',
-    SPEED_UP: 'SPEED_UP'
+    SPEED_UP: 'SPEED_UP',
+    TIME_DOWN: 'TIME_DOWN',
+    TIME_UP: 'TIME_UP'
   },
 
   initialState: {
-    scale: '10 10 10',
+    scale: 1,
     speed: 1,
+    time: 0,
     minScale: .001,
     minSpeed: 1
   },
@@ -17,18 +20,25 @@ AFRAME.registerReducer('worldSettings', {
     state = state || this.initialState;
     switch (action.type) {
 
+      case this.actions.TIME_UP: {
+        var newState = Object.assign({}, state);
+        newState.time += 1000;
+        return newState;
+      }
+      case this.actions.TIME_DOWN: {
+        var newState = Object.assign({}, state);
+        newState.time -= 1000;
+        return newState;
+      }
+
       case this.actions.SCALE_UP: {
         var newState = Object.assign({}, state);
-        let s = newState.scale.split(' ')[0]
-        let newScale = s * 10;
-        newState.scale = `${newScale} ${newScale} ${newScale}`;
+        newState.scale *= 10;
         return newState;
       }
       case this.actions.SCALE_DOWN: {
         var newState = Object.assign({}, state);
-        let s = newState.scale.split(' ')[0];
-        let newScale = Math.max(newState.minScale, s * .1);
-        newState.scale = `${newScale} ${newScale} ${newScale}`;
+        newState.scale = Math.max(newState.minScale, newState.scale * .1);
         return newState;
       }
 

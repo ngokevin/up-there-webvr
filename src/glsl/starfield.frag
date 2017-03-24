@@ -39,17 +39,18 @@ vec4 starSurface() {
 void main() {
   if(vPointSize <= 2.5) {
     gl_FragColor = vStarColor;
-  } else if(vPointSize < uDetailDrawDistance) {
-    gl_FragColor = texture2D(sphereMask, gl_PointCoord) * vStarColor;
-    if (gl_FragColor.w < 0.5) discard;
   } else {
     gl_FragColor = texture2D(sphereMask, gl_PointCoord) * vStarColor;
-    if (gl_FragColor.w < 0.5) {
-      discard;
-    } else {
-      gl_FragColor = mix(gl_FragColor, starSurface() + vStarColor, 1.0 - min(1.0, uDetailDrawDistance / vPointSize));
-    }
-
+    if (gl_FragColor.w < 0.5) discard;
   }
+  // } else {
+  //   gl_FragColor = texture2D(sphereMask, gl_PointCoord) * vStarColor;
+  //   if (gl_FragColor.w < 0.5) {
+  //     discard;
+  //   } else {
+  //     gl_FragColor = mix(gl_FragColor, starSurface() + vStarColor, 1.0 - min(1.0, uDetailDrawDistance / vPointSize));
+  //   }
+  //
+  // }
 
 }

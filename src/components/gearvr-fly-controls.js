@@ -30,9 +30,11 @@ AFRAME.registerComponent('gearvr-fly-controls', {
   },
 
   handleControlChange(state, evt) {
-    this.data.active = state !== 0;
-    this.data.direction = -state;
-    this.cursor.setAttribute('material', 'color', state ? "#ff6600" : "#ffffff" );
+    if(this.data.active !== (state !== 0)) {
+      this.data.active = state !== 0;
+      this.data.direction = -state;
+      this.cursor.setAttribute('material', 'color', state ? "#ff6600" : "#ffffff" );
+    }
   },
 
   update: function (oldData) {
