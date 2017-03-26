@@ -1,3 +1,5 @@
+var debounce = require('debounce');
+
 /* globals AFRAME THREE */
 AFRAME.registerComponent('gearvr-fly-controls', {
   schema: {
@@ -8,9 +10,43 @@ AFRAME.registerComponent('gearvr-fly-controls', {
   },
 
   init: function () {
-    this.handleControlChange = this.handleControlChange.bind(this);
     this.cursor = document.getElementById('acursor');
     this.hand = document.getElementById('right-hand');
+    this.handleClick = this.handleClick.bind(this);
+    this.dbClick = debounce(this.handleClick, 200, true);
+    this.gearVRInitialized = false;
+
+    if(AFRAME.utils.device.isMobile()) {
+      this.el.sceneEl.addEventListener('enter-vr', () => {
+        navigator.getVRDisplays()
+          .then( e => {
+            // if we are on a mobile device that is not a gearVR, enable fusing
+            if(e.length > 0 && e[0].displayName.indexOf("GearVR") == -1) {
+              this.cursor.setAttribute('cursor', 'fuse', 'true');
+            } else {
+              this.cursor.setAttribute('cursor', 'fuse', 'false');
+              if(!this.gearVRInitialized) {
+                this.gearVRInitialized = true;
+                this.hand.addEventListener('buttonchanged', (evt) => {
+                  if(evt.detail.state.pressed == true) {
+                    this.dbClick();
+                  }
+                })
+              }
+
+            }
+          })
+          .catch( e => {
+            console.log("VR DETECTION ERROR")
+            console.log(e)
+          })
+
+      })
+
+    }
+
+
+    this.handleControlChange = this.handleControlChange.bind(this);
 
     this.hand.addEventListener('axismove', (evt) => {
       this.handleControlChange(evt.detail.axis[0], evt);
@@ -36,7 +72,10 @@ AFRAME.registerComponent('gearvr-fly-controls', {
       this.cursor.setAttribute('material', 'color', state ? "#ff6600" : "#ffffff" );
     }
   },
-
+  handleClick: function() {
+    this.cursor.components.cursor.onMouseDown();
+    this.cursor.components.cursor.onMouseUp();
+  },
   update: function (oldData) {
     // console.log('old', oldData);
     // console.log('new', this.data);
