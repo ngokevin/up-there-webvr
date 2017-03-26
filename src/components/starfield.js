@@ -1,4 +1,4 @@
-import {TweenLite, Power2} from "gsap";
+// import {TweenLite, Power2} from "gsap";
 
 // var stardata = require('../../data/stardata.json')
 var fields = ['x','y','z','vx','vy','vz','absmag','temp','radius','id']; // all float32s
@@ -300,11 +300,12 @@ AFRAME.registerComponent('starfield', {
           // console.log('NEW SCALE');
           // this.scaleParent.position.copy(this.camera.object3D.position);
           // THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
-          TweenLite.to(this.tws, 1, {val: this.data.scale, ease: Power2.easeInOut, onComplete: () => {
+          // TweenLite.to(this.tws, 1, {val: this.data.scale, ease: Power2.easeInOut, onComplete: () => {
+          this.tws = this.data.scale;
             // THREE.SceneUtils.detach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
-          }});
-          this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
+          // }});
+          // this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
         }
         break;
 

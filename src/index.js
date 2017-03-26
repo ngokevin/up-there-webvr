@@ -1,5 +1,5 @@
 require('aframe');
-require('aframe-extras');
+// require('aframe-extras');
 require('aframe-html-shader');
 
 require('aframe-gearvr-controls-component');
@@ -9,7 +9,7 @@ require('aframe-lod');
 require('aframe-event-set-component');
 require('aframe-animation-component');
 
-require('../vendor/OrbitControls.js');
+// require('../vendor/OrbitControls.js');
 
 require('./utils.js');
 // require('./ui2d.js');
