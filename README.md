@@ -1,10 +1,16 @@
-# A-Painter
+# Up There - WebVR edition
 
-Paint in VR in your browser. [Read more!](https://blog.mozvr.com/a-painter/)
+Up There is a three-dimensional VR planetarium, which contains true 3D positions of over 100,000k nearby stars. You can fly through them at warp speeds, and each star rendered with proportional scaling and coloring based on its magnitude (apparent) and surface temperature.
 
-[![A-Painter logo](https://blog.mozvr.com/content/images/2016/09/logo_a-painter_high-nobrands.jpg)](https://blog.mozvr.com/a-painter/)
 
-[VIEW GALLERY](https://github.com/aframevr/a-painter/issues/99)
+
+# What's being constructed now?
+
+I'm working on a star-detail view that will be loaded conditionally based on distance.
+
+# Where's the code from?
+
+I forked the wonderful [A-Painter](https://blog.mozvr.com/a-painter/) from Mozilla when I started porting this project over from Unreal Engine 4. It is wonderful boilerplate, and is a good structure to start with. They get a lot done with not a lot of code.
 
 ## Usage
 

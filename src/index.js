@@ -5,11 +5,14 @@ require('aframe-html-shader');
 require('aframe-gearvr-controls-component');
 require('aframe-auto-detect-controllers-component');
 require('aframe-redux-component');
+require('aframe-lod');
+require('aframe-event-set-component');
+require('aframe-animation-component');
 
 require('../vendor/OrbitControls.js');
 
 require('./utils.js');
-require('./ui2d.js');
+// require('./ui2d.js');
 
 // reducers
 require('./reducers/worldSettings.js');
@@ -18,7 +21,7 @@ require('./reducers/worldSettings.js');
 require('./components/action-dispatcher.js');
 require('./components/attribute-incrementer.js');
 require('./components/blend-model.js');
-require('./components/brush.js');
+// require('./components/brush.js');
 require('./components/button-switch.js');
 require('./components/constellation.js');
 require('./components/cursor-listener.js');
