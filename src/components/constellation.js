@@ -53,7 +53,7 @@ var stardata = require('../../assets/data/stardata.json');
             vertArray.push([d.position.x, d.position.y, d.position.z])
             velArray.push([d.velocity.x, d.velocity.y, d.velocity.z])
           } else {
-            debugger;
+            // debugger;
           }
 
         })

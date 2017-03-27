@@ -11,7 +11,7 @@ AFRAME.registerReducer('worldSettings', {
   },
 
   initialState: {
-    scale: 1,
+    scale: 100,
     speed: 50,
     time: 0,
     starfieldReady: false,

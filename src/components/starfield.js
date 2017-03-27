@@ -24,6 +24,7 @@ AFRAME.registerComponent('starfield', {
     this.starDB = this.el.starDB = [];
     this.starIdLookup = {};
 
+
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
           "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
@@ -187,12 +188,61 @@ AFRAME.registerComponent('starfield', {
     return scaleLog(10, value, -1.77, 12);
   },
 
+  processUpdateBatch() {
+    if(!this.updateQueue.length) return false;
+
+    var c = 0
+      , q;
+
+    var sortedBatches = this.updateQueue.sort( (q) => {
+      return -q.id;
+    })
+
+    var lastId = sortedBatches[0].id;
+    var o = sortedBatches[0].offset;
+    while((q = sortedBatches.shift()) !== undefined) {
+      if(q.id - lastId > 1) {
+        break;
+      }
+      c += q.count;
+      this.updateGeometry(q.buf, q.offset, q.count);
+    }
+    // console.log(`Updated ${c} stars`)
+
+    if(c > 0) {
+      this.posAttribute.updateRange.count = c/4;
+      this.posAttribute.updateRange.offset = o/4;
+      // console.log(this.posAttribute.updateRange);
+      this.posAttribute.needsUpdate = true;
+    }
+
+  },
+
+  updateGeometry(buf, offset, count) {
+      if(this.offsetsProcessed.indexOf(offset) === -1) {
+        if(buf.length !== count) {
+          console.log("Invalid packet, rejecting");
+        }
+        this.offsetsProcessed.push(offset);
+        var _buf = buf;
+        var _offset = offset / 4;
+        var _count = count / 4;
+
+        let ar = new Float32Array(buf.buffer);
+
+        this.posAttribute.array.set(ar, _offset);
+
+        this.starCount += count/12;
+        this.bufferOffset += (buf.length);
+      }
+
+  },
+
   buildStarfieldGeometry: function() {
 
     console.log(`Processing ${this.stardataraw.byteLength} bytes of stardata...`);
 
     var starCount = this.stardata.length / fields.length;
-    console.log(starCount);
     var geo = new THREE.BufferGeometry();
     var verts = new Float32Array(starCount * 3);
     var absmag = new Float32Array(starCount);
@@ -214,9 +264,16 @@ AFRAME.registerComponent('starfield', {
       p.y = verts[(i * 3) + 1] = this.stardata[(i * fields.length) + 1];
       p.z = verts[(i * 3) + 2] = this.stardata[(i * fields.length) + 2];
 
+      if(i === 0) {
+        p.x = verts[(i * 3) + 0] = 0.0;
+        p.y = verts[(i * 3) + 1] = 0.0;
+        p.z = verts[(i * 3) + 2] = 0.0;
+      }
+
       v.x = velocity[(i * 3) + 0] = this.stardata[(i * fields.length) + 3];
       v.y = velocity[(i * 3) + 1] = this.stardata[(i * fields.length) + 4];
       v.z = velocity[(i * 3) + 2] = this.stardata[(i * fields.length) + 5];
+
 
       absmag[i] = this.stardata[(i * fields.length) + 6];
       temp[i] = this.stardata[(i * fields.length) + 7];
@@ -291,7 +348,6 @@ AFRAME.registerComponent('starfield', {
               type: 'STARFIELD_READY'
             })
           });
-
         break;
 
       case STARFIELD_READY:
@@ -301,9 +357,9 @@ AFRAME.registerComponent('starfield', {
           // this.scaleParent.position.copy(this.camera.object3D.position);
           // THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
           // TweenLite.to(this.tws, 1, {val: this.data.scale, ease: Power2.easeInOut, onComplete: () => {
-          this.tws = this.data.scale;
+          this.tws.val = this.data.scale;
             // THREE.SceneUtils.detach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
-            this.el.setAttribute('starfield', { state: STARFIELD_READY });
+            this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
           // }});
           // this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
         }
@@ -325,7 +381,9 @@ AFRAME.registerComponent('starfield', {
       // this.scaleParent.scale.set(this.tws.val, this.tws.val, this.tws.val);
       this.el.setAttribute('scale', `${this.tws.val} ${this.tws.val} ${this.tws.val}`)
       this.starfieldMat.uniforms['starfieldScale'].value = this.tws.val;
+      this.el.setAttribute('starfield', { state: STARFIELD_READY });
     }
+    this.starfieldMat.uniforms['starfieldScale'].value = this.tws.val;
     this.starfieldMat.uniforms['cameraPosition'].value = this.el.object3D.worldToLocal(new THREE.Vector3(p.x, p.y, p.z));
     this.starfieldMat.uniforms['uTime'].value = time;
     this.starfieldMat.uniforms['uStarfieldTime'].value = this.data.time;

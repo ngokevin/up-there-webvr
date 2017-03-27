@@ -12,23 +12,28 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene redux="reducers: worldSettings" antialias="true" pool__cube="mixin: wirecube; size: 10">
+    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 10">
       <a-assets>
         <!-- assets -->
         <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item>
 
         <!-- mixins -->
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
+        <a-mixin id="star" sol-scale geometry="primitive: sphere; segmentsWidth: 12; segmentsHeight: 24" material="shader: flat; color: #ffffff; side: double"></a-mixin>
+        <a-mixin id="blue" material="color: #77ccff"></a-mixin>
       </a-assets>
 
       <!-- STARFIELD -->
-      <a-entity id="starfield" rotation="-90 0 0" scale="10 10 10" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time" starfield>
+      <a-entity id="starfield" rotation="-90 0 0" scale="1 1 1" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time" starfield>
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
-        <!-- <a-entity id="star-detail-spawner" star-detail-spawner></a-entity> -->
+        <!-- <a-entity id="star-detail-spawner" star-detail-spawner position="0 0 1"></a-entity> -->
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
+        <a-entity mixin="star"></a-entity>
       </a-entity>
 
       <!-- <a-entity mixin="wirecube"></a-entity> -->
+
+
 
       <!-- parent object for everything following the user around -->
       <a-entity follow-entity>
@@ -37,7 +42,14 @@
 
           <!-- CONSTELLATION CONTROLS -->
           <a-entity id="constellation-controls">
-            <a-entity position="0 .35 0" text="align: center; value: constellations; width: 2"></a-entity>
+            <a-entity id="scale-legend" position="0 .5 .1">
+              <a-entity text="value: scale; align: center; width: 2" position="0 .1 0" rotation="45 0 0" mixin="blue" formattedstorevalue='storePath: worldSettings.scale; formattedStringFunc: (s) => { return `${((1/parseFloat(s)) * 3.26156).toFixed(3)} lightyears` }' redux-bind="worldSettings.scale: formattedstorevalue.storeTemp"></a-entity>
+              <a-entity mixin="blue" id="scale-legend" geometry="primitive: box; width: 1; height: .01; depth: .01" material="shader: flat;" ></a-entity>
+              <a-entity mixin="blue" id="scale-legend" position="-.5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
+              <a-entity mixin="blue" id="scale-legend" geometry="primitive: box; width: 1; height: .01; depth: .01" material="shader: flat;" ></a-entity>
+              <a-entity mixin="blue" id="scale-legend" position=".5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
+            </a-entity>
+            <a-entity position="0 .35 0" text="align: center; value: constellations; width: 1"></a-entity>
             <a-entity position="0 .15 0" rotation="90 0 0" blend-model="src: assets/models/indicator-light.json;" indicator-light="target: constellationToggle">
             </a-entity>
             <a-entity rotation="90 0 0" id="constellationToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" class="clickable">
@@ -58,9 +70,8 @@
           </a-entity>
 
           <!-- SCALE CONTROLS -->
-          <a-entity id="speed-controls" position="-.5 0 0">
-
-            <a-entity position="0 .35 0" text="align: center; value: scale; width: 2.5" redux-bind="worldSettings.scale: text.value"></a-entity>
+          <a-entity id="scale-controls" position="-.5 0 0">
+            <a-entity position="0 .35 0" text="align: center; value: scale; width: 2.5" formattedstorevalue='storePath: worldSettings.scale; formattedStringFunc: (s) => { return Math.round(parseFloat(s).toExponential()) }' redux-bind="worldSettings.scale: formattedstorevalue.storeTemp"></a-entity>
             <a-entity position="0 .15 0" rotation="90 0 0" blend-model="src: assets/models/push-button.json; morphTargets: true; targetObjectName: Button" button-switch="morph: Push;" action-dispatcher="type: SCALE_UP" class="clickable">
               <a-animation attribute="button-switch.morphValue" dur="125" begin="buttonPressed" direction="alternate" repeat=1 from=0 to=1></a-animation>
             </a-entity>
@@ -87,7 +98,7 @@
       </a-entity>
 
     <!-- Camera / Cursor -->
-      <a-entity id="acamera" camera="far: 10e10" position="0 0 1" look-controls wasd-controls="fly: true" gearvr-fly-controls gearvr-time-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
+      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 4.848e-6" look-controls wasd-controls="fly: true" gearvr-fly-controls gearvr-time-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
         <!-- <a-entity id="acursor"
           position="0 0 -1"
           geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
