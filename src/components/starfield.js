@@ -10,6 +10,7 @@ const STARFIELD_DIRTY = 'STARFIELD_DIRTY';
 const STARFIELD_READY = 'STARFIELD_READY';
 const STARFIELD_BUILDING = 'STARFIELD_BUILDING';
 const STARFIELD_SCALING = 'STARFIELD_SCALING';
+const STARFIELD_DETAIL_VIEW = 'STARFIELD_DETAIL_VIEW';
 
 var memoize = function(fn) {
     var cache = {}
@@ -29,7 +30,8 @@ AFRAME.registerComponent('starfield', {
     src: {type: 'asset'},
     scale: {type: 'float', default: 1.0},
     state: { type: 'string', default: STARFIELD_DIRTY },
-    time: { type: 'float', default: 0.0}
+    time: { type: 'float', default: 0.0},
+    selectedStar: { type: 'int', default: -1}
   },
 
   init: function () {
@@ -37,6 +39,8 @@ AFRAME.registerComponent('starfield', {
     this.starDB = this.el.starDB = [];
     this.starIdLookup = {};
 
+    this.detailView = new THREE.Object3D();
+    this.el.sceneEl.object3D.add(this.detailView);
 
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
@@ -50,8 +54,6 @@ AFRAME.registerComponent('starfield', {
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
-        // depthWrite: false,
-        // depthTest: false,
         transparent: true
       });
 
@@ -85,6 +87,7 @@ AFRAME.registerComponent('starfield', {
     }
 
     this.scaleParent = new THREE.Object3D();
+    this.scaleParent.name = "ScaleParent";
     this.el.sceneEl.object3D.add(this.scaleParent);
 
   },
@@ -107,13 +110,9 @@ AFRAME.registerComponent('starfield', {
           if(hashKeys.indexOf(p) === -1) {
             hashKeys.push(p);
             if(this.spatialHash[h] !== undefined) {
-              // console.log(`Hash key ${h}: ${this.spatialHash[h].length} items`)
               list = list.concat(this.spatialHash[h]);
-              // console.log(list);
-              // console.log(list.length)
             }
           } else {
-            // console.log(`dupe! ${h}`)
           }
 
         }
@@ -355,7 +354,7 @@ AFRAME.registerComponent('starfield', {
       starRec.mag = absmag[i];
       starRec.color = c;
       starRec.radius = radius[i];
-      starRec.temp = this.stardata[(i * fields.length) + 4];
+      starRec.temp = temp[i];
       starRec.velocity = { x: v.x, y: v.y, z: v.z };
       starRec.id = id[i];
 
@@ -380,9 +379,25 @@ AFRAME.registerComponent('starfield', {
     window.sel = this.el;
   },
 
+  setScaleParentToStar: function(id) {
+    let s = this.getStarWorldLocation(id);
+    this.scaleParent.position.set(s.x, s.y, s.z);
+    this.scaleParent.updateMatrixWorld();
+    console.log(this.scaleParent);
+    this.scaleParent.scale.set(1, 1, 1);
+    // debugger;
+    THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
+    var scale = { v: 1 };
+    this.tween = new AFRAME.TWEEN.Tween(scale)
+                  .to({ v: 100 }, 1000)
+                  .onUpdate( () => {
+                    this.scaleParent.scale.set(scale.v, scale.v, scale.v);
+
+                  })
+                  .start();
+  },
+
   update: function (oldData) {
-    // console.log(this.data, oldData);
-    // console.log(this.data);
     switch(this.data.state) {
 
       case STARFIELD_DIRTY:
@@ -411,38 +426,35 @@ AFRAME.registerComponent('starfield', {
         break;
 
       case STARFIELD_READY:
-      // console.log(this.data.scale)
-        if(this.data.scale !== oldData.scale) {
-          // console.log('NEW SCALE');
-          // this.scaleParent.position.copy(this.camera.object3D.position);
-          // THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
-          // TweenLite.to(this.tws, 1, {val: this.data.scale, ease: Power2.easeInOut, onComplete: () => {
-          this.tws.val = this.data.scale;
-            // THREE.SceneUtils.detach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
-            this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
-          // }});
-          // this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
+        // if(this.data.scale !== oldData.scale) {
+        //   this.tws.val = this.data.scale;
+        //   this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
+        // }
+        if(this.data.selectedStar !== oldData.selectedStar && this.data.selectedStar >= 0) {
+          console.log(`star changed from ${oldData.selectedStar} to ${this.data.selectedStar}`);
+          this.setScaleParentToStar(this.data.selectedStar);
         }
         break;
 
       case STARFIELD_BUILDING:
-
         break;
 
       case STARFIELD_SCALING:
+        break;
 
+      case STARFIELD_DETAIL_VIEW:
         break;
     }
   },
   tick: function(time, delta) {
     let p = this.camera.getAttribute('position');
     let s = this.el.getAttribute('scale').x;
-    if(this.data.state === STARFIELD_SCALING) {
-      // this.scaleParent.scale.set(this.tws.val, this.tws.val, this.tws.val);
-      this.el.setAttribute('scale', `${this.tws.val} ${this.tws.val} ${this.tws.val}`)
-      this.starfieldMat.uniforms['starfieldScale'].value = this.tws.val;
-      this.el.setAttribute('starfield', { state: STARFIELD_READY });
-    }
+    // if(this.data.state === STARFIELD_SCALING) {
+    //   // this.scaleParent.scale.set(this.tws.val, this.tws.val, this.tws.val);
+    //   this.el.setAttribute('scale', `${this.tws.val} ${this.tws.val} ${this.tws.val}`)
+    //   this.starfieldMat.uniforms['starfieldScale'].value = this.tws.val;
+    //   this.el.setAttribute('starfield', { state: STARFIELD_READY });
+    // }
     this.starfieldMat.uniforms['starfieldScale'].value = this.tws.val;
     this.starfieldMat.uniforms['cameraPosition'].value = this.el.object3D.worldToLocal(new THREE.Vector3(p.x, p.y, p.z));
     this.starfieldMat.uniforms['uTime'].value = time;
