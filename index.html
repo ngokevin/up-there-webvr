@@ -12,21 +12,21 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 10">
+    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 40">
       <a-assets>
         <!-- assets -->
         <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item>
 
         <!-- mixins -->
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
-        <a-mixin id="star" sol-scale geometry="primitive: sphere; segmentsWidth: 12; segmentsHeight: 24" material="shader: flat; color: #ffffff; side: double"></a-mixin>
+        <a-mixin id="star" geometry="primitive: box;" material="shader: flat; color: #ffffff; side: double; wireframe: true" scale=".05 .05 .05"></a-mixin>
         <a-mixin id="blue" material="color: #77ccff"></a-mixin>
       </a-assets>
 
       <!-- STARFIELD -->
       <a-entity id="starfield" rotation="-90 0 0" scale="1 1 1" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time" starfield>
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
-        <!-- <a-entity id="star-detail-spawner" star-detail-spawner position="0 0 1"></a-entity> -->
+        <a-entity id="star-detail-spawner" star-detail-spawner></a-entity>
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
         <a-entity mixin="star"></a-entity>
       </a-entity>
