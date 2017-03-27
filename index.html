@@ -19,7 +19,7 @@
 
         <!-- mixins -->
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
-        <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05"></a-mixin>
+        <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05" rotation="90 0 0" class="star"></a-mixin>
         <a-mixin id="blue" material="color: #77ccff"></a-mixin>
       </a-assets>
 
@@ -28,7 +28,6 @@
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner></a-entity>
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
-        <a-entity mixin="star"></a-entity>
       </a-entity>
 
       <!-- <a-entity mixin="wirecube"></a-entity> -->
@@ -113,11 +112,13 @@
             event-set__1="_event: mouseenter; material.color: springgreen"
             event-set__2="_event: mouseleave; material.color: white"
             material="color: #ffffff; shader: flat;transparent: true; opacity: .5"
-            raycaster="objects: .clickable">
+            raycaster="objects: .clickable"
+            star-selector>
+              <a-entity text="value: cursor; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverStar: text.value"></a-entity>
               <a-animation attribute="geometry.thetaLength" dur="1000" end="mouseleave" begin="fusing" from=360 to=0 fill="backwards"></a-animation>
               <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseleave" from=360 to=360></a-animation>
               <a-animation attribute="geometry.thetaLength" dur="1" begin="click" from=360 to=360></a-animation>
-              <a-animation attribute="scale" dur="125" begin="click" direction="alternate" repeat=1 from="1 1 1" to=".5 .5 .5"></a-animation>
+              <a-animation attribute="material.opacity" dur="125" begin="click" from="1" to=".5"></a-animation>
               <!-- <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseLeave" from=360 to=360></a-animation> -->
           </a-entity>
         </a-entity>

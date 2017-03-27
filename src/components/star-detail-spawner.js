@@ -63,6 +63,7 @@
             if(this.active.indexOf(id) === -1) {
               let c = this.pool.requestEntity();
               c.classList.add('clickable');
+              c.classList.add('hoverable');
               let p = this.starfield.components.starfield.getStarPosition(id);
               c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
               c.setAttribute('id', `star_${id}`);

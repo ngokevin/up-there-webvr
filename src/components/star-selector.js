@@ -1,5 +1,8 @@
 var starnames = require('../../assets/data/starnames.json');
 
+const SELECT_STAR = 'SELECT_STAR'
+    , HOVER_STAR = 'HOVER_STAR';
+
 /* globals AFRAME THREE */
 AFRAME.registerComponent('star-selector', {
   schema: {
@@ -7,31 +10,42 @@ AFRAME.registerComponent('star-selector', {
   },
 
   init: function () {
-    var starfield = this.starfield = document.getElementById('starfield');
-    var cursor = this.cursor = document.getElementById('acursor');
-    this.lastCursorPos = "";//this.getPosString(cursor.getAttribute('position'));
-    this.tick = this.tick.bind(this);
-    this.camera = document.getElementById('acamera');
-  },
+    this.starfield = document.getElementById('starfield');
 
+    this.el.addEventListener('mouseenter', evt => {
+      // debugger;
+      let s = null;
+      try {
+        if(evt.detail.intersectedEl.classList.contains('hoverable')) {
+          s = parseInt(evt.detail.intersectedEl.getAttribute('id').split('_')[1]);
+        }
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+      if(s !== null) {
+        this.setHover(s);
+      }
+
+      // this.setHover()
+    })
+    this.el.addEventListener('mouseleave', evt => {
+      // debugger;
+      if(evt.detail.intersectedEl.classList.contains('hoverable')) {
+        if(this.el.sceneEl.systems.redux.store.getState().worldSettings.hoverStar == evt.detail.intersectedEl.getAttribute('id').split('_')[1]) {
+          this.setHover(-1);
+        }
+      }
+    })
+  },
+  setHover: function(id) {
+    this.el.sceneEl.systems.redux.store.dispatch({
+      type: HOVER_STAR,
+      id: id
+    })
+  },
 
   getPosString: function(p) {
     return `${p.x} ${p.y} ${p.z}`
   },
-
-  tick(time, timeDelta) {
-
-    let pid = this.starfield.getNearestStarId(this.cursor.object3D.getWorldPosition())
-    if(pid === -1 || pid === this.data.currentStar) return;
-
-    let p = this.starfield.getNearestStarWorldLocation(this.cursor.object3D.getWorldPosition());
-    if(p && this.getPosString(p.pos) !== this.lastCursorPos) {
-      this.lastCursorPos = this.getPosString(p);
-      this.el.setAttribute('scale', '0 0 0');
-      this.el.setAttribute('position', p.pos);
-      this.el.object3D.lookAt(this.camera.object3D.position);
-      this.data.currentStar = p.id;
-      this.el.emit('starSelected', this.data.currentStar);
-    }
-  }
 });
