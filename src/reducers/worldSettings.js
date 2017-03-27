@@ -30,13 +30,21 @@ AFRAME.registerReducer('worldSettings', {
 
       case this.actions.HOVER_STAR: {
         var newState = Object.assign({}, state);
-        newState.hoverStar = parseInt(action.id);
+        if(action.id === undefined) {
+          newState.hoverStar = -1;
+        } else {
+          newState.hoverStar = parseInt(action.id);
+        }
         return newState;
       }
 
       case this.actions.SELECT_STAR: {
         var newState = Object.assign({}, state);
-        newState.selectedStar = parseInt(action.id);
+        if(action.id === undefined) {
+          newState.selectedStar = -1;
+        } else {
+          newState.selectedStar = parseInt(action.id);
+        }
         return newState;
       }
 

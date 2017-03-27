@@ -26,9 +26,12 @@
       <!-- STARFIELD -->
       <a-entity id="starfield" rotation="-90 0 0" scale="1 1 1" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
-        <!-- <a-entity id="star-detail-view" star-detail-view></a-entity> -->
-        <a-entity id="star-detail-spawner" star-detail-spawner></a-entity>
+        <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar"></a-entity>
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
+      </a-entity>
+
+      <a-entity id="star-detail-parent">
+        <a-entity id="star-detail-view" geometry="primitive: sphere;" sol-scale material="shader: placeholder;" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar" action-dispatcher="type: SELECT_STAR" class="clickable"></a-entity>
       </a-entity>
 
       <!-- <a-entity mixin="wirecube"></a-entity> -->

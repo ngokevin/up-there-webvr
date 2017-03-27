@@ -86,9 +86,9 @@ AFRAME.registerComponent('starfield', {
       val: 1
     }
 
-    this.scaleParent = new THREE.Object3D();
-    this.scaleParent.name = "ScaleParent";
-    this.el.sceneEl.object3D.add(this.scaleParent);
+    this.scaleParent = document.getElementById('star-detail-parent').object3D;
+    // this.scaleParent.name = "ScaleParent";
+    // this.el.sceneEl.object3D.add(this.scaleParent);
 
   },
 
@@ -382,17 +382,35 @@ AFRAME.registerComponent('starfield', {
   setScaleParentToStar: function(id) {
     let s = this.getStarWorldLocation(id);
     this.scaleParent.position.set(s.x, s.y, s.z);
-    this.scaleParent.updateMatrixWorld();
-    console.log(this.scaleParent);
     this.scaleParent.scale.set(1, 1, 1);
+    this.scaleParent.updateMatrixWorld();
     // debugger;
     THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
     var scale = { v: 1 };
     this.tween = new AFRAME.TWEEN.Tween(scale)
-                  .to({ v: 100 }, 1000)
+                  .to({ v: 1e6 }, 1000)
+                  .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
                   .onUpdate( () => {
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
+                  })
+                  .start();
+  },
+  clearScaleParent: function() {
+    console.log('clear!')
+    var scale = { v: this.scaleParent.scale.x };
 
+    this.tween.stop();
+    this.tween = new AFRAME.TWEEN.Tween(scale)
+                  .to({ v: 1.0 }, 1000)
+                  .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
+                  .onUpdate( () => {
+                    console.log('updating')
+                    this.scaleParent.scale.set(scale.v, scale.v, scale.v);
+                  })
+                  .onComplete( () => {
+                    this.scaleParent.updateMatrixWorld();
+                    THREE.SceneUtils.detach(this.el.object3D, this.scaleParent, this.el.sceneEl.object3D);
+                    console.log('done 🐬');
                   })
                   .start();
   },
@@ -430,9 +448,13 @@ AFRAME.registerComponent('starfield', {
         //   this.tws.val = this.data.scale;
         //   this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
         // }
-        if(this.data.selectedStar !== oldData.selectedStar && this.data.selectedStar >= 0) {
-          console.log(`star changed from ${oldData.selectedStar} to ${this.data.selectedStar}`);
-          this.setScaleParentToStar(this.data.selectedStar);
+        if(this.data.selectedStar !== oldData.selectedStar) {
+         if(this.data.selectedStar >= 0) {
+            console.log(`star changed from ${oldData.selectedStar} to ${this.data.selectedStar}`);
+            this.setScaleParentToStar(this.data.selectedStar);
+          } else {
+            this.clearScaleParent();
+          }
         }
         break;
 

@@ -4,7 +4,8 @@
  AFRAME.registerShader('placeholder', {
    schema: {
      dashSize: {default: 3},
-     lineWidth: {default: 1}
+     lineWidth: {default: 1},
+     selectedStar: { type: 'int', default: -1}
    },
    /**
     * `init` used to initialize material. Called once.
@@ -27,7 +28,8 @@
       target: {type: 'string', default: 'acursor'},
       maxStars: { type: 'int', default: 10 },
       mixin: { type: 'string', default: 'wirecube'},
-      radius: { type: 'float', default: 2 }
+      radius: { type: 'float', default: 2 },
+      selectedStar: { type: 'int', default: -1 }
     },
     init: function() {
       this.pool = this.el.sceneEl.components.pool__star;
@@ -47,6 +49,14 @@
     },
     update: function() {
       this.target = document.getElementById(this.data.target);
+      if(this.data.selectedStar >= 0) {
+        this.el.setAttribute('visible', 'false');
+      } else {
+        setTimeout( () => {
+          this.el.setAttribute('visible', 'true');
+        }, 1100);
+
+      }
     },
     throttledTick: function() {
       if(this.pool === undefined) {
