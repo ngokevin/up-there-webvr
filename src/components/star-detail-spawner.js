@@ -37,11 +37,11 @@
         // debugger;
         // this.starDB = this.starfield.components.starfield.starDB;
         if(stars.length > 0) {
-          console.log(stars);
           stars.map( id => {
             // if the star is brand new, spawn a marker for it
             if(this.active.indexOf(id) === -1) {
               let c = this.pool.requestEntity();
+              c.classList.add('clickable');
               let p = this.starfield.components.starfield.getStarPosition(id);
               c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
               c.setAttribute('id', `star_${id}`);
@@ -52,27 +52,24 @@
           });
         }
 
-
         // otherwise, if a star is no longer in range, remove it and return it to the object pool
         this.active = this.active.filter( (id) => {
           if(stars.indexOf(id) === -1) {
             var c = this.entities.find( e => e.getAttribute('id') === `star_${id}` );
             if(c !== undefined) {
               try {
-                let el = document.getElementById(`star_${id}`);
-                el.parentElement.removeChild(el);
+                c.setAttribute('id', 'dead')
+                c.classList.remove('clickable')
                 this.pool.returnEntity(c);
-                // el.parentEl.removeChild(el);
-
               } catch(e) {
                 debugger;
                 console.log(`Can't remove ${id} entity`, c);
                 return true;
               }
 
-              console.log(`removed star_${id}`)
+              // console.log(`removed star_${id}`)
             } else {
-              console.log('cant find entity', c)
+              // console.log('cant find entity', c)
             }
             return false;
           }

@@ -11,6 +11,19 @@ const STARFIELD_READY = 'STARFIELD_READY';
 const STARFIELD_BUILDING = 'STARFIELD_BUILDING';
 const STARFIELD_SCALING = 'STARFIELD_SCALING';
 
+var memoize = function(fn) {
+    var cache = {}
+      , fn = fn;
+
+    return function(arg) {
+      if(arg in cache) {
+        return cache[arg]
+      } else {
+        return cache[arg] = fn(arg);
+      }
+    }
+}
+
 AFRAME.registerComponent('starfield', {
   schema: {
     src: {type: 'asset'},
@@ -45,8 +58,12 @@ AFRAME.registerComponent('starfield', {
     this.tick = this.tick.bind(this);
     this.starLocations = [];
     this.spatialHash = {};
-    this.hashResolution = 2.0;
-    this.hashSearchRadius = 1;
+    this.hashResolution = 1.0;
+    this.hashSearchRadius = {
+      x: 1,
+      y: 1,
+      z: 3
+    };
     this.hashStep = this.hashResolution * this.hashSearchRadius;
 
     this.camera = document.getElementById('acamera');
@@ -61,6 +78,8 @@ AFRAME.registerComponent('starfield', {
     this.el.getNearestStarId = this.getNearestStarId.bind(this);
     this.el.getNearestStarWorldLocation = this.getNearestStarWorldLocation.bind(this);
 
+    this.getHashKeyMemo = memoize(this.getHashKey.bind(this));
+
     this.tws = {
       val: 1
     }
@@ -71,21 +90,32 @@ AFRAME.registerComponent('starfield', {
   },
 
   getHashKey: function(pos) {
-    return `${Math.floor(pos.x / this.hashResolution)}_${Math.floor(pos.y / this.hashResolution)}_${Math.floor(pos.z / this.hashResolution)}`;
+    return `${Math.floor(pos.x)}_${Math.floor(pos.y)}_${Math.floor(pos.z)}`;
   },
 
   getStarsNearLocation: function(pos) {
 
-    let list = []
+    var list = []
+      , hashKeys = []
       , h = '';
 
-    for(let x = pos.x - this.hashStep; x <= pos.x + this.hashStep; x += this.hashStep) {
-      for(let y = pos.y - this.hashStep; y <= pos.y + this.hashStep; y += this.hashStep) {
-        for(let z = pos.z - this.hashStep; z <= pos.z + this.hashStep; z += this.hashStep) {
-          h = this.getHashKey(pos);
-          if(this.spatialHash[h] !== undefined) {
-            list = list.concat(this.spatialHash[h]);
+    for(var x = pos.x - (this.hashResolution * this.hashSearchRadius.x); x <= pos.x + (this.hashResolution * this.hashSearchRadius.x); x += this.hashResolution) {
+      for(var y = pos.y - (this.hashResolution * this.hashSearchRadius.y); y <= pos.y + (this.hashResolution * this.hashSearchRadius.y); y += this.hashResolution) {
+        for(var z = pos.z - (this.hashResolution * this.hashSearchRadius.z); z <= pos.z + (this.hashResolution * this.hashSearchRadius.z); z += this.hashResolution) {
+          let p = { x: x, y: y, z: z };
+          h = this.getHashKey(p);
+          if(hashKeys.indexOf(p) === -1) {
+            hashKeys.push(p);
+            if(this.spatialHash[h] !== undefined) {
+              // console.log(`Hash key ${h}: ${this.spatialHash[h].length} items`)
+              list = list.concat(this.spatialHash[h]);
+              // console.log(list);
+              // console.log(list.length)
+            }
+          } else {
+            // console.log(`dupe! ${h}`)
           }
+
         }
       }
     }
