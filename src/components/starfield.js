@@ -405,7 +405,7 @@ AFRAME.registerComponent('starfield', {
     this.maskStar(id, 0.0);
     let stardata = this.getStarData(id);
     this.tween = new AFRAME.TWEEN.Tween(scale)
-                  .to({ v: (1e6 / stardata.radius) * 30.0 }, 3000)
+                  .to({ v: (1e6 / stardata.radius) * 20.0 }, 3000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
                   .onUpdate( () => {
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
