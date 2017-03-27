@@ -36,7 +36,7 @@ AFRAME.registerReducer('worldSettings', {
 
       case this.actions.SELECT_STAR: {
         var newState = Object.assign({}, state);
-        newState.selectStar = action.id;
+        newState.selectedStar = parseInt(action.id);
         return newState;
       }
 

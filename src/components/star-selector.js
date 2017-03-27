@@ -37,6 +37,21 @@ AFRAME.registerComponent('star-selector', {
         }
       }
     })
+
+    this.el.addEventListener('click', evt => {
+      let s = null;
+      try {
+        if(evt.detail.intersectedEl.classList.contains('hoverable')) {
+          s = parseInt(evt.detail.intersectedEl.getAttribute('id').split('_')[1]);
+        }
+      } catch (e) {
+        console.log(e);
+        return;
+      }
+      if(s !== null && s == this.el.sceneEl.systems.redux.store.getState().worldSettings.hoverStar) {
+        this.setSelected(s);
+      }
+    });
   },
   setHover: function(id) {
     this.el.sceneEl.systems.redux.store.dispatch({
@@ -44,7 +59,12 @@ AFRAME.registerComponent('star-selector', {
       id: id
     })
   },
-
+  setSelected: function(id) {
+    this.el.sceneEl.systems.redux.store.dispatch({
+      type: SELECT_STAR,
+      id: id
+    })
+  },
   getPosString: function(p) {
     return `${p.x} ${p.y} ${p.z}`
   },
