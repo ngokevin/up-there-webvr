@@ -8,6 +8,7 @@ require('aframe-redux-component');
 require('aframe-lod');
 require('aframe-event-set-component');
 require('aframe-animation-component');
+require('aframe-layout-component');
 
 // require('../vendor/OrbitControls.js');
 

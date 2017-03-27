@@ -21,6 +21,8 @@
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
         <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05" rotation="90 0 0" class="star"></a-mixin>
         <a-mixin id="blue" material="color: #77ccff"></a-mixin>
+        <a-mixin id="bigFont" text="align: center; width: 20; height: auto;"></a-mixin>
+        <a-mixin id="leftPanel" text="align: right; width: 10; height: auto;"></a-mixin>
       </a-assets>
 
       <!-- STARFIELD -->
@@ -31,7 +33,18 @@
       </a-entity>
 
       <a-entity id="star-detail-parent">
-        <a-entity id="star-detail-view" geometry="primitive: sphere;" sol-scale material="shader: placeholder;" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar" action-dispatcher="type: SELECT_STAR" class="clickable"></a-entity>
+        <a-entity id="star-detail-view" geometry="primitive: sphere;" sol-scale material="color: 0x9999ff" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar" action-dispatcher="type: SELECT_STAR" class="clickable">
+          <!-- TITLE -->
+          <a-entity id="star-detail-name" mixin="bigFont" position="0 2 0" text="value: Unknown" redux-bind="worldSettings.starName: text.value"></a-entity>
+
+          <!-- LEFT INFO -->
+          <a-entity position="0 0 0" layout="type: box; margin: .75">
+            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starName: text.value"></a-entity>
+            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starName: text.value"></a-entity>
+            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starName: text.value"></a-entity>
+          </a-entity>
+        </a-entity>
+
       </a-entity>
 
       <!-- <a-entity mixin="wirecube"></a-entity> -->

@@ -19,6 +19,7 @@ AFRAME.registerReducer('worldSettings', {
     starfieldReady: false,
     selectedStar: -1,
     hoverStar: 0,
+    starName: "Unknown",
     cursorPosition: { x: 0, y: 0, z: 0 },
     minScale: .001,
     minSpeed: 1
