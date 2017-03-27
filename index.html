@@ -71,7 +71,7 @@
 
           <!-- SCALE CONTROLS -->
           <a-entity id="scale-controls" position="-.5 0 0">
-            <a-entity position="0 .35 0" text="align: center; value: scale; width: 2.5" formattedstorevalue='storePath: worldSettings.scale; formattedStringFunc: (s) => { return Math.round(parseFloat(s).toExponential()) }' redux-bind="worldSettings.scale: formattedstorevalue.storeTemp"></a-entity>
+            <a-entity position="0 .35 0" text="align: center; value: scale; width: 2.5"></a-entity>
             <a-entity position="0 .15 0" rotation="90 0 0" blend-model="src: assets/models/push-button.json; morphTargets: true; targetObjectName: Button" button-switch="morph: Push;" action-dispatcher="type: SCALE_UP" class="clickable">
               <a-animation attribute="button-switch.morphValue" dur="125" begin="buttonPressed" direction="alternate" repeat=1 from=0 to=1></a-animation>
             </a-entity>
