@@ -1,16 +1,37 @@
  const SOLS_TO_PARSECS = 2.25461e-8;
 
+ // var mat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+ AFRAME.registerShader('placeholder', {
+   schema: {
+     dashSize: {default: 3},
+     lineWidth: {default: 1}
+   },
+   /**
+    * `init` used to initialize material. Called once.
+    */
+   init: function (data) {
+     this.material = new THREE.MeshBasicMaterial({ color: 0xff99dd, wireframe: true });
+     this.update(data);  // `update()` currently not called after `init`. (#1834)
+   },
+   /**
+    * `update` used to update the material. Called on initialization and when data updates.
+    */
+   update: function (data) {
+    //  this.material.dashsize = data.dashsize;
+    //  this.material.linewidth = data.linewidth;
+   }
+ });
 
   AFRAME.registerComponent('star-detail-spawner', {
     schema: {
       target: {type: 'string', default: 'acursor'},
       maxStars: { type: 'int', default: 10 },
       mixin: { type: 'string', default: 'wirecube'},
-      radius: { type: 'float', default: 1 }
+      radius: { type: 'float', default: 2 }
     },
     init: function() {
       this.pool = this.el.sceneEl.components.pool__star;
-      this.tick = this.tick.bind(this);
+      this.tick = AFRAME.utils.throttleTick(this.throttledTick, 250, this);
       this.starfield = document.getElementById('starfield');
       // this.starDB = this.starfield.components.starfield.starDB;
       this.ready = true;
@@ -22,12 +43,12 @@
       this.entities = [];
     },
     getStarsInRange() {
-      return this.starfield.components.starfield.getStarsNearWorldLocation(this.target.object3D.getWorldPosition());
+      return this.starfield.components.starfield.getStarsNearWorldLocation(this.target.object3D.getWorldPosition(), this.data.radius);
     },
     update: function() {
       this.target = document.getElementById(this.data.target);
     },
-    tick: function() {
+    throttledTick: function() {
       if(this.pool === undefined) {
         this.pool = this.el.sceneEl.components.pool__star;
       }
@@ -62,14 +83,9 @@
                 c.classList.remove('clickable')
                 this.pool.returnEntity(c);
               } catch(e) {
-                debugger;
+                // debugger;
                 console.log(`Can't remove ${id} entity`, c);
-                return true;
               }
-
-              // console.log(`removed star_${id}`)
-            } else {
-              // console.log('cant find entity', c)
             }
             return false;
           }

@@ -60,9 +60,9 @@ AFRAME.registerComponent('starfield', {
     this.spatialHash = {};
     this.hashResolution = 1.0;
     this.hashSearchRadius = {
-      x: 1,
-      y: 1,
-      z: 3
+      x: 2,
+      y: 2,
+      z: 2
     };
     this.hashStep = this.hashResolution * this.hashSearchRadius;
 
@@ -123,6 +123,36 @@ AFRAME.registerComponent('starfield', {
     return list;
   },
 
+  getStarsInRadius: function(pos, radius) {
+
+    var list = []
+      , hashKeys = []
+      , h = '';
+
+    for(var x = pos.x - (this.hashResolution * radius); x <= pos.x + (this.hashResolution * radius); x += this.hashResolution) {
+      for(var y = pos.y - (this.hashResolution * radius); y <= pos.y + (this.hashResolution * radius); y += this.hashResolution) {
+        for(var z = pos.z - (this.hashResolution * radius); z <= pos.z + (this.hashResolution * radius); z += this.hashResolution) {
+          let p = { x: x, y: y, z: z };
+          h = this.getHashKey(p);
+          if(hashKeys.indexOf(p) === -1) {
+            hashKeys.push(p);
+            if(this.spatialHash[h] !== undefined) {
+              // console.log(`Hash key ${h}: ${this.spatialHash[h].length} items`)
+              list = list.concat(this.spatialHash[h]);
+              // console.log(list);
+              // console.log(list.length)
+            }
+          } else {
+            // console.log(`dupe! ${h}`)
+          }
+
+        }
+      }
+    }
+
+    return list;
+  },
+
   addStarToHash: function(pos, idx) {
     var h = this.getHashKey(pos);
     if(this.spatialHash[h] === undefined) {
@@ -150,8 +180,8 @@ AFRAME.registerComponent('starfield', {
     return this.el.object3D.localToWorld(new THREE.Vector3(p.x, p.y, p.z));
   },
 
-  getStarsNearWorldLocation: function(pos) {
-    return [...new Set(this.getStarsNearLocation(this.el.object3D.worldToLocal(pos)))];
+  getStarsNearWorldLocation: function(pos, radius = 2) {
+    return [...new Set(this.getStarsInRadius(this.el.object3D.worldToLocal(pos), radius))];
   },
 
   getNearestStarPosition: function(pos) {
