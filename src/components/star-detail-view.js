@@ -18,12 +18,12 @@ AFRAME.registerComponent('star-detail-view', {
         // this.el.setAttribute('position', `${star.position.x} ${star.position.y} ${star.position.z}`);
 
         // update detail view scale
-        this.el.setAttribute('visible', 'true');
+        // this.el.setAttribute('visible', 'true');
 
         this.el.setAttribute('sol-scale', star.radius);
       // leaving detail view mode
       } else {
-        this.el.setAttribute('visible', 'false');
+        // this.el.setAttribute('visible', 'false');
       }
     }
   }

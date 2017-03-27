@@ -297,6 +297,21 @@ AFRAME.registerComponent('starfield', {
 
   },
 
+  maskStar: function(id, mask) {
+    // debugger;
+    let o = this.el.object3D.getObjectByName('starfieldPoints', true);
+    // let i = (id * 4) + 3;
+    debugger;
+    // o.geometry.attributes.starColor.setDynamic(true);
+    // console.log(o.geometry.attributes.starColor.array[id])
+    console.log(parseFloat(mask))
+    o.geometry.attributes.starColor.setW(id, parseFloat(mask));
+    // console.log(o.geometry.attributes.starColor.array[id]);
+    // o.geometry.attributes.starColor.updateRange.count = 1;
+    // o.geometry.attributes.starColor.updateRange.offset = id;
+    o.geometry.attributes.starColor.needsUpdate = true;
+  },
+
   buildStarfieldGeometry: function() {
 
     console.log(`Processing ${this.stardataraw.byteLength} bytes of stardata...`);
@@ -384,24 +399,26 @@ AFRAME.registerComponent('starfield', {
     this.scaleParent.position.set(s.x, s.y, s.z);
     this.scaleParent.scale.set(1, 1, 1);
     this.scaleParent.updateMatrixWorld();
-    // debugger;
+
     THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
     var scale = { v: 1 };
+    this.maskStar(id, 0.0);
+    let stardata = this.getStarData(id);
     this.tween = new AFRAME.TWEEN.Tween(scale)
-                  .to({ v: 1e6 }, 1000)
+                  .to({ v: (1e6 / stardata.radius) * 3.0 }, 3000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
                   .onUpdate( () => {
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
                   })
                   .start();
   },
-  clearScaleParent: function() {
+  clearScaleParent: function(id) {
     console.log('clear!')
     var scale = { v: this.scaleParent.scale.x };
 
     this.tween.stop();
     this.tween = new AFRAME.TWEEN.Tween(scale)
-                  .to({ v: 1.0 }, 1000)
+                  .to({ v: 1.0 }, 3000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
                   .onUpdate( () => {
                     console.log('updating')
@@ -409,6 +426,7 @@ AFRAME.registerComponent('starfield', {
                   })
                   .onComplete( () => {
                     this.scaleParent.updateMatrixWorld();
+                    this.maskStar(id, 1.0);
                     THREE.SceneUtils.detach(this.el.object3D, this.scaleParent, this.el.sceneEl.object3D);
                     console.log('done 🐬');
                   })
@@ -433,6 +451,7 @@ AFRAME.registerComponent('starfield', {
             console.log('building mesh');
 
             let m = new THREE.Points(this.geo, this.starfieldMat);
+            m.name = "starfieldPoints";
             mesh.add(m);
             this.el.setObject3D('mesh', mesh);
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
@@ -453,7 +472,7 @@ AFRAME.registerComponent('starfield', {
             console.log(`star changed from ${oldData.selectedStar} to ${this.data.selectedStar}`);
             this.setScaleParentToStar(this.data.selectedStar);
           } else {
-            this.clearScaleParent();
+            this.clearScaleParent(oldData.selectedStar);
           }
         }
         break;
