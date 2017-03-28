@@ -64,6 +64,7 @@ AFRAME.registerComponent('starfield', {
     this.totalStarCount = 107643;
     this.starLocations = [];
     this.spatialHash = {};
+    window.hash = this.spatialHash;
     this.hashResolution = 1.0;
     this.hashSearchRadius = {
       x: 2,
@@ -165,6 +166,7 @@ AFRAME.registerComponent('starfield', {
       this.spatialHash[h] = [];
     }
     this.spatialHash[h].push(idx);
+    return h
   },
 
   getStarData: function(id) {
@@ -348,8 +350,9 @@ AFRAME.registerComponent('starfield', {
 
     this.geo = geo;
     this.points = new THREE.Points(this.geo, this.starfieldMat);
+    this.points.name = "starfieldPoints";
     this.points.frustrumCulled = false;
-    this.el.object3D.frustrumCulled = false;
+    // this.el.object3D.frustrumCulled = false;
     this.el.setObject3D('mesh', this.points);
     // this.el.object3D.frustrumCulled = false;
   },
@@ -381,7 +384,7 @@ AFRAME.registerComponent('starfield', {
                   .to({ v: 1.0 }, 3000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
                   .onUpdate( () => {
-                    console.log('updating')
+                    // console.log('updating')
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
                   })
                   .onComplete( () => {
@@ -399,20 +402,17 @@ AFRAME.registerComponent('starfield', {
 
     if(starBuffer === undefined) return;
 
-    // console.log("Processing buffer...");
-
     // create a few temp objects to use
     let p = {};
     let v = {};
     let starRec = {};
+
     let buff = starBuffer.buf;
     let fields = this.dataFields;
     let offset = (starBuffer.offset / 4) / fields.length;
     var ar = new Float32Array(buff.buffer);
 
-    // create some arrays to use as well
     var starCount = ar.length / fields.length;
-    // console.log(`Processing ${starCount} stars with ${offset} offset...`);
 
     var verts = new Float32Array(starCount * 3);
     var absmag = new Float32Array(starCount);
@@ -424,14 +424,14 @@ AFRAME.registerComponent('starfield', {
     var id = new Float32Array(starCount);
 
     // for each star in the buffer
-    for(var i = 0; i < ar.length / fields.length; i++) {
+    for(var i = 0; i < starCount; i++) {
 
       // construct GPU buffers for each value
       p.x = verts[(i * 3) + 0] = ar[(i * fields.length) + 0];
       p.y = verts[(i * 3) + 1] = ar[(i * fields.length) + 1];
       p.z = verts[(i * 3) + 2] = ar[(i * fields.length) + 2];
 
-      if(i === 0) {
+      if(starCount === 0) {
         p.x = verts[(i * 3) + 0] = 0.0;
         p.y = verts[(i * 3) + 1] = 0.0;
         p.z = verts[(i * 3) + 2] = 0.0;
@@ -466,17 +466,16 @@ AFRAME.registerComponent('starfield', {
       starRec.id = id[i];
 
       // add the star to the local spatial hash for fast querying
-      this.addStarToHash(p, i);
+      let shv = this.addStarToHash(p, this.spawnedStars);
+      if(shv == '0_0_0') debugger;
 
       // also add its position to the id lookup array
-      // this.starLocations.push(Object.assign({}, p));
-      // this.starDB.push(Object.assign({}, starRec));
-      this.starIdLookup[id[i]] = i;
+      this.starLocations.push(Object.assign({}, p));
+      this.starDB.push(Object.assign({}, starRec));
+      this.starIdLookup[id[i]] = this.spawnedStars;
 
       this.spawnedStars++;
     }
-
-
 
     this.geo.attributes.position.array.set(verts, offset * 3)
     this.geo.attributes.position.needsUpdate = true;
@@ -513,15 +512,11 @@ AFRAME.registerComponent('starfield', {
     this.geo.attributes.radius.updateRange.count = radius.length;
     this.geo.attributes.radius.updateRange.offset = offset;
 
-    // if(this.geo.boundingSphere === undefined) {
-    //   this.geo.calculateBoundingSphere();
-    // }
-    this.geo.boundingSphere.radius = 1000;
+    if(this.geo.boundingSphere.radius < 1000) {
+      this.geo.boundingSphere.radius = 1000;
+    }
+
     window.geo = this.geo;
-    // console.log(this.geo.attributes);
-    debugger;
-    // this.geo.attributes.position.array.set(verts, offset * 3);
-    // this.geo.attributes.position.needsUpdate = true;
 
   },
 

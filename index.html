@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 100">
+    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 200">
       <a-assets>
         <!-- assets -->
         <!-- <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item> -->
@@ -26,12 +26,12 @@
         <a-mixin id="star" reticle class="star" scale=".5 .5 .5"></a-mixin>
       </a-assets>
 
-      <a-entity mixin="reticle"></a-entity>
+      <!-- <a-entity mixin="reticle"></a-entity> -->
 
       <!-- STARFIELD -->
-      <a-entity id="starfield" rotation="-90 0 0" scale="1 1 1" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
-        <!-- <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity> -->
-        <!-- <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity> -->
+      <a-entity id="starfield" rotation="-90 0 0" scale=".5 .5 .5" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
+        <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
+        <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
       </a-entity>
 
@@ -126,7 +126,7 @@
       </a-entity>
 
     <!-- Camera / Cursor -->
-      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 4.848e-6" look-controls wasd-controls="fly: true" gearvr-fly-controls gearvr-time-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
+      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 4.848e-6" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
         <!-- <a-entity id="acursor"
           position="0 0 -1"
           geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"

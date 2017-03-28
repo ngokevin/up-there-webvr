@@ -23,7 +23,6 @@ class HttpStore {
 
     this.chunkCounter = 0;
     this.loading = true;
-    this.chunkSize = 16384;
     this.bytesPerValue = 4;
 
     this.chunkTemp = [];
@@ -73,7 +72,7 @@ class HttpStore {
 
   handleEnd(data) {
     this.loading = false;
-    console.log("DONE");
+    console.log("File download complete. 🐙");
   }
 
   handleError(code) {

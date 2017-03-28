@@ -71,10 +71,12 @@
         // debugger;
         // this.starDB = this.starfield.components.starfield.starDB;
         if(stars.length > 0) {
+          debugger;
           stars.map( id => {
             // if the star is brand new, spawn a marker for it
             if(this.active.indexOf(id) === -1) {
               let c = this.pool.requestEntity();
+
               c.classList.add('clickable');
               c.classList.add('hoverable');
               let p = this.starfield.components.starfield.getStarPosition(id);
