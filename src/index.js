@@ -1,6 +1,6 @@
 require('aframe');
 // require('aframe-extras');
-require('aframe-html-shader');
+// require('aframe-html-shader');
 
 require('aframe-gearvr-controls-component');
 require('aframe-auto-detect-controllers-component');

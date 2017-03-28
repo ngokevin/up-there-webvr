@@ -1,8 +1,17 @@
 var webpack = require('webpack');
+// import path from 'path';
+var ClosureCompilerPlugin = require('webpack-closure-compiler');
 
 var PLUGINS = [];
 if (process.env.NODE_ENV === 'production') {
-  new webpack.optimize.UglifyJsPlugin()
+  PLUGINS.push(    new ClosureCompilerPlugin({
+        compiler: {
+          language_in: 'ECMASCRIPT6',
+          language_out: 'ECMASCRIPT5',
+          compilation_level: 'SIMPLE'
+        },
+        concurrency: 3,
+      }))
 }
 
 module.exports = {
