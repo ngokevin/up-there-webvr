@@ -29,7 +29,8 @@
       maxStars: { type: 'int', default: 10 },
       mixin: { type: 'string', default: 'wirecube'},
       radius: { type: 'float', default: 2 },
-      selectedStar: { type: 'int', default: -1 }
+      selectedStar: { type: 'int', default: -1 },
+      starfieldReady: { type: 'boolean', default: false }
     },
     init: function() {
       this.pool = this.el.sceneEl.components.pool__star;
@@ -59,6 +60,8 @@
       }
     },
     throttledTick: function() {
+      if(!this.data.starfieldReady) return;
+
       if(this.pool === undefined) {
         this.pool = this.el.sceneEl.components.pool__star;
       }

@@ -3,7 +3,13 @@
 /* globals AFRAME THREE */
 AFRAME.registerComponent('star-detail-view', {
   schema: {
-    selectedStar: { type: 'int', default: -1 }
+    selectedStar: { type: 'int', default: -1 },
+    star: {
+      name: "Not known",
+      position: { x: 0, y: 0, z: 0 },
+      classification: "Unknown",
+      distance: 0.0
+    }
   },
 
   init: function () {

@@ -4,6 +4,7 @@
 var fields = ['x','y','z','vx','vy','vz','absmag','temp','radius','id']; // all float32s
 var stardata = require('../../assets/data/stardata.json');
 var colorTable = require('../colorTable.json');
+var HttpStore = require('../HttpStore');
 /* globals AFRAME THREE */
 
 const STARFIELD_DIRTY = 'STARFIELD_DIRTY';
@@ -11,6 +12,7 @@ const STARFIELD_READY = 'STARFIELD_READY';
 const STARFIELD_BUILDING = 'STARFIELD_BUILDING';
 const STARFIELD_SCALING = 'STARFIELD_SCALING';
 const STARFIELD_DETAIL_VIEW = 'STARFIELD_DETAIL_VIEW';
+const STARFIELD_NEW = 'STARFIELD_NEW';
 
 var memoize = function(fn) {
     var cache = {}
@@ -29,9 +31,10 @@ AFRAME.registerComponent('starfield', {
   schema: {
     src: {type: 'asset'},
     scale: {type: 'float', default: 1.0},
-    state: { type: 'string', default: STARFIELD_DIRTY },
+    state: { type: 'string', default: STARFIELD_NEW },
     time: { type: 'float', default: 0.0},
-    selectedStar: { type: 'int', default: -1}
+    selectedStar: { type: 'int', default: -1},
+    dataDownloaded: { type: 'bool', default: false}
   },
 
   init: function () {
@@ -58,6 +61,7 @@ AFRAME.registerComponent('starfield', {
       });
 
     this.tick = this.tick.bind(this);
+    this.totalStarCount = 107643;
     this.starLocations = [];
     this.spatialHash = {};
     this.hashResolution = 1.0;
@@ -81,12 +85,15 @@ AFRAME.registerComponent('starfield', {
     this.el.getNearestStarWorldLocation = this.getNearestStarWorldLocation.bind(this);
 
     this.getHashKeyMemo = memoize(this.getHashKey.bind(this));
-
+    this.dataFields = ['x','y','z','vx','vy','vz','mag','temp','radius','id'];
     this.tws = {
       val: 1
     }
-
+    this.spawnedStars = 0;
     this.scaleParent = document.getElementById('star-detail-parent').object3D;
+    this.starDataQueue = [];
+    this.processStarData = this.processStarData.bind(this);
+
     // this.scaleParent.name = "ScaleParent";
     // this.el.sceneEl.object3D.add(this.scaleParent);
 
@@ -153,7 +160,7 @@ AFRAME.registerComponent('starfield', {
   },
 
   addStarToHash: function(pos, idx) {
-    var h = this.getHashKey(pos);
+    let h = this.getHashKey(pos);
     if(this.spatialHash[h] === undefined) {
       this.spatialHash[h] = [];
     }
@@ -294,7 +301,11 @@ AFRAME.registerComponent('starfield', {
         this.starCount += count/12;
         this.bufferOffset += (buf.length);
       }
+  },
 
+  updateAttribute(name, dataPacket) {
+    // get the attribute from our geometry
+    // this.geometry.
   },
 
   maskStar: function(id, mask) {
@@ -314,9 +325,7 @@ AFRAME.registerComponent('starfield', {
 
   buildStarfieldGeometry: function() {
 
-    console.log(`Processing ${this.stardataraw.byteLength} bytes of stardata...`);
-
-    var starCount = this.stardata.length / fields.length;
+    var starCount = this.totalStarCount;
     var geo = new THREE.BufferGeometry();
     var verts = new Float32Array(starCount * 3);
     var absmag = new Float32Array(starCount);
@@ -327,61 +336,6 @@ AFRAME.registerComponent('starfield', {
     var radius = new Float32Array(starCount);
     var id = new Float32Array(starCount);
 
-    let p = {};
-    let v = {};
-
-    // create buffers for each of the data fields packed into our bin file
-    for(var i = 0; i < starCount; i++) {
-      let starRec = {};
-      // construct GPU buffers for each value
-      p.x = verts[(i * 3) + 0] = this.stardata[(i * fields.length) + 0];
-      p.y = verts[(i * 3) + 1] = this.stardata[(i * fields.length) + 1];
-      p.z = verts[(i * 3) + 2] = this.stardata[(i * fields.length) + 2];
-
-      if(i === 0) {
-        p.x = verts[(i * 3) + 0] = 0.0;
-        p.y = verts[(i * 3) + 1] = 0.0;
-        p.z = verts[(i * 3) + 2] = 0.0;
-      }
-
-      v.x = velocity[(i * 3) + 0] = this.stardata[(i * fields.length) + 3];
-      v.y = velocity[(i * 3) + 1] = this.stardata[(i * fields.length) + 4];
-      v.z = velocity[(i * 3) + 2] = this.stardata[(i * fields.length) + 5];
-
-
-      absmag[i] = this.stardata[(i * fields.length) + 6];
-      temp[i] = this.stardata[(i * fields.length) + 7];
-
-      // precalculate the color of the star based on its temperature
-      let c = this.getColorForTemp(this.stardata[(i * fields.length) + 7]).multiplyScalar(1.15)
-      color[(i * 4) + 0] = c.x;
-      color[(i * 4) + 1] = c.y;
-      color[(i * 4) + 2] = c.z;
-      color[(i * 4) + 3] = c.w;
-
-      radius[i] = this.stardata[(i * fields.length) + 8];
-      id[i] = this.stardata[(i * fields.length) + 9];
-
-      // precalculate the star scale offset based on its magnitude
-      starScale[i] = Math.max(.5, Math.min(5.0, 7.0 * (1.0 - this.logScale(absmag[i]))));
-
-      starRec.position = { x: p.x, y: p.y, z: p.z };
-      starRec.mag = absmag[i];
-      starRec.color = c;
-      starRec.radius = radius[i];
-      starRec.temp = temp[i];
-      starRec.velocity = { x: v.x, y: v.y, z: v.z };
-      starRec.id = id[i];
-
-      // add the star to the local spatial hash for fast querying
-      this.addStarToHash(p, i);
-
-      // also add its position to the id lookup array
-      this.starLocations.push(Object.assign({}, p));
-      this.starDB.push(Object.assign({}, starRec));
-      this.starIdLookup[id[i]] = i;
-    }
-
     geo.addAttribute( 'position', new THREE.BufferAttribute(verts, 3) );
     geo.addAttribute( 'velocity', new THREE.BufferAttribute(velocity, 3) );
     geo.addAttribute( 'absmag', new THREE.BufferAttribute(absmag, 1) );
@@ -390,8 +344,14 @@ AFRAME.registerComponent('starfield', {
     geo.addAttribute( 'starScale', new THREE.BufferAttribute(starScale, 1) );
     geo.addAttribute( 'radius', new THREE.BufferAttribute(radius, 1) );
 
+    geo.attributes.position.setDynamic(true);
+
     this.geo = geo;
-    window.sel = this.el;
+    this.points = new THREE.Points(this.geo, this.starfieldMat);
+    this.points.frustrumCulled = false;
+    this.el.object3D.frustrumCulled = false;
+    this.el.setObject3D('mesh', this.points);
+    // this.el.object3D.frustrumCulled = false;
   },
 
   setScaleParentToStar: function(id) {
@@ -433,33 +393,160 @@ AFRAME.registerComponent('starfield', {
                   .start();
   },
 
+  processStarData: function() {
+
+    let starBuffer = this.starDataQueue.shift();
+
+    if(starBuffer === undefined) return;
+
+    // console.log("Processing buffer...");
+
+    // create a few temp objects to use
+    let p = {};
+    let v = {};
+    let starRec = {};
+    let buff = starBuffer.buf;
+    let fields = this.dataFields;
+    let offset = (starBuffer.offset / 4) / fields.length;
+    var ar = new Float32Array(buff.buffer);
+
+    // create some arrays to use as well
+    var starCount = ar.length / fields.length;
+    // console.log(`Processing ${starCount} stars with ${offset} offset...`);
+
+    var verts = new Float32Array(starCount * 3);
+    var absmag = new Float32Array(starCount);
+    var temp = new Float32Array(starCount);
+    var color = new Float32Array(starCount * 4);
+    var starScale = new Float32Array(starCount);
+    var velocity = new Float32Array(starCount * 3);
+    var radius = new Float32Array(starCount);
+    var id = new Float32Array(starCount);
+
+    // for each star in the buffer
+    for(var i = 0; i < ar.length / fields.length; i++) {
+
+      // construct GPU buffers for each value
+      p.x = verts[(i * 3) + 0] = ar[(i * fields.length) + 0];
+      p.y = verts[(i * 3) + 1] = ar[(i * fields.length) + 1];
+      p.z = verts[(i * 3) + 2] = ar[(i * fields.length) + 2];
+
+      if(i === 0) {
+        p.x = verts[(i * 3) + 0] = 0.0;
+        p.y = verts[(i * 3) + 1] = 0.0;
+        p.z = verts[(i * 3) + 2] = 0.0;
+      }
+
+      v.x = velocity[(i * 3) + 0] = ar[(i * fields.length) + 3];
+      v.y = velocity[(i * 3) + 1] = ar[(i * fields.length) + 4];
+      v.z = velocity[(i * 3) + 2] = ar[(i * fields.length) + 5];
+
+      absmag[i] = ar[(i * fields.length) + 6];
+      temp[i] = ar[(i * fields.length) + 7];
+
+      // precalculate the color of the star based on its temperature
+      let c = this.getColorForTemp(ar[(i * fields.length) + 7]).multiplyScalar(1.15)
+      color[(i * 4) + 0] = c.x;
+      color[(i * 4) + 1] = c.y;
+      color[(i * 4) + 2] = c.z;
+      color[(i * 4) + 3] = c.w;
+
+      radius[i] = ar[(i * fields.length) + 8];
+      id[i] = ar[(i * fields.length) + 9];
+
+      // precalculate the star scale offset based on its magnitude
+      starScale[i] = Math.max(.5, Math.min(5.0, 7.0 * (1.0 - this.logScale(absmag[i]))));
+
+      starRec.position = { x: p.x, y: p.y, z: p.z };
+      starRec.mag = absmag[i];
+      starRec.color = c;
+      starRec.radius = radius[i];
+      starRec.temp = temp[i];
+      starRec.velocity = { x: v.x, y: v.y, z: v.z };
+      starRec.id = id[i];
+
+      // add the star to the local spatial hash for fast querying
+      this.addStarToHash(p, i);
+
+      // also add its position to the id lookup array
+      // this.starLocations.push(Object.assign({}, p));
+      // this.starDB.push(Object.assign({}, starRec));
+      this.starIdLookup[id[i]] = i;
+
+      this.spawnedStars++;
+    }
+
+
+
+    this.geo.attributes.position.array.set(verts, offset * 3)
+    this.geo.attributes.position.needsUpdate = true;
+    this.geo.attributes.position.updateRange.count = verts.length;
+    this.geo.attributes.position.updateRange.offset = offset * 3;
+
+    this.geo.attributes.absmag.array.set(absmag, offset)
+    this.geo.attributes.absmag.needsUpdate = true;
+    this.geo.attributes.absmag.updateRange.count = absmag.length;
+    this.geo.attributes.absmag.updateRange.offset = offset;
+
+    this.geo.attributes.temp.array.set(temp, offset)
+    this.geo.attributes.temp.needsUpdate = true;
+    this.geo.attributes.temp.updateRange.count = temp.length;
+    this.geo.attributes.temp.updateRange.offset = offset;
+
+    this.geo.attributes.starColor.array.set(color, offset * 4)
+    this.geo.attributes.starColor.needsUpdate = true;
+    this.geo.attributes.starColor.updateRange.count = color.length;
+    this.geo.attributes.starColor.updateRange.offset = offset * 4;
+
+    this.geo.attributes.starScale.array.set(starScale, offset)
+    this.geo.attributes.starScale.needsUpdate = true;
+    this.geo.attributes.starScale.updateRange.count = starScale.length;
+    this.geo.attributes.starScale.updateRange.offset = offset;
+
+    this.geo.attributes.velocity.array.set(velocity, offset * 3)
+    this.geo.attributes.velocity.needsUpdate = true;
+    this.geo.attributes.velocity.updateRange.count = velocity.length;
+    this.geo.attributes.velocity.updateRange.offset = offset * 3;
+
+    this.geo.attributes.radius.array.set(radius, offset)
+    this.geo.attributes.radius.needsUpdate = true;
+    this.geo.attributes.radius.updateRange.count = radius.length;
+    this.geo.attributes.radius.updateRange.offset = offset;
+
+    // if(this.geo.boundingSphere === undefined) {
+    //   this.geo.calculateBoundingSphere();
+    // }
+    this.geo.boundingSphere.radius = 1000;
+    window.geo = this.geo;
+    // console.log(this.geo.attributes);
+    debugger;
+    // this.geo.attributes.position.array.set(verts, offset * 3);
+    // this.geo.attributes.position.needsUpdate = true;
+
+  },
+
   update: function (oldData) {
+    console.log(this.data.state);
+
     switch(this.data.state) {
+
+      case STARFIELD_NEW:
+        // // create a store to stream download and process bytes from a binary file
+        // this.store = new HttpStore('./assets/data/stardata.bin', this.dataFields.length);
+        // // initialize the starfield geometry
+        // this.buildStarfieldGeometry();
+        // this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
+        // console.log(this.el.getAttribute('starfield').state);
+        // this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
+
+        return;
+        break;
+
+      case STARFIELD_BUILDING:
+        break;
 
       case STARFIELD_DIRTY:
         this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
-        fetch('./assets/data/stardata.bin')
-          .then( (res) => {
-            return res.arrayBuffer();
-          })
-          .then( b => {
-            this.stardataraw = b;
-            this.stardata = new Float32Array(b);
-            this.buildStarfieldGeometry();
-
-            var mesh = new THREE.Object3D();
-            console.log('building mesh');
-
-            let m = new THREE.Points(this.geo, this.starfieldMat);
-            m.name = "starfieldPoints";
-            mesh.add(m);
-            this.el.setObject3D('mesh', mesh);
-            this.el.setAttribute('starfield', { state: STARFIELD_READY });
-            window.store = this.el.sceneEl.systems.redux.store;
-            this.el.sceneEl.systems.redux.store.dispatch({
-              type: 'STARFIELD_READY'
-            })
-          });
         break;
 
       case STARFIELD_READY:
@@ -477,8 +564,6 @@ AFRAME.registerComponent('starfield', {
         }
         break;
 
-      case STARFIELD_BUILDING:
-        break;
 
       case STARFIELD_SCALING:
         break;
@@ -488,6 +573,47 @@ AFRAME.registerComponent('starfield', {
     }
   },
   tick: function(time, delta) {
+    switch(this.el.getAttribute('starfield').state) {
+
+      case STARFIELD_NEW:
+        // create a store to stream download and process bytes from a binary file
+        this.store = new HttpStore('./assets/data/stardata.bin', this.dataFields.length);
+        // initialize the starfield geometry
+        this.buildStarfieldGeometry();
+        this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
+        return;
+        break;
+
+      case STARFIELD_BUILDING:
+
+          // if(!this.data.dataDownloaded) {
+
+          let newStars = this.store.getPackets();
+
+          if(newStars && newStars.length > 0) {
+            // console.log(`got ${newStars.length} packets!`)
+            this.starDataQueue = this.starDataQueue.concat(newStars);
+          } else if(newStars === false) {
+            this.el.setAttribute('starfield', { dataDownloaded: true });
+          }
+
+          this.processStarData();
+          // console.log(this.starDataQueue.length);
+
+          if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
+            this.el.setAttribute('starfield', { state: STARFIELD_READY });
+            this.el.sceneEl.systems.redux.store.dispatch({
+              type: 'STARFIELD_READY'
+            })
+            this.el.sceneEl.systems.redux.store.dispatch({
+              type: 'SET_BUSY',
+              val: false
+            })
+          }
+
+        break;
+
+    }
     let p = this.camera.getAttribute('position');
     let s = this.el.getAttribute('scale').x;
     // if(this.data.state === STARFIELD_SCALING) {
