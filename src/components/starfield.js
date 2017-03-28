@@ -301,7 +301,7 @@ AFRAME.registerComponent('starfield', {
     // debugger;
     let o = this.el.object3D.getObjectByName('starfieldPoints', true);
     // let i = (id * 4) + 3;
-    debugger;
+    // debugger;
     // o.geometry.attributes.starColor.setDynamic(true);
     // console.log(o.geometry.attributes.starColor.array[id])
     console.log(parseFloat(mask))

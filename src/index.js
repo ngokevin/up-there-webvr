@@ -39,6 +39,7 @@ require('./components/location-indicator.js');
 require('./components/look-controls-alt.js');
 require('./components/orbit-controls.js');
 require('./components/player-controls.js');
+require('./components/reticle.js');
 require('./components/scale-ui.js');
 require('./components/sol-scale.js');
 require('./components/sync-local-location.js');

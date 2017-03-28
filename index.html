@@ -19,11 +19,14 @@
 
         <!-- mixins -->
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
-        <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05" rotation="90 0 0" class="star"></a-mixin>
+        <!-- <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05" rotation="90 0 0" class="star"></a-mixin> -->
         <a-mixin id="blue" material="color: #77ccff"></a-mixin>
         <a-mixin id="bigFont" text="align: center; width: 20; height: auto;"></a-mixin>
         <a-mixin id="leftPanel" text="align: right; width: 10; height: auto;"></a-mixin>
+        <a-mixin id="star" reticle class="star" scale=".5 .5 .5"></a-mixin>
       </a-assets>
+
+      <a-entity mixin="reticle"></a-entity>
 
       <!-- STARFIELD -->
       <a-entity id="starfield" rotation="-90 0 0" scale="1 1 1" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
