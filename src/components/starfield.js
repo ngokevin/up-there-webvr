@@ -95,6 +95,9 @@ AFRAME.registerComponent('starfield', {
     this.starDataQueue = [];
     this.processStarData = this.processStarData.bind(this);
 
+    this.spawnLimit = 0;
+    this.rebuildCheckSteps = 10000;
+
     // this.scaleParent.name = "ScaleParent";
     // this.el.sceneEl.object3D.add(this.scaleParent);
 
@@ -351,7 +354,7 @@ AFRAME.registerComponent('starfield', {
     this.geo = geo;
     this.points = new THREE.Points(this.geo, this.starfieldMat);
     this.points.name = "starfieldPoints";
-    this.points.frustrumCulled = false;
+    // this.points.frustrumCulled = false;
     // this.el.object3D.frustrumCulled = false;
     this.el.setObject3D('mesh', this.points);
     // this.el.object3D.frustrumCulled = false;
@@ -555,6 +558,12 @@ AFRAME.registerComponent('starfield', {
       this.geo.boundingSphere.radius = 1000;
     }
 
+    if(this.spawnedStars > this.spawnLimit) {
+      this.updateGeometryAttributes();
+      this.spawnLimit += this.rebuildCheckSteps;
+    }
+    // this.geo.computeBoundingSphere();
+
     window.geo = this.geo;
 
   },
@@ -562,7 +571,10 @@ AFRAME.registerComponent('starfield', {
   updateGeometryAttributes: function() {
     Object.keys(this.geo.attributes).map( k => {
       this.geo.attributes[k].needsUpdate = true;
+      this.geo.attributes[k].updateRange.offset = 0;
+      this.geo.attributes[k].updateRange.count = this.geo.attributes[k].array.length;
     })
+    this.geo.computeBoundingSphere();
   },
 
   update: function (oldData) {
@@ -622,7 +634,7 @@ AFRAME.registerComponent('starfield', {
           let newStars = this.store.getPackets();
 
           if(newStars && newStars.length > 0) {
-            let sStars = this.splitPackets(newStars, 192);
+            let sStars = this.splitPackets(newStars, 128);
             this.starDataQueue = this.starDataQueue.concat(sStars);
           } else if(newStars === false) {
             this.el.setAttribute('starfield', { dataDownloaded: true });
@@ -634,13 +646,16 @@ AFRAME.registerComponent('starfield', {
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
             this.el.emit('starfieldReady', false);
             this.updateGeometryAttributes();
-            this.el.sceneEl.systems.redux.store.dispatch({
-              type: 'STARFIELD_READY'
-            })
-            this.el.sceneEl.systems.redux.store.dispatch({
-              type: 'SET_BUSY',
-              val: false
-            })
+            setTimeout(() => {
+              this.el.sceneEl.systems.redux.store.dispatch({
+                type: 'STARFIELD_READY'
+              })
+              this.el.sceneEl.systems.redux.store.dispatch({
+                type: 'SET_BUSY',
+                val: false
+              })
+            }, 5000);
+
           }
 
         break;
