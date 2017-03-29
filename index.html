@@ -29,9 +29,12 @@
       <!-- <a-entity mixin="reticle"></a-entity> -->
 
       <!-- STARFIELD -->
-      <a-entity id="starfield" rotation="-90 0 0" scale=".5 .5 .5" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
+      <a-entity id="starfield" rotation="0 0 0" scale=".0005 .0005 .0005" position="0 0 -1" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
+
+        <a-animation easing="ease-in-out" attribute="rotation" dur="2500" begin="starfieldReady" from="0 0 0" to="-90 0 0"></a-animation>
+        <a-animation easing="ease-in-out" attribute="scale" dur="5000" begin="starfieldReady" from=".0005 .0005 .0005" to=".5 .5 .5"></a-animation>
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
       </a-entity>
 
@@ -52,10 +55,10 @@
 
       <a-entity id="loading" follow-entity redux-bind="worldSettings.busy: visible">
         <a-entity position="0 0 -1">
-          <a-entity text="value: LOADING...; align: center; width: 2; height: auto" position="0 .25 0"></a-entity>
-          <a-entity mixin="wirecube">
+          <a-entity text="value: LOADING...; align: center; width: 2; height: auto" position="0 .5 0"></a-entity>
+          <!-- <a-entity mixin="wirecube">
             <a-animation attribute="rotation" dur="1000" fill="forwards" to="180 360 0" repeat="indefinite"></a-animation>
-          </a-entity>
+          </a-entity> -->
         </a-entity>
       </a-entity>
 

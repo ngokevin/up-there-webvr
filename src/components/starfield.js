@@ -391,9 +391,48 @@ AFRAME.registerComponent('starfield', {
                     this.scaleParent.updateMatrixWorld();
                     this.maskStar(id, 1.0);
                     THREE.SceneUtils.detach(this.el.object3D, this.scaleParent, this.el.sceneEl.object3D);
-                    console.log('done 🐬');
+                    console.log('done 🦑');
                   })
                   .start();
+  },
+
+  splitPackets: function(packets, maxSize) {
+
+    let splitBuffers = [];
+
+    packets.map( starBuffer => {
+      let buff = starBuffer.buf;
+      let fields = this.dataFields;
+      let starOffset = (starBuffer.offset / 4) / fields.length;
+      let starCount = (starBuffer.count / 4) / fields.length;
+      let bytesPerStar = 4 * fields.length;
+
+      // in chunks of maxSize items, iterate until we're out of stars
+      for(let i = 0; i < starCount; i += maxSize) {
+
+        let b
+          , a;
+
+        if(i+maxSize >= starCount) {
+          b = Buffer.from(buff, (i*bytesPerStar), (starCount*bytesPerStar) - (i*bytesPerStar))
+          a = new Float32Array(buff.buffer, (i*bytesPerStar), (starCount*fields.length) - (i*fields.length))
+        } else {
+          // b = buff.slice(starBuffer.offset + (i*bytesPerStar), maxSize*bytesPerStar);
+          b = Buffer.from(buff, (i*bytesPerStar), maxSize*bytesPerStar)
+          a = new Float32Array(buff.buffer, (i*bytesPerStar), maxSize*fields.length)
+        }
+
+        splitBuffers.push({
+          buf: b,
+          arr: a,
+          offset: starBuffer.offset + (i*bytesPerStar),
+          count: b.length
+        });
+
+      }
+    })
+
+    return splitBuffers;
   },
 
   processStarData: function() {
@@ -401,7 +440,7 @@ AFRAME.registerComponent('starfield', {
     let starBuffer = this.starDataQueue.shift();
 
     if(starBuffer === undefined) return;
-
+    // console.log('building...', starBuffer)
     // create a few temp objects to use
     let p = {};
     let v = {};
@@ -410,7 +449,8 @@ AFRAME.registerComponent('starfield', {
     let buff = starBuffer.buf;
     let fields = this.dataFields;
     let offset = (starBuffer.offset / 4) / fields.length;
-    var ar = new Float32Array(buff.buffer);
+    // var ar = new Float32Array(buff.buffer);
+    var ar = starBuffer.arr;
 
     var starCount = ar.length / fields.length;
 
@@ -480,36 +520,36 @@ AFRAME.registerComponent('starfield', {
     this.geo.attributes.position.needsUpdate = true;
     this.geo.attributes.position.updateRange.count = verts.length;
     this.geo.attributes.position.updateRange.offset = offset * 3;
-
+    //
     this.geo.attributes.absmag.array.set(absmag, offset)
-    this.geo.attributes.absmag.needsUpdate = true;
-    this.geo.attributes.absmag.updateRange.count = absmag.length;
-    this.geo.attributes.absmag.updateRange.offset = offset;
-
+    // this.geo.attributes.absmag.needsUpdate = true;
+    // this.geo.attributes.absmag.updateRange.count = absmag.length;
+    // this.geo.attributes.absmag.updateRange.offset = offset;
+    //
     this.geo.attributes.temp.array.set(temp, offset)
-    this.geo.attributes.temp.needsUpdate = true;
-    this.geo.attributes.temp.updateRange.count = temp.length;
-    this.geo.attributes.temp.updateRange.offset = offset;
-
+    // this.geo.attributes.temp.needsUpdate = true;
+    // this.geo.attributes.temp.updateRange.count = temp.length;
+    // this.geo.attributes.temp.updateRange.offset = offset;
+    //
     this.geo.attributes.starColor.array.set(color, offset * 4)
     this.geo.attributes.starColor.needsUpdate = true;
     this.geo.attributes.starColor.updateRange.count = color.length;
     this.geo.attributes.starColor.updateRange.offset = offset * 4;
-
+    //
     this.geo.attributes.starScale.array.set(starScale, offset)
     this.geo.attributes.starScale.needsUpdate = true;
     this.geo.attributes.starScale.updateRange.count = starScale.length;
     this.geo.attributes.starScale.updateRange.offset = offset;
-
+    //
     this.geo.attributes.velocity.array.set(velocity, offset * 3)
-    this.geo.attributes.velocity.needsUpdate = true;
-    this.geo.attributes.velocity.updateRange.count = velocity.length;
-    this.geo.attributes.velocity.updateRange.offset = offset * 3;
-
+    // this.geo.attributes.velocity.needsUpdate = true;
+    // this.geo.attributes.velocity.updateRange.count = velocity.length;
+    // this.geo.attributes.velocity.updateRange.offset = offset * 3;
+    //
     this.geo.attributes.radius.array.set(radius, offset)
-    this.geo.attributes.radius.needsUpdate = true;
-    this.geo.attributes.radius.updateRange.count = radius.length;
-    this.geo.attributes.radius.updateRange.offset = offset;
+    // this.geo.attributes.radius.needsUpdate = true;
+    // this.geo.attributes.radius.updateRange.count = radius.length;
+    // this.geo.attributes.radius.updateRange.offset = offset;
 
     if(this.geo.boundingSphere.radius < 1000) {
       this.geo.boundingSphere.radius = 1000;
@@ -517,6 +557,12 @@ AFRAME.registerComponent('starfield', {
 
     window.geo = this.geo;
 
+  },
+
+  updateGeometryAttributes: function() {
+    Object.keys(this.geo.attributes).map( k => {
+      this.geo.attributes[k].needsUpdate = true;
+    })
   },
 
   update: function (oldData) {
@@ -576,8 +622,8 @@ AFRAME.registerComponent('starfield', {
           let newStars = this.store.getPackets();
 
           if(newStars && newStars.length > 0) {
-            // console.log(`got ${newStars.length} packets!`)
-            this.starDataQueue = this.starDataQueue.concat(newStars);
+            let sStars = this.splitPackets(newStars, 192);
+            this.starDataQueue = this.starDataQueue.concat(sStars);
           } else if(newStars === false) {
             this.el.setAttribute('starfield', { dataDownloaded: true });
           }
@@ -586,6 +632,8 @@ AFRAME.registerComponent('starfield', {
 
           if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
+            this.el.emit('starfieldReady', false);
+            this.updateGeometryAttributes();
             this.el.sceneEl.systems.redux.store.dispatch({
               type: 'STARFIELD_READY'
             })
