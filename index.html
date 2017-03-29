@@ -33,9 +33,9 @@
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
 
-        <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" from="0 0 0" to="-90 0 0"></a-animation>
-        <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="5000" begin="starfieldReady" from=".0005 .0005 .0005" to=".5 .5 .5"></a-animation>
-        <a-animation easing="ease-in-out" attribute="position" dur="5000" begin="starfieldReady" from="0 0 -2" to="0 0 0"></a-animation>
+        <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" to="-90 0 0"></a-animation>
+        <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="5000" begin="starfieldReady" to=".5 .5 .5"></a-animation>
+        <a-animation easing="ease-in-out" attribute="position" dur="5000" begin="starfieldReady" to="0 0 0"></a-animation>
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
       </a-entity>
 
@@ -54,12 +54,17 @@
 
       </a-entity>
 
-      <a-entity id="loading" follow-entity redux-bind="worldSettings.busy: visible">
-        <a-entity position="0 0 -1">
-          <a-entity text="value: Constructing Known Universe...; align: center; width: 2; height: auto" position="0 .5 0"></a-entity>
-          <!-- <a-entity mixin="wirecube">
-            <a-animation attribute="rotation" dur="1000" fill="forwards" to="180 360 0" repeat="indefinite"></a-animation>
-          </a-entity> -->
+      <a-entity id="loading" redux-bind="worldSettings.busy: visible" position="0 0 -2" scale="2 2 2">
+        <a-entity>
+          <a-entity text="value: Up There VR; align: center; width: 3; height: auto" position="0 .5 0"></a-entity>
+          <a-entity text="value: Constructing Universe...; align: center; width: 1; height: auto" position="0 .35 0"></a-entity>
+          <a-entity position="0 -.25 0" >
+            <a-entity text="align: center; width: 1; height: auto" position="0 -.05 0" redux-bind="worldSettings.starCount: text.value"></a-entity>
+            <a-entity text="value: stars; align: center; width: 1; height: auto" position="0 -.1 0"></a-entity>
+          </a-entity>
+          <a-entity mixin="wirecube" position="0 -.42 0" scale=".025 .025 .025">
+            <a-animation attribute="rotation" dur="2000" fill="forwards" to="180 360 0" repeat="indefinite"></a-animation>
+          </a-entity>
         </a-entity>
       </a-entity>
 
@@ -68,7 +73,7 @@
       <!-- parent object for everything following the user around -->
       <a-entity follow-entity>
         <!-- control panel -->
-        <a-entity id="control-panel" position="0 -1.25  -.35" rotation="-75 0 0">
+        <a-entity id="control-panel" position="0 -1.25  -.45" rotation="-75 0 0">
 
           <!-- CONSTELLATION CONTROLS -->
           <a-entity id="constellation-controls">
@@ -79,16 +84,16 @@
               <a-entity mixin="blue" id="scale-legend" geometry="primitive: box; width: 1; height: .01; depth: .01" material="shader: flat;" ></a-entity>
               <a-entity mixin="blue" id="scale-legend" position=".5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
             </a-entity> -->
-            <a-entity position="0 .35 0" text="align: center; value: constellations; width: 1"></a-entity>
+            <!-- <a-entity position="0 .35 0" text="align: center; value: constellations; width: 1"></a-entity>
             <a-entity position="0 .15 0" rotation="90 0 0" blend-model="src: assets/models/indicator-light.json;" indicator-light="target: constellationToggle">
             </a-entity>
             <a-entity rotation="90 0 0" id="constellationToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" class="clickable">
               <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
-            </a-entity>
+            </a-entity> -->
           </a-entity>
 
           <!-- SPEED CONTROLS -->
-          <a-entity id="speed-controls" position=".5 0 0">
+          <!-- <a-entity id="speed-controls" position=".5 0 0">
             <a-entity position="0 .45 0" text="align: center; value: warp; width: 2.5"></a-entity>
 
             <a-entity position="0 .35 0" text="align: center; value: speed; width: 2.5" redux-bind="worldSettings.speed: text.value"></a-entity>
@@ -99,7 +104,7 @@
             <a-entity position="0 -.15 0" rotation="90 0 0" blend-model="src: assets/models/push-button.json; morphTargets: true; targetObjectName: Button" button-switch="morph: Push;" action-dispatcher="type: SPEED_DOWN" class="clickable">
               <a-animation attribute="button-switch.morphValue" dur="125" begin="buttonPressed" direction="alternate" repeat=1 from=0 to=1></a-animation>
             </a-entity>
-          </a-entity>
+          </a-entity> -->
 
           <!-- SCALE CONTROLS -->
           <!-- <a-entity id="scale-controls" position="-.5 0 0">
@@ -130,7 +135,7 @@
       </a-entity>
 
     <!-- Camera / Cursor -->
-      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 .3" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
+      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 .5" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
         <!-- <a-entity id="acursor"
           position="0 0 -1"
           geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
@@ -147,8 +152,8 @@
             material="color: #ffffff; shader: flat;transparent: true; opacity: .5;"
             raycaster="objects: .clickable; recursive: true; far: 100"
             star-selector>
-              <a-entity text="value: cursor; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverStar: text.value"></a-entity>
-              <a-entity text="value: cursor; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity>
+              <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverStar: text.value"></a-entity>
+              <!-- <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity> -->
               <a-animation attribute="geometry.thetaLength" dur="1000" end="mouseleave" begin="fusing" from=360 to=0 fill="backwards"></a-animation>
               <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseleave" from=360 to=360></a-animation>
               <a-animation attribute="geometry.thetaLength" dur="1" begin="click" from=360 to=360></a-animation>
