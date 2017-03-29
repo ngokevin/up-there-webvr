@@ -23,9 +23,9 @@ var stardata = require('../../assets/data/stardata.json');
 
       if(!this.store.getState().worldSettings.starfieldReady) {
         this.unsubscribe = this.store.subscribe(() => { this.storeUpdated() })
+      } else {
+        this.storeUpdated();
       }
-
-      // this.buildGeometry = this.buildGeometry.bind(this);
 
     },
     storeUpdated() {

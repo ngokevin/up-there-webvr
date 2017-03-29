@@ -23,7 +23,7 @@
         <a-mixin id="blue" material="color: #77ccff"></a-mixin>
         <a-mixin id="bigFont" text="align: center; width: 20; height: auto;"></a-mixin>
         <a-mixin id="leftPanel" text="align: right; width: 10; height: auto;"></a-mixin>
-        <a-mixin id="star" reticle class="star" scale=".5 .5 .5"></a-mixin>
+        <a-mixin id="star" reticle class="star"></a-mixin>
       </a-assets>
 
       <!-- <a-entity mixin="reticle"></a-entity> -->
@@ -140,7 +140,7 @@
             position="0 0 -1"
             event-set__1="_event: mouseenter; material.color: springgreen"
             event-set__2="_event: mouseleave; material.color: white"
-            material="color: #ffffff; shader: flat;transparent: true; opacity: .5"
+            material="color: #ffffff; shader: flat;transparent: true; opacity: .5;"
             raycaster="objects: .clickable; recursive: true; far: 100"
             star-selector>
               <a-entity text="value: cursor; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverStar: text.value"></a-entity>
