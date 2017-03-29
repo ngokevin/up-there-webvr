@@ -49,7 +49,12 @@ AFRAME.registerComponent('star-selector', {
         return;
       }
       if(s !== null && s == this.el.sceneEl.systems.redux.store.getState().worldSettings.hoverStar) {
-        this.setSelected(s);
+        if(this.el.sceneEl.systems.redux.store.getState().worldSettings.selectedStar == s) {
+          this.setSelected(-1);
+        } else {
+          this.setSelected(s);
+        }
+
       }
     });
   },

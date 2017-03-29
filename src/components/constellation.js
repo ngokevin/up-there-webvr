@@ -49,11 +49,11 @@ var stardata = require('../../assets/data/stardata.json');
           // look up the star's position and velocity and toss it into the array
           let i = this.starfield.components.starfield.starIdLookup[s];
           let d = this.starfield.components.starfield.getStarData(i);
-          if(d!== undefined) {
+          if(d !== undefined) {
             vertArray.push([d.position.x, d.position.y, d.position.z])
             velArray.push([d.velocity.x, d.velocity.y, d.velocity.z])
           } else {
-            // debugger;
+            debugger;
           }
 
         })

@@ -368,7 +368,7 @@ AFRAME.registerComponent('starfield', {
     this.maskStar(id, 0.0);
     let stardata = this.getStarData(id);
     this.tween = new AFRAME.TWEEN.Tween(scale)
-                  .to({ v: (1e6 / stardata.radius) * 20.0 }, 3000)
+                  .to({ v: (1e6 / stardata.radius) * 20.0 }, 1000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
                   .onUpdate( () => {
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
@@ -381,8 +381,8 @@ AFRAME.registerComponent('starfield', {
 
     this.tween.stop();
     this.tween = new AFRAME.TWEEN.Tween(scale)
-                  .to({ v: 1.0 }, 3000)
-                  .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
+                  .to({ v: 1.0 }, 1000)
+                  .easing(AFRAME.TWEEN.Easing.Quintic.Out)
                   .onUpdate( () => {
                     // console.log('updating')
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
@@ -467,12 +467,11 @@ AFRAME.registerComponent('starfield', {
 
       // add the star to the local spatial hash for fast querying
       let shv = this.addStarToHash(p, this.spawnedStars);
-      if(shv == '0_0_0') debugger;
 
       // also add its position to the id lookup array
       this.starLocations.push(Object.assign({}, p));
       this.starDB.push(Object.assign({}, starRec));
-      this.starIdLookup[id[i]] = this.spawnedStars;
+      this.starIdLookup[id[i]] = 0 + this.spawnedStars;
 
       this.spawnedStars++;
     }
@@ -526,13 +525,6 @@ AFRAME.registerComponent('starfield', {
     switch(this.data.state) {
 
       case STARFIELD_NEW:
-        // // create a store to stream download and process bytes from a binary file
-        // this.store = new HttpStore('./assets/data/stardata.bin', this.dataFields.length);
-        // // initialize the starfield geometry
-        // this.buildStarfieldGeometry();
-        // this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
-        // console.log(this.el.getAttribute('starfield').state);
-        // this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
 
         return;
         break;
@@ -545,15 +537,13 @@ AFRAME.registerComponent('starfield', {
         break;
 
       case STARFIELD_READY:
-        // if(this.data.scale !== oldData.scale) {
-        //   this.tws.val = this.data.scale;
-        //   this.el.setAttribute('starfield', { state: STARFIELD_SCALING });
-        // }
+
         if(this.data.selectedStar !== oldData.selectedStar) {
          if(this.data.selectedStar >= 0) {
             console.log(`star changed from ${oldData.selectedStar} to ${this.data.selectedStar}`);
             this.setScaleParentToStar(this.data.selectedStar);
           } else {
+            console.log(`exiting detail view`);
             this.clearScaleParent(oldData.selectedStar);
           }
         }
@@ -573,15 +563,15 @@ AFRAME.registerComponent('starfield', {
       case STARFIELD_NEW:
         // create a store to stream download and process bytes from a binary file
         this.store = new HttpStore('./assets/data/stardata.bin', this.dataFields.length);
+
         // initialize the starfield geometry
         this.buildStarfieldGeometry();
         this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
+        this.data.state = STARFIELD_BUILDING;
         return;
         break;
 
       case STARFIELD_BUILDING:
-
-          // if(!this.data.dataDownloaded) {
 
           let newStars = this.store.getPackets();
 
@@ -593,7 +583,6 @@ AFRAME.registerComponent('starfield', {
           }
 
           this.processStarData();
-          // console.log(this.starDataQueue.length);
 
           if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
             this.el.setAttribute('starfield', { state: STARFIELD_READY });

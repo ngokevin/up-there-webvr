@@ -115,13 +115,13 @@
 
       <!-- Vive/Oculus only for left hand / spatial controls -->
       <!-- currently optimized for gearvr -->
-      <a-entity id="left-hand"
+      <!-- <a-entity id="left-hand"
                 if-no-vr-headset="visible: false"
                 auto-detect-controllers="hand:left">
-      </a-entity>
+      </a-entity> -->
       <a-entity id="right-hand"
                 if-no-vr-headset="visible: false"
-                auto-detect-controllers="hand:right"
+
                 gearvr-controls>
       </a-entity>
 
@@ -141,7 +141,7 @@
             event-set__1="_event: mouseenter; material.color: springgreen"
             event-set__2="_event: mouseleave; material.color: white"
             material="color: #ffffff; shader: flat;transparent: true; opacity: .5"
-            raycaster="objects: .clickable"
+            raycaster="objects: .clickable; recursive: true; far: 100"
             star-selector>
               <a-entity text="value: cursor; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverStar: text.value"></a-entity>
               <a-entity text="value: cursor; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity>

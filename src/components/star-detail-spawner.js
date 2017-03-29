@@ -71,7 +71,7 @@
         // debugger;
         // this.starDB = this.starfield.components.starfield.starDB;
         if(stars.length > 0) {
-          debugger;
+          // debugger;
           stars.map( id => {
             // if the star is brand new, spawn a marker for it
             if(this.active.indexOf(id) === -1) {
