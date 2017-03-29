@@ -17,7 +17,6 @@
   "devDependencies": {
     "babili-webpack-plugin": "0.0.11",
     "cross-env": "^2.0.1",
-    "semistandard": "^9.0.0",
     "snazzy": "^4.0.1",
     "webpack": "^2.2.1",
     "webpack-closure-compiler": "^2.1.4"
@@ -34,9 +33,6 @@
     "aframe-lod": "git+https://github.com/flimshaw/aframe-lod.git",
     "aframe-redux-component": "^3.0.2",
     "aframe-stats-in-vr-component": "^0.1.7",
-    "aframe-text-component": "^0.4.2",
-    "aframe-text-geometry-component": "^0.5.1",
-    "aframe-ui-widgets": "^1.0.2",
     "debounce": "^1.0.0",
     "extract-text-webpack-plugin": "^2.0.0",
     "glsl-colormap": "^1.0.1",
@@ -44,7 +40,6 @@
     "glsl-scale-log": "^1.0.0",
     "glslify": "^6.0.1",
     "glslify-loader": "^1.0.2",
-    "gsap": "^1.19.1",
     "raw-loader": "^0.5.1",
     "whatwg-fetch": "^2.0.3"
   }

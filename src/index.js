@@ -1,11 +1,13 @@
 require('aframe');
+
+THREE.Sprite = require('../vendor/Sprite');
 // require('aframe-extras');
 // require('aframe-html-shader');
 
 require('aframe-gearvr-controls-component');
 require('aframe-auto-detect-controllers-component');
 require('aframe-redux-component');
-require('aframe-lod');
+// require('aframe-lod');
 require('aframe-event-set-component');
 require('aframe-animation-component');
 require('aframe-layout-component');
