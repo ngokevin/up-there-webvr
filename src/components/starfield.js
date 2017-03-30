@@ -343,6 +343,10 @@ AFRAME.registerComponent('starfield', {
     // this.points.frustrumCulled = false;
     // this.el.object3D.frustrumCulled = false;
     this.el.setObject3D('mesh', this.points);
+
+    this.macroPosition = new THREE.Vector3();
+    this.detailPosition = new THREE.Vector3();
+    this.detailDistance = 3.0;
     // this.el.object3D.frustrumCulled = false;
   },
 
@@ -356,6 +360,25 @@ AFRAME.registerComponent('starfield', {
     var scale = { v: 1 };
     this.maskStar(id, 0.0);
     let stardata = this.getStarData(id);
+
+    // save current starfield world position to tween back to
+    this.macroPosition.copy(this.scaleParent.position);
+
+    // calculate destination position some distance away from the camera
+    let d = new THREE.Vector3(0, 0, 1);
+    d.applyQuaternion(this.camera.object3D.quaternion);
+    this.detailPosition.copy(this.camera.object3D.position).sub(d.multiplyScalar(this.detailDistance));
+
+    this.posTween = new AFRAME.TWEEN.Tween(this.scaleParent.position)
+                      .to(
+                        {
+                          x: this.detailPosition.x,
+                          y: this.detailPosition.y,
+                          z: this.detailPosition.z
+                        }, 1000)
+                        .easing(AFRAME.TWEEN.Easing.Exponential.InOut)
+                        .start();
+
     this.tween = new AFRAME.TWEEN.Tween(scale)
                   .to({ v: (1e6 / stardata.radius) * 20.0 }, 1000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
@@ -367,6 +390,17 @@ AFRAME.registerComponent('starfield', {
   clearScaleParent: function(id) {
     console.log('clear!')
     var scale = { v: this.scaleParent.scale.x };
+
+    this.posTween.stop();
+    this.posTween = new AFRAME.TWEEN.Tween(this.scaleParent.position)
+                      .to(
+                        {
+                          x: this.macroPosition.x,
+                          y: this.macroPosition.y,
+                          z: this.macroPosition.z
+                        }, 1000)
+                        .easing(AFRAME.TWEEN.Easing.Exponential.InOut)
+                        .start();
 
     this.tween.stop();
     this.tween = new AFRAME.TWEEN.Tween(scale)
