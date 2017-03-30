@@ -68,6 +68,7 @@ class HttpStore {
 
     // record the length of this buffer to the total count
     this.chunkCounter += cleanBuffer.length;
+    console.log(`Downloaded ${this.chunkCounter} bytes for ${cleanBuffer.length} recs...`);
   }
 
   handleEnd(data) {
@@ -82,9 +83,10 @@ class HttpStore {
   // the update function returns all completed packets along to the view,
   // and then empties the queue, returns false if loading has completed
   getPackets() {
-    if(this.loading) {
+    if(this.loading || this.queue.length > 0) {
       let q = this.queue.concat([]);
       this.queue = [];
+      console.log(`Sending ${q.length} records...`);
       return q;
     }
     return false;

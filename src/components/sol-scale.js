@@ -10,6 +10,6 @@ AFRAME.registerComponent('sol-scale', {
     // calculate scale based on sol radius
     let pr = this.data * SOLS_TO_PARSECS;
     this.el.setAttribute('scale', `${pr} ${pr} ${pr}`);
-    console.log(pr);
+    // console.log(pr);
   }
 });

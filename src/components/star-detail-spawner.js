@@ -66,7 +66,7 @@
         this.pool = this.el.sceneEl.components.pool__star;
       }
 
-      if(this.ready === true && this.pool !== undefined) {
+      if(this.target != null && this.ready === true && this.pool !== undefined) {
         var stars = this.getStarsInRange();
         // debugger;
         // this.starDB = this.starfield.components.starfield.starDB;

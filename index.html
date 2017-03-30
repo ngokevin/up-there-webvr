@@ -16,7 +16,7 @@
       <a-assets>
         <!-- assets -->
         <!-- <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item> -->
-
+        <a-asset-item id="starNames" src="assets/data/starnames.json"></a-asset-item>
         <!-- mixins -->
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
         <!-- <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05" rotation="90 0 0" class="star"></a-mixin> -->
@@ -30,7 +30,7 @@
 
       <!-- STARFIELD -->
       <a-entity id="starfield" rotation="0 0 0" scale=".0005 .0005 .0005" position="0 0 -2" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
-        <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
+        <!-- <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity> -->
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
 
         <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" to="-90 0 0"></a-animation>
@@ -39,6 +39,7 @@
         <!-- <a-animation attribute="scale" dur="1000" begin="scaleUpdate" from="0 0 0" to="1 1 1"></a-animation> -->
       </a-entity>
 
+      <!-- STAR DETAIL VIEW  -->
       <a-entity id="star-detail-parent">
         <a-entity id="star-detail-view" geometry="primitive: sphere;" sol-scale material="color: 0x9999ff" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar" action-dispatcher="type: SELECT_STAR" class="clickable">
           <!-- TITLE -->
@@ -46,14 +47,14 @@
 
           <!-- LEFT INFO -->
           <a-entity position="0 0 0" layout="type: box; margin: .75">
-            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starName: text.value"></a-entity>
-            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starName: text.value"></a-entity>
-            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starName: text.value"></a-entity>
+            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.currentStar.name: text.value"></a-entity>
+            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.currentStar.radius: text.value"></a-entity>
+            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.currentStar.temp: text.value"></a-entity>
           </a-entity>
         </a-entity>
-
       </a-entity>
 
+      <!-- LOADING INDICATOR -->
       <a-entity id="loading" redux-bind="worldSettings.busy: visible" position="0 0 -2" scale="2 2 2">
         <a-entity>
           <a-entity text="value: Up There VR; align: center; width: 3; height: auto" position="0 .5 0"></a-entity>

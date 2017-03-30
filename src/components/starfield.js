@@ -308,6 +308,8 @@ AFRAME.registerComponent('starfield', {
 
     var starCount = this.totalStarCount;
     var geo = new THREE.BufferGeometry();
+
+    window.geo = geo;
     var verts = new Float32Array(starCount * 3);
     var absmag = new Float32Array(starCount);
     var temp = new Float32Array(starCount);
@@ -419,6 +421,8 @@ AFRAME.registerComponent('starfield', {
     let starBuffer = this.starDataQueue.shift();
 
     if(starBuffer === undefined) return;
+
+
     // console.log('building...', starBuffer)
     // create a few temp objects to use
     let p = {};
@@ -599,6 +603,7 @@ AFRAME.registerComponent('starfield', {
         this.buildStarfieldGeometry();
         this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
         this.data.state = STARFIELD_BUILDING;
+        console.log("Building starfield... ✨")
         return;
         break;
 
@@ -607,7 +612,8 @@ AFRAME.registerComponent('starfield', {
           let newStars = this.store.getPackets();
 
           if(newStars && newStars.length > 0) {
-            let sStars = this.splitPackets(newStars, 128);
+            console.log("splitting stars", newStars);
+            let sStars = this.splitPackets(newStars, 1024);
             this.starDataQueue = this.starDataQueue.concat(sStars);
           } else if(newStars === false) {
             this.el.setAttribute('starfield', { dataDownloaded: true });
@@ -620,7 +626,10 @@ AFRAME.registerComponent('starfield', {
             val: this.spawnedStars
           })
 
+          // console.log(`Processed ${this.spawnedStars} stars 🐝`)
+
           if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
+            console.log(`Starfield ready. ${newStars} Processed ${this.spawnedStars} stars 🐝`)
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
             this.el.emit('starfieldReady', false);
             this.updateGeometryAttributes();

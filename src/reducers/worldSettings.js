@@ -12,6 +12,7 @@ AFRAME.registerReducer('worldSettings', {
     HOVER_STAR: 'HOVER_STAR',
     SET_BUSY: 'SET_BUSY',
     STAR_COUNT: 'STAR_COUNT',
+    PROCESSING_RATE: 'PROCESSING_RATE',
   },
 
   initialState: {
@@ -23,6 +24,12 @@ AFRAME.registerReducer('worldSettings', {
     hoverStar: 0,
     starName: "Unknown",
     starCount: 0,
+    currentStar: {
+      name: "Unknown",
+      radius: 2.0,
+      temp: 5400
+    },
+    processingRate: 512,
     busy: true,
     cursorPosition: { x: 0, y: 0, z: 0 },
     minScale: .001,
@@ -32,6 +39,12 @@ AFRAME.registerReducer('worldSettings', {
   reducer: function (state, action) {
     state = state || this.initialState;
     switch (action.type) {
+
+      case this.actions.PROCESSING_RATE: {
+        var newState = Object.assign({}, state);
+        newState.processingRate = action.val;
+        return newState;
+      }
 
       case this.actions.STAR_COUNT: {
         var newState = Object.assign({}, state);
