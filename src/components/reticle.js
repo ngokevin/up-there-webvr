@@ -26,7 +26,4 @@ AFRAME.registerComponent('reticle', {
 
   },
 
-  getHoverText: function() {
-    return starData[parseInt(this.el.getAttribute('starId').split('_')[1])]
-  }
 });

@@ -71,6 +71,13 @@ AFRAME.registerComponent('star-selector', {
       }
     });
   },
+  formatStarName: function(name) {
+    if(name === 'U') {
+      return 'Unnamed';
+    } else {
+      return name;
+    }
+  },
   setHover: function(id) {
     this.el.sceneEl.systems.redux.store.dispatch({
       type: HOVER_STAR,
@@ -79,7 +86,7 @@ AFRAME.registerComponent('star-selector', {
     if(id > -1) {
       this.el.sceneEl.systems.redux.store.dispatch({
         type: HOVER_TEXT,
-        val: this.starfield.components.starfield.starnames[id]
+        val: this.formatStarName(this.starfield.components.starfield.starnames[id])
       })
     } else {
       this.el.sceneEl.systems.redux.store.dispatch({

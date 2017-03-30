@@ -45,7 +45,13 @@ AFRAME.registerComponent('starfield', {
     this.detailView = new THREE.Object3D();
     this.el.sceneEl.object3D.add(this.detailView);
     this.starnamesEl = document.getElementById('starNames');
-    this.starnames = JSON.parse(THREE.Cache.files[this.starnamesEl.getAttribute('src')]);
+    if(this.starnamesEl.hasLoaded) {
+      this.starnames = JSON.parse(THREE.Cache.files[this.starnamesEl.getAttribute('src')]);
+    } else {
+      this.starnamesEl.addEventListener('loaded', (evt) => {
+        this.starnames = JSON.parse(THREE.Cache.files[this.starnamesEl.getAttribute('src')]);
+      })
+    }
 
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
@@ -470,10 +476,10 @@ AFRAME.registerComponent('starfield', {
       temp[i] = ar[(i * fields.length) + 7];
 
       // precalculate the color of the star based on its temperature
-      let c = this.getColorForTemp(ar[(i * fields.length) + 7]).multiplyScalar(1.15)
-      color[(i * 4) + 0] = c.x;
-      color[(i * 4) + 1] = c.y;
-      color[(i * 4) + 2] = c.z;
+      let c = this.getColorForTemp(ar[(i * fields.length) + 7])
+      color[(i * 4) + 0] = c.x * 1.15;
+      color[(i * 4) + 1] = c.y * 1.15;
+      color[(i * 4) + 2] = c.z * 1.15;
       color[(i * 4) + 3] = c.w;
 
       radius[i] = ar[(i * fields.length) + 8];
