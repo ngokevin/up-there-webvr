@@ -82,6 +82,7 @@
               let p = this.starfield.components.starfield.getStarPosition(id);
               c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
               c.setAttribute('id', `star_${id}`);
+              c.setAttribute('reticle', 'starId', id);
               this.active.push(id);
               this.entities.push(c);
               this.el.appendChild(c);

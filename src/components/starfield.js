@@ -44,6 +44,8 @@ AFRAME.registerComponent('starfield', {
     this.starCount = 0
     this.detailView = new THREE.Object3D();
     this.el.sceneEl.object3D.add(this.detailView);
+    this.starnamesEl = document.getElementById('starNames');
+    this.starnames = JSON.parse(THREE.Cache.files[this.starnamesEl.getAttribute('src')]);
 
     this.starfieldMat = new THREE.ShaderMaterial({
         uniforms: {
@@ -612,7 +614,7 @@ AFRAME.registerComponent('starfield', {
           let newStars = this.store.getPackets();
 
           if(newStars && newStars.length > 0) {
-            console.log("splitting stars", newStars);
+            // console.log("splitting stars", newStars);
             let sStars = this.splitPackets(newStars, 1024);
             this.starDataQueue = this.starDataQueue.concat(sStars);
           } else if(newStars === false) {

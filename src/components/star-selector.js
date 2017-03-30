@@ -1,16 +1,29 @@
 var starnames = require('../../assets/data/starnames.json');
 
 const SELECT_STAR = 'SELECT_STAR'
-    , HOVER_STAR = 'HOVER_STAR';
+    , HOVER_STAR = 'HOVER_STAR'
+    , HOVER_TEXT = 'HOVER_TEXT';
 
 /* globals AFRAME THREE */
 AFRAME.registerComponent('star-selector', {
   schema: {
-    currentStar: { type: 'int', default: -1}
+    currentStar: { type: 'int', default: -1},
+    dataReady: { type: 'boolean', default: false}
   },
 
   init: function () {
     this.starfield = document.getElementById('starfield');
+
+    // subscribe to the starnames database
+    this.starnames = document.getElementById('starNames');
+    if(this.starnames.hasLoaded) {
+      this.data.dataReady = true;
+    } else {
+      this.starnames.addEventListener('loaded', (evt) => {
+        this.data.dataReady = true;
+      })
+    }
+
 
     this.el.addEventListener('mouseenter', evt => {
       // debugger;
@@ -63,6 +76,18 @@ AFRAME.registerComponent('star-selector', {
       type: HOVER_STAR,
       id: id
     })
+    if(id > -1) {
+      this.el.sceneEl.systems.redux.store.dispatch({
+        type: HOVER_TEXT,
+        val: this.starfield.components.starfield.starnames[id]
+      })
+    } else {
+      this.el.sceneEl.systems.redux.store.dispatch({
+        type: HOVER_TEXT,
+        val: ""
+      })
+    }
+
   },
   setSelected: function(id) {
     this.el.sceneEl.systems.redux.store.dispatch({
