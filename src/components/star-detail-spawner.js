@@ -25,7 +25,7 @@
 
   AFRAME.registerComponent('star-detail-spawner', {
     schema: {
-      target: {type: 'string', default: 'acursor'},
+      target: {type: 'string', default: 'cursorIndicator'},
       maxStars: { type: 'int', default: 10 },
       mixin: { type: 'string', default: 'wirecube'},
       radius: { type: 'float', default: 2 },

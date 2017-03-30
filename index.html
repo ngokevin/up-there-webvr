@@ -30,7 +30,7 @@
 
       <!-- STARFIELD -->
       <a-entity id="starfield" rotation="0 0 0" scale=".0005 .0005 .0005" position="0 0 -2" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
-        <!-- <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity> -->
+        <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
 
         <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" to="-90 0 0"></a-animation>
@@ -42,14 +42,16 @@
       <!-- STAR DETAIL VIEW  -->
       <a-entity id="star-detail-parent">
         <a-entity id="star-detail-view" geometry="primitive: sphere;" sol-scale material="shader: flat; color: 0x9999ff" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar" action-dispatcher="type: SELECT_STAR" class="clickable">
-          <!-- TITLE -->
-          <a-entity id="star-detail-name" mixin="bigFont" position="0 2 0" text="value: Unknown" redux-bind="worldSettings.starDetails.name: text.value"></a-entity>
+          <a-entity id="star-detail-text" look-at="[camera]">
+            <!-- TITLE -->
+            <a-entity id="star-detail-name" mixin="bigFont" position="0 2 0" text="value: Unknown" redux-bind="worldSettings.starDetails.name: text.value"></a-entity>
 
-          <!-- LEFT INFO -->
-          <a-entity position="-2 -.5 0" layout="type: box; margin: .75">
-            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.distance: text.value"></a-entity>
-            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.radius: text.value"></a-entity>
-            <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.temp: text.value"></a-entity>
+            <!-- LEFT INFO -->
+            <a-entity position="-2 -.5 0" layout="type: box; margin: .75">
+              <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.distance: text.value"></a-entity>
+              <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.radius: text.value"></a-entity>
+              <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.temp: text.value"></a-entity>
+            </a-entity>
           </a-entity>
         </a-entity>
       </a-entity>
@@ -72,7 +74,7 @@
 
 
       <!-- parent object for everything following the user around -->
-      <a-entity follow-entity>
+      <a-entity follow-entity redux-bind="worldSettings.starfieldReady: visible">
         <!-- control panel -->
         <a-entity id="control-panel" position="0 -1.25  -.45" rotation="-75 0 0">
 
@@ -144,21 +146,23 @@
           raycaster="objects: .clickable"
           sync-local-location
           player-controls> -->
-          <a-entity id="acursor"
-            cursor="fuse: false; fuseTimeout: 1000"
+          <a-entity id="cursorIndicator"
             geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;"
             position="0 0 -1"
-            event-set__1="_event: mouseenter; material.color: springgreen"
-            event-set__2="_event: mouseleave; material.color: white"
             material="color: #ffffff; shader: flat;transparent: true; opacity: .5;"
-            raycaster="objects: .clickable; recursive: true; far: 100"
+          >
+            <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverText: text.value"></a-entity>
+            <!-- <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity> -->
+            <a-animation attribute="geometry.thetaLength" dur="1000" end="mouseleave" begin="fusing" from=360 to=0 fill="backwards"></a-animation>
+            <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseleave" from=360 to=360></a-animation>
+            <a-animation attribute="geometry.thetaLength" dur="1" begin="click" from=360 to=360></a-animation>
+            <a-animation attribute="material.opacity" dur="125" begin="click" from="1" to=".5"></a-animation>
+          </a-entity>
+          <a-entity id="acursor"
+            cursor="fuse: false; fuseTimeout: 1000"
+            raycaster="objects: .clickable; recursive: true; far: 100; near: 0"
+            position="0 0 0"
             star-selector>
-              <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverText: text.value"></a-entity>
-              <!-- <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity> -->
-              <a-animation attribute="geometry.thetaLength" dur="1000" end="mouseleave" begin="fusing" from=360 to=0 fill="backwards"></a-animation>
-              <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseleave" from=360 to=360></a-animation>
-              <a-animation attribute="geometry.thetaLength" dur="1" begin="click" from=360 to=360></a-animation>
-              <a-animation attribute="material.opacity" dur="125" begin="click" from="1" to=".5"></a-animation>
               <!-- <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseLeave" from=360 to=360></a-animation> -->
           </a-entity>
         </a-entity>

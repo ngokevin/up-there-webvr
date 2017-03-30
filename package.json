@@ -31,6 +31,7 @@
     "aframe-html-shader": "^0.1.1",
     "aframe-layout-component": "^4.0.2",
     "aframe-lod": "git+https://github.com/flimshaw/aframe-lod.git",
+    "aframe-look-at-component": "^0.2.0",
     "aframe-redux-component": "^3.0.2",
     "aframe-stats-in-vr-component": "^0.1.7",
     "debounce": "^1.0.0",

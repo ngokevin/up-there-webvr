@@ -5,6 +5,7 @@ THREE.Sprite = require('../vendor/Sprite');
 // require('aframe-html-shader');
 
 require('aframe-gearvr-controls-component');
+require('aframe-look-at-component');
 // require('aframe-auto-detect-controllers-component');
 require('aframe-redux-component');
 // require('aframe-lod');
