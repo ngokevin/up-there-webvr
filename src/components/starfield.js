@@ -677,7 +677,7 @@ AFRAME.registerComponent('starfield', {
                 type: 'STARFIELD_READY'
               })
 
-            }, 1000);
+            }, 5000);
 
           }
 

@@ -23,7 +23,7 @@ AFRAME.registerComponent('exoplanet-view', {
   },
   update: function() {
     if(this.data > -1) {
-      this.planetDef = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.exoplanets[0];
+      this.planetDef = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.exoplanets[this.data];
       if(this.planetDef !== undefined) {
         // calculate the diameter of the orbit
         this.starDef = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails;

@@ -95,7 +95,8 @@ AFRAME.registerComponent('star-detail-view', {
     newStar.dbKey = this.data.selectedStar;
 
     let planetCount = this.getExoplanets(star.id).length;
-    newStar.exoplanets = this.getExoplanets(star.id);//`${planetCount} planet${planetCount == 1 ? '' : 's'}`;
+    newStar.exoplanetCount = `${planetCount} planet${planetCount == 1 ? '' : 's'}`;
+    newStar.exoplanets = this.getExoplanets(star.id);//
 
     this.el.sceneEl.systems.redux.store.dispatch({
       type: 'STAR_DETAILS',
@@ -106,8 +107,6 @@ AFRAME.registerComponent('star-detail-view', {
     if(this.data.selectedStar !== oldData.selectedStar) {
       // going into detail view mode
       if(this.data.selectedStar > -1) {
-
-
 
         // centralize formatting here for the detail view rather than making a million separate
         // components for each value

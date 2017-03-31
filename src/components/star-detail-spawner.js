@@ -55,7 +55,7 @@
       } else {
         setTimeout( () => {
           this.el.setAttribute('visible', 'true');
-        }, 1100);
+        }, 5100);
 
       }
     },

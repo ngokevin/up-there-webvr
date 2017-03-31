@@ -39,8 +39,8 @@
 
         </a-entity>
         <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" to="-90 0 0"></a-animation>
-        <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="1000" begin="starfieldReady" to=".5 .5 .5"></a-animation>
-        <a-animation easing="ease-in-out" attribute="position" dur="1000" begin="starfieldReady" to="0 0 0"></a-animation>
+        <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="5000" begin="starfieldReady" to=".5 .5 .5"></a-animation>
+        <a-animation easing="ease-in-out" attribute="position" dur="5000" begin="starfieldReady" to="0 0 0"></a-animation>
       </a-entity>
 
       <!-- STAR DETAIL VIEW  -->
@@ -62,7 +62,7 @@
 
             <!-- RIGHT INFO -->
             <a-entity position="2 .5 0" layout="type: box; margin: -.75">
-              <a-entity position="-5 0 0" mixin="rightPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanets: text.value"></a-entity>
+              <a-entity position="-5 0 0" mixin="rightPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanetCount: text.value"></a-entity>
             </a-entity>
           </a-entity>
 
