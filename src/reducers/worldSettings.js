@@ -1,3 +1,5 @@
+var starSets = require('./starSets');
+
 AFRAME.registerReducer('worldSettings', {
   actions: {
     SCALE_DOWN: 'SCALE_DOWN',
@@ -14,7 +16,11 @@ AFRAME.registerReducer('worldSettings', {
     STAR_COUNT: 'STAR_COUNT',
     PROCESSING_RATE: 'PROCESSING_RATE',
     HOVER_TEXT: 'HOVER_TEXT',
-    STAR_DETAILS: 'STAR_DETAILS'
+    STAR_DETAILS: 'STAR_DETAILS',
+    // STAR_SET MODIFIERS
+    SELECT_STAR_SET: 'SELECT_STAR_SET',
+    CREATE_STAR_SET: 'CREATE_STAR_SET',
+    DELETE_STAR_SET: 'DELETE_STAR_SET'
   },
 
   initialState: {
@@ -37,6 +43,8 @@ AFRAME.registerReducer('worldSettings', {
       id: "",
       exoplanets: "YES"
     },
+    currentStarSet: null,
+    starSets: {},
     processingRate: 512,
     busy: true,
     cursorPosition: { x: 0, y: 0, z: 0 },
@@ -47,6 +55,21 @@ AFRAME.registerReducer('worldSettings', {
   reducer: function (state, action) {
     state = state || this.initialState;
     switch (action.type) {
+
+      case this.actions.SELECT_STAR_SET: {
+        var newState = Object.assign({}, state);
+        if(newState.starSets[action.key] !== undefined) {
+          newState.currentStarSet = action.key;
+        }
+        return newState;
+      }
+
+      case this.actions.DELETE_STAR_SET:
+      case this.actions.CREATE_STAR_SET:
+        var newState = Object.assign({}, state);
+        newState.starSets = starSets(state.starSets, action);
+        return newState;
+
 
       case this.actions.STAR_DETAILS: {
         var newState = Object.assign({}, state);

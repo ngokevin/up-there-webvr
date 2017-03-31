@@ -18,6 +18,9 @@ require('aframe-layout-component');
 require('./utils.js');
 // require('./ui2d.js');
 
+// systems
+require('./systems/exoplanet.js')
+
 // reducers
 require('./reducers/worldSettings.js');
 

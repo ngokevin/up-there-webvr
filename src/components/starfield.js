@@ -666,7 +666,7 @@ AFRAME.registerComponent('starfield', {
           if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
             console.log(`Starfield ready. ${newStars} Processed ${this.spawnedStars} stars 🐝`)
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
-            this.el.emit('starfieldReady', false);
+            this.el.emit('starfieldReady', true);
             this.updateGeometryAttributes();
             this.el.sceneEl.systems.redux.store.dispatch({
               type: 'SET_BUSY',

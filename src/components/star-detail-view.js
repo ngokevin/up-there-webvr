@@ -9,7 +9,6 @@ const SOL_TO_KM = 695700
     , PARSEC_TO_AU = 1 / AU_TO_PARSEC
     , AU_TO_KM = AU_TO_PARSEC * PARSEC_TO_KM
 
-var csv = require('csv-string');
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -29,32 +28,27 @@ AFRAME.registerComponent('star-detail-view', {
 
   init: function () {
     this.starfield = document.getElementById('starfield');
-    this.exoplanetsDB = document.getElementById('exoplanets');
+    // this.exoplanetsDB = document.getElementById('exoplanets');
+    //
+    // if(this.exoplanetsDB.hasLoaded) {
+    //   this.processExoplanetsDb();
+    // } else {
+    //   this.exoplanetsDB.addEventListener('loaded', this.processExoplanetsDb.bind(this));
+    // }
+  },
 
-    if(this.exoplanetsDB.hasLoaded) {
-      this.processExoplanetsDb();
-    } else {
-      this.exoplanetsDB.addEventListener('loaded', this.processExoplanetsDb.bind(this));
-    }
-  },
-  processExoplanetsDb: function() {
-    let rawCsv = THREE.Cache.files[this.exoplanetsDB.getAttribute('src')];
-    let x = csv.parse(rawCsv);
-    this.exoplanetHeaders = x.shift();
-    this.exoplanetTable = x;
-  },
   getExoplanets: function(id) {
-    let p = this.exoplanetTable.find( s => {
-      parseInt(s[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]) == id
-    });
-
-    // console.log(this.exoplanetTable[0][this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1], id)
-
-    if(p !== undefined) {
-      return p[this.exoplanetHeaders.indexOf('pl_hostname')]
-    } else {
-      return 'NO'
-    }
+    // let p = this.exoplanetTable.find( s => {
+    //   parseInt(s[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]) == id
+    // });
+    //
+    // // console.log(this.exoplanetTable[0][this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1], id)
+    //
+    // if(p !== undefined) {
+    //   return p[this.exoplanetHeaders.indexOf('pl_hostname')]
+    // } else {
+    //   return 'NO'
+    // }
 
   },
   formatDistance: function(distParsecs) {
@@ -116,7 +110,7 @@ AFRAME.registerComponent('star-detail-view', {
 
     newStar.id = `ID: HD ${star.id}`;
 
-    newStar.exoplanets = this.getExoplanets(star.id);
+    // newStar.exoplanets = this.getExoplanets(star.id);
 
     this.el.sceneEl.systems.redux.store.dispatch({
       type: 'STAR_DETAILS',
