@@ -33,7 +33,9 @@ AFRAME.registerReducer('worldSettings', {
       temp: "",
       distance: "",
       distanceParsecs: 1.3,
-      hexColor: ""
+      hexColor: "",
+      id: "",
+      exoplanets: "YES"
     },
     processingRate: 512,
     busy: true,

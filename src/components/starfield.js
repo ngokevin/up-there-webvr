@@ -300,15 +300,8 @@ AFRAME.registerComponent('starfield', {
   maskStar: function(id, mask) {
     // debugger;
     let o = this.el.object3D.getObjectByName('starfieldPoints', true);
-    // let i = (id * 4) + 3;
-    // debugger;
-    // o.geometry.attributes.starColor.setDynamic(true);
-    // console.log(o.geometry.attributes.starColor.array[id])
-    console.log(parseFloat(mask))
+
     o.geometry.attributes.starColor.setW(id, parseFloat(mask));
-    // console.log(o.geometry.attributes.starColor.array[id]);
-    // o.geometry.attributes.starColor.updateRange.count = 1;
-    // o.geometry.attributes.starColor.updateRange.offset = id;
     o.geometry.attributes.starColor.needsUpdate = true;
   },
 

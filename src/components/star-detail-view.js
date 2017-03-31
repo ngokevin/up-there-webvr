@@ -9,6 +9,11 @@ const SOL_TO_KM = 695700
     , PARSEC_TO_AU = 1 / AU_TO_PARSEC
     , AU_TO_KM = AU_TO_PARSEC * PARSEC_TO_KM
 
+var csv = require('csv-string');
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 /* globals AFRAME THREE */
 AFRAME.registerComponent('star-detail-view', {
@@ -24,6 +29,33 @@ AFRAME.registerComponent('star-detail-view', {
 
   init: function () {
     this.starfield = document.getElementById('starfield');
+    this.exoplanetsDB = document.getElementById('exoplanets');
+
+    if(this.exoplanetsDB.hasLoaded) {
+      this.processExoplanetsDb();
+    } else {
+      this.exoplanetsDB.addEventListener('loaded', this.processExoplanetsDb.bind(this));
+    }
+  },
+  processExoplanetsDb: function() {
+    let rawCsv = THREE.Cache.files[this.exoplanetsDB.getAttribute('src')];
+    let x = csv.parse(rawCsv);
+    this.exoplanetHeaders = x.shift();
+    this.exoplanetTable = x;
+  },
+  getExoplanets: function(id) {
+    let p = this.exoplanetTable.find( s => {
+      parseInt(s[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]) == id
+    });
+
+    // console.log(this.exoplanetTable[0][this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1], id)
+
+    if(p !== undefined) {
+      return p[this.exoplanetHeaders.indexOf('pl_hostname')]
+    } else {
+      return 'NO'
+    }
+
   },
   formatDistance: function(distParsecs) {
 
@@ -33,9 +65,11 @@ AFRAME.registerComponent('star-detail-view', {
     if(distLy < .8) {
       out = `${Math.round((distLy * LY_TO_KM)/1e6)} million km`;
     } else if(distLy < 10) {
-      out = `${distLy.toFixed(2)} lightyears`;
-    } else {
+      out = `${distLy.toFixed(1)} lightyears`;
+    } else if(distLy < 1000){
       out = `${Math.round(distLy)} lightyears`
+    } else {
+      out = `${numberWithCommas(Math.round(distLy))} lightyears`
     }
 
     return out;
@@ -46,11 +80,11 @@ AFRAME.registerComponent('star-detail-view', {
     let radiusKm = radiusSols * SOL_TO_KM;
 
     if(radiusKm < 1e6) {
-      out = `${Math.round(radiusKm)} km`;
+      out = `${numberWithCommas(Math.round(radiusKm))} km`;
     } else if(radiusKm < 1e9) {
-      out = `${Math.round(radiusKm / 1e6)} million km`;
+      out = `${(radiusKm / 1e6).toFixed(1)} million km`;
     } else {
-      out = `${Math.round(radiusKm / 1e9)} billion km`;
+      out = `${(radiusKm / 1e9).toFixed(1)} billion km`;
     }
     return out;
   },
@@ -72,15 +106,17 @@ AFRAME.registerComponent('star-detail-view', {
 
     newStar.name = starName
     newStar.radius = this.formatRadius(star.radius);
-    newStar.temp = `${star.temp}° K`;
+    newStar.temp = `${numberWithCommas(star.temp)}° K`;
     let p = new THREE.Vector3(star.position.x, star.position.y, star.position.z);
     newStar.distance = this.formatDistance(p.distanceTo(new THREE.Vector3(0,0,0)));
 
     let color = new THREE.Color(star.color.x, star.color.y, star.color.z);
     newStar.color = color.getHexString();
-    // debugger;
     this.el.setAttribute('material', 'color', `#${newStar.color}`);
-    // debugger
+
+    newStar.id = `ID: HD ${star.id}`;
+
+    newStar.exoplanets = this.getExoplanets(star.id);
 
     this.el.sceneEl.systems.redux.store.dispatch({
       type: 'STAR_DETAILS',

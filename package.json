@@ -34,14 +34,18 @@
     "aframe-look-at-component": "^0.2.0",
     "aframe-redux-component": "^3.0.2",
     "aframe-stats-in-vr-component": "^0.1.7",
+    "csv": "^1.1.1",
+    "csv-string": "^2.3.2",
     "debounce": "^1.0.0",
     "extract-text-webpack-plugin": "^2.0.0",
+    "fast-csv": "^2.4.0",
     "glsl-colormap": "^1.0.1",
     "glsl-noise": "0.0.0",
     "glsl-scale-log": "^1.0.0",
     "glslify": "^6.0.1",
     "glslify-loader": "^1.0.2",
     "raw-loader": "^0.5.1",
+    "tiny-csv": "^3.0.0",
     "whatwg-fetch": "^2.0.3"
   }
 }

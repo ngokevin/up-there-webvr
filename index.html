@@ -17,6 +17,7 @@
         <!-- assets -->
         <!-- <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item> -->
         <a-asset-item id="starNames" src="assets/data/starnames.json"></a-asset-item>
+        <a-asset-item id="exoplanets" src="assets/data/exoplanets.csv"></a-asset-item>
         <!-- mixins -->
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
         <!-- <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05" rotation="90 0 0" class="star"></a-mixin> -->
@@ -47,10 +48,12 @@
             <a-entity id="star-detail-name" mixin="bigFont" position="0 2 0" text="value: Unknown" redux-bind="worldSettings.starDetails.name: text.value"></a-entity>
 
             <!-- LEFT INFO -->
-            <a-entity position="-2 -.5 0" layout="type: box; margin: .75">
-              <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.distance: text.value"></a-entity>
-              <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.radius: text.value"></a-entity>
-              <a-entity id="star-detail-name" position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.temp: text.value"></a-entity>
+            <a-entity position="-2 .5 0" layout="type: box; margin: -.75">
+              <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanets: text.value"></a-entity>
+              <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.id: text.value"></a-entity>
+              <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.distance: text.value"></a-entity>
+              <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.radius: text.value"></a-entity>
+              <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.temp: text.value"></a-entity>
             </a-entity>
           </a-entity>
         </a-entity>
