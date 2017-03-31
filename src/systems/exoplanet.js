@@ -6,6 +6,7 @@ AFRAME.registerSystem('exoplanet', {
   init: function () {
     this.exoplanetsDB = document.getElementById('exoplanets');
     this.starfield = document.getElementById('starfield');
+    this.exoplanetIdTable = [];
     window.store =this.store = this.sceneEl.systems.redux.store;
     if(this.exoplanetsDB.hasLoaded) {
       this.processExoplanetsDb();
@@ -31,9 +32,11 @@ AFRAME.registerSystem('exoplanet', {
     let s = [];
     this.exoplanetTable.map( p => {
       let i = parseInt(p[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]);
-      if(document.getElementById('starfield').components.starfield.getStarData(i) !== undefined) {
-        if(s.indexOf(i) === -1) {
-          s.push(i);
+      let sid = this.starfield.components.starfield.starIdLookup[i];
+      // console.log(i, sid);
+      if(sid !== undefined && this.starfield.components.starfield.getStarData(sid) !== undefined) {
+        if(s.indexOf(sid) === -1) {
+          s.push(sid);
         }
       }
     })
@@ -44,14 +47,24 @@ AFRAME.registerSystem('exoplanet', {
     })
   },
   // returns a given starID's exoplanet, or false
-  getExoPlanet: function(id) {
+  getExoplanet: function(id) {
     // find the first planet who's hipparcos id matches
     let p = this.exoplanetTable.find( s => {
-      parseInt(s[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]) == id
+      let exHip = parseInt(s[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]);
+      let sHip = this.starfield.components.starfield.starIdLookup[exHip];
+      return id == exHip
     });
 
+    // console.log(p, id);
     if(p !== undefined) {
-      return p[this.exoplanetHeaders.indexOf('pl_hostname')]
+
+      let pOut = {};
+
+      this.exoplanetHeaders.map( (k, i) => {
+        pOut[k] = p[i];
+      })
+
+      return pOut
     } else {
       return false
     }

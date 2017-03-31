@@ -66,7 +66,7 @@ AFRAME.registerComponent('star-set-indicator', {
         color[(i*4+3)] = 1.;
       })
 
-      console.log(verts);
+      // console.log(verts);
 
       this.geo.attributes.position.set(verts);
       this.geo.attributes.position.needsUpdate = true;
