@@ -82,6 +82,7 @@ AFRAME.registerComponent('star-detail-view', {
 
     newStar.name = starName
     newStar.radius = this.formatRadius(star.radius);
+    newStar.radiusSols = star.radius;
     newStar.temp = `${numberWithCommas(star.temp)}° K`;
     let p = new THREE.Vector3(star.position.x, star.position.y, star.position.z);
     newStar.distance = this.formatDistance(p.distanceTo(new THREE.Vector3(0,0,0)));
@@ -91,9 +92,10 @@ AFRAME.registerComponent('star-detail-view', {
     this.el.setAttribute('material', 'color', `#${newStar.color}`);
 
     newStar.id = `ID: HD ${star.id}`;
+    newStar.dbKey = this.data.selectedStar;
 
     let planetCount = this.getExoplanets(star.id).length;
-    newStar.exoplanets = `${planetCount} planet${planetCount == 1 ? '' : 's'}`;
+    newStar.exoplanets = this.getExoplanets(star.id);//`${planetCount} planet${planetCount == 1 ? '' : 's'}`;
 
     this.el.sceneEl.systems.redux.store.dispatch({
       type: 'STAR_DETAILS',
