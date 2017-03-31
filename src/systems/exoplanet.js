@@ -1,13 +1,15 @@
 
 var csv = require('csv-string');
 
+const SELECT_STAR = 'SELECT_STAR';
+
 /* globals AFRAME */
 AFRAME.registerSystem('exoplanet', {
   init: function () {
     this.exoplanetsDB = document.getElementById('exoplanets');
     this.starfield = document.getElementById('starfield');
     this.exoplanetIdTable = [];
-    window.store =this.store = this.sceneEl.systems.redux.store;
+    window.store = this.store = this.sceneEl.systems.redux.store;
     if(this.exoplanetsDB.hasLoaded) {
       this.processExoplanetsDb();
     } else {
@@ -33,7 +35,7 @@ AFRAME.registerSystem('exoplanet', {
     this.exoplanetTable.map( p => {
       let i = parseInt(p[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]);
       let sid = this.starfield.components.starfield.starIdLookup[i];
-      // console.log(i, sid);
+
       if(sid !== undefined && this.starfield.components.starfield.getStarData(sid) !== undefined) {
         if(s.indexOf(sid) === -1) {
           s.push(sid);
@@ -46,27 +48,32 @@ AFRAME.registerSystem('exoplanet', {
       starset: s
     })
   },
+  getExoplanet: function(planetLetter) {
+
+  },
   // returns a given starID's exoplanet, or false
-  getExoplanet: function(id) {
-    // find the first planet who's hipparcos id matches
-    let p = this.exoplanetTable.find( s => {
+  getExoplanets: function(id) {
+
+    // find all the planets who's hipparcos id matches
+    let p = this.exoplanetTable.filter( s => {
       let exHip = parseInt(s[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]);
       let sHip = this.starfield.components.starfield.starIdLookup[exHip];
       return id == exHip
     });
 
     // console.log(p, id);
-    if(p !== undefined) {
+    if(p !== undefined && p.length > 0) {
+      let pOut = p.map( exo => {
+        let obj = {};
 
-      let pOut = {};
-
-      this.exoplanetHeaders.map( (k, i) => {
-        pOut[k] = p[i];
+        this.exoplanetHeaders.map( (k, i) => {
+          obj[k] = exo[i];
+        });
+        return obj;
       })
-
       return pOut
     } else {
-      return false
+      return []
     }
 
   }

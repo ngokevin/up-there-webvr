@@ -28,24 +28,10 @@ AFRAME.registerComponent('star-detail-view', {
 
   init: function () {
     this.starfield = document.getElementById('starfield');
-
-    // this.exoplanetsDB = document.getElementById('exoplanets');
-    //
-    // if(this.exoplanetsDB.hasLoaded) {
-    //   this.processExoplanetsDb();
-    // } else {
-    //   this.exoplanetsDB.addEventListener('loaded', this.processExoplanetsDb.bind(this));
-    // }
   },
 
   getExoplanets: function(id) {
-    let p = this.el.sceneEl.systems.exoplanet.getExoplanet(id);
-    if(p) {
-      console.log(p);
-      return 'YES'
-    } else {
-      return 'NO'
-    }
+    return this.el.sceneEl.systems.exoplanet.getExoplanets(id);
   },
   formatDistance: function(distParsecs) {
 
@@ -106,7 +92,8 @@ AFRAME.registerComponent('star-detail-view', {
 
     newStar.id = `ID: HD ${star.id}`;
 
-    newStar.exoplanets = this.getExoplanets(star.id);
+    let planetCount = this.getExoplanets(star.id).length;
+    newStar.exoplanets = `${planetCount} planet${planetCount == 1 ? '' : 's'}`;
 
     this.el.sceneEl.systems.redux.store.dispatch({
       type: 'STAR_DETAILS',
