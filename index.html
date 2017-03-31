@@ -33,7 +33,9 @@
       <a-entity id="starfield" rotation="0 0 0" scale=".0005 .0005 .0005" position="0 0 -2" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
+        <a-entity id="star-set-highlighter" star-set-indicator redux-bind="worldSettings.currentStarSet: star-set-indicator.currentStarSet">
 
+        </a-entity>
         <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" to="-90 0 0"></a-animation>
         <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="5000" begin="starfieldReady" to=".5 .5 .5"></a-animation>
         <a-animation easing="ease-in-out" attribute="position" dur="5000" begin="starfieldReady" to="0 0 0"></a-animation>
@@ -48,7 +50,7 @@
 
             <!-- LEFT INFO -->
             <a-entity position="-2 .5 0" layout="type: box; margin: -.75">
-              <!-- <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanets: text.value"></a-entity> -->
+              <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanets: text.value"></a-entity>
               <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.id: text.value"></a-entity>
               <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.distance: text.value"></a-entity>
               <a-entity position="-5 0 0" mixin="leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.radius: text.value"></a-entity>
@@ -90,7 +92,7 @@
               <a-entity mixin="blue" id="scale-legend" position=".5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
             </a-entity> -->
             <a-entity position="0 .35 0" text="align: center; value: exoplanets; width: 1"></a-entity>
-            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" toggle-switch="morph: On" action-dispatcher="type: SELECT_STAR_SET; key: 'exoplanets'" class="clickable">
+            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" toggle-switch="morph: On" action-dispatcher="type: SELECT_STAR_SET; value: exoplanets" class="clickable">
               <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
             </a-entity>
           </a-entity>

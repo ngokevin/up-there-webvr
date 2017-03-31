@@ -14,7 +14,6 @@ AFRAME.registerSystem('exoplanet', {
     }
   },
   processExoplanetsDb: function() {
-
     // process the CSV into an object
     let rawCsv = THREE.Cache.files[this.exoplanetsDB.getAttribute('src')];
     let x = csv.parse(rawCsv);

@@ -27,6 +27,7 @@ AFRAME.registerReducer('worldSettings', {
     scale: .0005,
     speed: 50,
     time: 0,
+    currentStarSet: false,
     starfieldReady: false,
     selectedStar: -1,
     hoverStar: 0,
@@ -43,7 +44,6 @@ AFRAME.registerReducer('worldSettings', {
       id: "",
       exoplanets: "YES"
     },
-    currentStarSet: null,
     starSets: {},
     processingRate: 512,
     busy: true,
@@ -58,8 +58,10 @@ AFRAME.registerReducer('worldSettings', {
 
       case this.actions.SELECT_STAR_SET: {
         var newState = Object.assign({}, state);
-        if(newState.starSets[action.key] !== undefined) {
-          newState.currentStarSet = action.key;
+        if(newState.starSets[action.value] !== undefined) {
+          newState.currentStarSet = action.value;
+        } else {
+          newState.currentStarSet = false;
         }
         return newState;
       }

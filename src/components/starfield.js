@@ -333,7 +333,7 @@ AFRAME.registerComponent('starfield', {
     this.geo = geo;
     this.points = new THREE.Points(this.geo, this.starfieldMat);
     this.points.name = "starfieldPoints";
-    // this.points.frustrumCulled = false;
+    this.points.frustrumCulled = false;
     // this.el.object3D.frustrumCulled = false;
     this.el.setObject3D('mesh', this.points);
 

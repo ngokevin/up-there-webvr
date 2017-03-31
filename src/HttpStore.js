@@ -68,7 +68,7 @@ class HttpStore {
 
     // record the length of this buffer to the total count
     this.chunkCounter += cleanBuffer.length;
-    console.log(`Downloaded ${this.chunkCounter} bytes for ${cleanBuffer.length} recs...`);
+    // console.log(`Downloaded ${this.chunkCounter} bytes for ${cleanBuffer.length} recs...`);
   }
 
   handleEnd(data) {

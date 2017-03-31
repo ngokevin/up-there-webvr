@@ -49,6 +49,7 @@ require('./components/reticle.js');
 // require('./components/scale-ui.js');
 require('./components/sol-scale.js');
 require('./components/star-hover-text.js');
+require('./components/star-set-indicator.js');
 require('./components/sync-local-location.js');
 require('./components/toggle-switch.js');
 require('./components/translate-ui.js');
