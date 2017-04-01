@@ -64,9 +64,11 @@
             <a-entity position="2 .5 0" layout="type: box; margin: -.75">
               <a-entity position="-5 0 0" mixin="rightPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanetCount: text.value"></a-entity>
             </a-entity>
+
+            <a-entity star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId"></a-entity>
           </a-entity>
 
-          <a-entity star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId"></a-entity>
+
         </a-entity>
       </a-entity>
 

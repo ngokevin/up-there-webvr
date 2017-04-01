@@ -7,5 +7,5 @@ uniform float uTime;
 
 void main() {
   gl_FragColor = texture2D(decal, gl_PointCoord);
-  if(gl_FragColor.w < .5) discard;
+  if(gl_FragColor.w < .25) discard;
 }
