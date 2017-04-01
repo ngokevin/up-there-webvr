@@ -1,4 +1,6 @@
 // import {TweenLite, Power2} from "gsap";
+const SOLS_TO_PARSECS = 2.25461e-8
+    , AU_TO_PARSEC = 4.84814e-6;
 
 // var stardata = require('../../data/stardata.json')
 var fields = ['x','y','z','vx','vy','vz','absmag','temp','radius','id']; // all float32s
@@ -343,12 +345,14 @@ AFRAME.registerComponent('starfield', {
     // this.el.object3D.frustrumCulled = false;
   },
 
+  // scale the starfield to show the selected star at the proper scale
   setScaleParentToStar: function(id) {
     let s = this.getStarWorldLocation(id);
     this.scaleParent.position.set(s.x, s.y, s.z);
     this.scaleParent.scale.set(1, 1, 1);
     this.scaleParent.updateMatrixWorld();
 
+    // parent the starfield to the scaleParent location without changing its world transform
     THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
     var scale = { v: 1 };
     this.maskStar(id, 0.0);
@@ -362,6 +366,7 @@ AFRAME.registerComponent('starfield', {
     d.applyQuaternion(this.camera.object3D.quaternion);
     this.detailPosition.copy(this.camera.object3D.position).sub(d.multiplyScalar(this.detailDistance));
 
+    // tween the position to be the right distance away from wherever the camera is currently gazing
     this.posTween = new AFRAME.TWEEN.Tween(this.scaleParent.position)
                       .to(
                         {
@@ -372,8 +377,29 @@ AFRAME.registerComponent('starfield', {
                         .easing(AFRAME.TWEEN.Easing.Exponential.InOut)
                         .start();
 
+    let starDetails = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails;
+
+    let parsecsScale = 0;
+
+    // if the star has exoplanets, scale it to comfortably fit all of their orbits
+    if(starDetails.exoplanets.length > 0) {
+      let sortedPlanets = starDetails.exoplanets.sort( (a,b) => {
+        return parseFloat(a.pl_orbsmax) - parseFloat(b.pl_orbsmax);
+      })
+      parsecsScale = parseFloat(sortedPlanets[sortedPlanets.length-1].pl_orbsmax) * AU_TO_PARSEC;
+    } else {
+      // at a scale of 1, the star is this large
+
+    }
+
+    parsecsScale = SOLS_TO_PARSECS * stardata.radius;
+
+    // scale the parent so that the star will always be 1m in radius
+    let parentScale = .5 / parsecsScale;
+
+    // tween the scale so that the star's radius in sols is
     this.tween = new AFRAME.TWEEN.Tween(scale)
-                  .to({ v: (1e6 / stardata.radius) * 20.0 }, 1000)
+                  .to({ v: parentScale }, 1000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
                   .onUpdate( () => {
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
@@ -381,9 +407,9 @@ AFRAME.registerComponent('starfield', {
                   .start();
   },
   clearScaleParent: function(id) {
-    console.log('clear!')
     var scale = { v: this.scaleParent.scale.x };
 
+    // tween the scaleparent position back to our previous location
     this.posTween.stop();
     this.posTween = new AFRAME.TWEEN.Tween(this.scaleParent.position)
                       .to(
@@ -395,6 +421,7 @@ AFRAME.registerComponent('starfield', {
                         .easing(AFRAME.TWEEN.Easing.Exponential.InOut)
                         .start();
 
+    // tween the scaleparent scale back to 1
     this.tween.stop();
     this.tween = new AFRAME.TWEEN.Tween(scale)
                   .to({ v: 1.0 }, 1000)
@@ -612,7 +639,9 @@ AFRAME.registerComponent('starfield', {
 
         if(this.data.selectedStar !== oldData.selectedStar) {
          if(this.data.selectedStar >= 0) {
-            this.setScaleParentToStar(this.data.selectedStar);
+            setTimeout( () => {
+              this.setScaleParentToStar(this.data.selectedStar);
+            }, 100)
           } else {
             this.clearScaleParent(oldData.selectedStar);
           }
