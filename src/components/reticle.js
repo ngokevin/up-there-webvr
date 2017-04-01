@@ -1,7 +1,7 @@
 /* globals AFRAME THREE */
 
 var spriteMaterial = new THREE.SpriteMaterial({
-  color: 0xffaaed,
+  color: 0x99aaff,
   transparent: true,
   map: new THREE.TextureLoader().load( "assets/images/reticle.png" ),
   depthWrite: false,
