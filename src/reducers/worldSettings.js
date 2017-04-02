@@ -17,6 +17,7 @@ AFRAME.registerReducer('worldSettings', {
     PROCESSING_RATE: 'PROCESSING_RATE',
     HOVER_TEXT: 'HOVER_TEXT',
     STAR_DETAILS: 'STAR_DETAILS',
+
     // STAR_SET MODIFIERS
     SELECT_STAR_SET: 'SELECT_STAR_SET',
     CREATE_STAR_SET: 'CREATE_STAR_SET',
@@ -45,6 +46,12 @@ AFRAME.registerReducer('worldSettings', {
       dbKey: -1,
       exoplanets: [],
       exoplanetCount: 0
+    },
+    ui: {
+      selectedStar: -1,
+      hoverStar: -1,
+      selectedPlanet: -1,
+      hoverPlanet: -1
     },
     starSets: {},
     processingRate: 512,

@@ -1,4 +1,5 @@
-const SOLS_TO_PARSECS = 2.25461e-8;
+const SOLS_TO_PARSECS = 2.25461e-8
+    , AU_TO_PARSEC = 4.84814e-6;
 
 
  AFRAME.registerComponent('star-detail-exoplanet-spawner', {
@@ -21,15 +22,34 @@ const SOLS_TO_PARSECS = 2.25461e-8;
    },
    spawnPlanets: function() {
      let p = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.exoplanets;
-     console.log(p);
+
+     // skip if there are no exoplanets
+     if(p.length <= 0) {
+       return;
+     }
+
+     // if the star has exoplanets, scale it to comfortably fit all of their orbits
+     let sortedPlanets = p.sort( (a,b) => {
+       return parseFloat(a.pl_orbsmax) - parseFloat(b.pl_orbsmax);
+     })
+
+     // the scale in parsecs of the largest orbit
+     parsecsScale = parseFloat(sortedPlanets[sortedPlanets.length-1].pl_orbsmax) * AU_TO_PARSEC;
+
+     // calculate the scale value for that orbital radius to give it a real world scale of 1
+     let systemScale = 1.0 / parsecsScale;
+
+     console.log(`🌎 Star system is ${parsecsScale} across, ${systemScale} ratio`)
+
      p.map( (pDef, i) => {
        let c = this.el.sceneEl.components.pool__exoplanet.requestEntity();
-       c.setAttribute('exoplanet-view', i);
-       console.log(`Setting ${i} key on exoplanet...`)
+       c.setAttribute('exoplanet-view', 'planetId', i);
+       c.setAttribute('exoplanet-view', 'systemScale', systemScale);
+      //  console.log(`Setting ${i} key on exoplanet...`)
        this.el.appendChild(c);
        this.active.push(c);
      });
-     console.log(`Spawned ${p.length} planets...`);
+
    },
    update: function(oldData) {
      console.log(this.data, oldData);

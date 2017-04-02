@@ -379,19 +379,6 @@ AFRAME.registerComponent('starfield', {
 
     let starDetails = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails;
 
-    let parsecsScale = 0;
-
-    // if the star has exoplanets, scale it to comfortably fit all of their orbits
-    if(starDetails.exoplanets.length > 0) {
-      let sortedPlanets = starDetails.exoplanets.sort( (a,b) => {
-        return parseFloat(a.pl_orbsmax) - parseFloat(b.pl_orbsmax);
-      })
-      parsecsScale = parseFloat(sortedPlanets[sortedPlanets.length-1].pl_orbsmax) * AU_TO_PARSEC;
-    } else {
-      // at a scale of 1, the star is this large
-
-    }
-
     parsecsScale = SOLS_TO_PARSECS * stardata.radius;
 
     // scale the parent so that the star will always be 1m in radius
