@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 200" pool__exoplanet="mixin: exoplanet; size: 9">
+    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 200" pool__exoplanet="mixin: exoplanet; size: 9" pool__medtext="mixin: medFont; size: 9;">
       <a-assets>
         <!-- assets -->
         <!-- <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item> -->
@@ -77,6 +77,7 @@
             <a-entity position="3 .5 0" rotation="-25 0 0" layout="type: box; margin: -.75">
               <a-entity position="-5 1 0" mixin="medFont rightPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanetCount: text.value"></a-entity>
               <a-entity rotation="-45 0 0" star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId"></a-entity>
+              <a-entity rotation="0 0 0" star-detail-exoplanet-list redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-list.starId" layout="type: box; margin: -.75"></a-entity>
             </a-entity>
 
 
