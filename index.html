@@ -27,10 +27,9 @@
         <a-mixin id="medFont" text="align: center; width: 10; height: auto;"></a-mixin>
         <a-mixin id="smFont" text="align: center; width: 5; height: auto;"></a-mixin>
 
-
         <a-mixin id="leftPanel" text="align: right; anchor: right;"></a-mixin>
         <a-mixin id="rightPanel" text="align: left; anchor: left;"></a-mixin>
-        <a-mixin id="star" reticle class="star" scale=".5 .5 .5" action-dispatcher="type: SELECT_STAR; value: -1"></a-mixin>
+        <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
         <a-mixin id="exoplanet" exoplanet-view geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0" material="shader: flat; color: #ff0000; side: double"></a-mixin>
       </a-assets>
 
@@ -52,7 +51,7 @@
       <!-- ✨✨✨ STAR DETAIL VIEW ✨✨✨  -->
       <a-entity id="star-detail-parent">
 
-        <a-entity id="star-detail-view" geometry="primitive: sphere;" material="shader: flat; color: 0x9999ff" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar">
+        <a-entity id="star-detail-view" scale="0 0 0" geometry="primitive: sphere;" material="shader: flat; color: 0x9999ff" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar">
 
           <!-- detail ui parent, maintains angle to camera -->
           <a-entity id="star-detail-text" look-at="[camera]">
@@ -123,7 +122,7 @@
               <a-entity mixin="blue" id="scale-legend" position=".5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
             </a-entity> -->
             <a-entity position="0 .35 0" text="align: center; value: exoplanets; width: 1"></a-entity>
-            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" toggle-switch="morph: On" action-dispatcher="type: SELECT_STAR_SET; value: exoplanets" class="clickable">
+            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="highlight stars with planets" toggle-switch="morph: On" action-dispatcher="type: SELECT_STAR_SET; value: exoplanets" class="clickable">
               <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
             </a-entity>
           </a-entity>
@@ -138,7 +137,7 @@
               <a-entity mixin="blue" id="scale-legend" position=".5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
             </a-entity> -->
             <a-entity position="0 .35 0" text="align: center; value: constellations; width: 1"></a-entity>
-            <a-entity rotation="90 0 0" id="constellationToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" class="clickable">
+            <a-entity rotation="90 0 0" id="constellationToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="toggle constellation lines" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" class="clickable">
               <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
             </a-entity>
           </a-entity>
@@ -203,7 +202,12 @@
                 geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;"
                 position="0 0 -1"
                 material="color: #ffffff; shader: flat; transparent: true; opacity: .5;"
-              >
+              ></a-entity>
+              <a-entity id="cursorHoverText"
+                position="0 -.125 -1"
+                text="value: Default; align: center; width: 2; height: auto; anchor: center"
+                star-hover-text
+              ></a-entity>
                 <!-- <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverText: text.value"></a-entity>
                 <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity>
                 <a-animation attribute="material.color" dur="250" to="pink" begin="mouseenter"></a-animation>
@@ -212,7 +216,7 @@
                 <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseleave" from=360 to=360></a-animation>
                 <a-animation attribute="geometry.thetaLength" dur="1" begin="click" from=360 to=360></a-animation>
                 <a-animation attribute="material.opacity" dur="125" begin="click" from="1" to=".5"></a-animation> -->
-              </a-entity>
+
               <!-- <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseLeave" from=360 to=360></a-animation> -->
           </a-entity>
         </a-entity>

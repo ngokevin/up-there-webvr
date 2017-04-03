@@ -12,6 +12,7 @@
     */
    init: function (data) {
      this.material = new THREE.MeshBasicMaterial({ color: 0xff99dd, wireframe: true });
+     this.starfield = document.getElementById('starfield')
      this.update(data);  // `update()` currently not called after `init`. (#1834)
    },
    /**
@@ -66,13 +67,20 @@
       });
       this.entities = [];
     },
+    formatStarName: function(name) {
+      if(name === 'U') {
+        return 'Unnamed';
+      } else {
+        return name;
+      }
+    },
     throttledTick: function() {
       if(!this.data.starfieldReady) return;
 
       if(this.pool === undefined) {
         this.pool = this.el.sceneEl.components.pool__star;
       }
-      debugger;
+
       if(this.target != null && this.ready === true && this.pool !== undefined && this.data.selectedStar == -1) {
 
         var stars = this.getStarsInRange();
@@ -89,6 +97,8 @@
               c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
               c.setAttribute('id', `star_${id}`);
               c.setAttribute('action-dispatcher', 'value', parseInt(id));
+              c.setAttribute('hover-text', this.formatStarName(this.starfield.components.starfield.starnames[id]));
+              // c.setAttribute('')
               this.active.push(id);
               this.entities.push(c);
               this.el.appendChild(c);

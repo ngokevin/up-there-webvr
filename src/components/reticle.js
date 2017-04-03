@@ -29,9 +29,11 @@ AFRAME.registerComponent('reticle', {
     // this.sprite = new THREE.Sprite()
     this.el.setObject3D('sprite', new THREE.Sprite(spriteMaterial));
   },
+  handleStateUpdate: function() {
 
-  update: function () {
-
+  },
+  update: function() {
+    // console.log('Reticle updated.');
   },
 
 });

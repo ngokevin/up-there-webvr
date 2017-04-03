@@ -133,9 +133,7 @@ AFRAME.registerComponent('starfield', {
             if(this.spatialHash[h] !== undefined) {
               list = list.concat(this.spatialHash[h]);
             }
-          } else {
           }
-
         }
       }
     }
