@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>A-Painter</title>
+    <title>Up There WebVR by flimshaw.net</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="img/icon-256.png">
     <meta name="description" content="Paint in VR in your browser. Powered by A-Frame.">
@@ -30,7 +30,7 @@
 
         <a-mixin id="leftPanel" text="align: right; anchor: right;"></a-mixin>
         <a-mixin id="rightPanel" text="align: left; anchor: left;"></a-mixin>
-        <a-mixin id="star" reticle class="star" scale=".5 .5 .5"></a-mixin>
+        <a-mixin id="star" reticle class="star" scale=".5 .5 .5" action-dispatcher="type: SELECT_STAR; value: -1"></a-mixin>
         <a-mixin id="exoplanet" exoplanet-view geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0" material="shader: flat; color: #ff0000; side: double"></a-mixin>
       </a-assets>
 
@@ -58,8 +58,8 @@
           <a-entity id="star-detail-text" look-at="[camera]">
 
             <!-- CLOSE BUTTON -->
-            <a-entity mixin="medFont" position="-1 3 0" text="value: < Zoom Out; align: left;" action-dispatcher="type: SELECT_STAR" class="clickable">
-              <a-animation easing="ease-in-out" attribute="position" dur="1000" repeat="indefinite" to="-1.15 3 0" direction="alternate"></a-animation>
+            <a-entity mixin="smFont" geometry="primitive: plane; width: 2; height: .5" material="shader: flat; color: #333333" position="-4 3 0" text="value: < Zoom Out;" action-dispatcher="type: SELECT_STAR" class="clickable hoverable">
+              <a-animation easing="ease-in-out" attribute="position" dur="1000" repeat="indefinite" to="-4 3 -.15" direction="alternate"></a-animation>
             </a-entity>
 
             <!-- TITLE -->
@@ -181,11 +181,12 @@
       </a-entity> -->
       <a-entity id="right-hand"
                 if-no-vr-headset="visible: false"
-                gearvr-controls>
+                gearvr-controls
+                >
       </a-entity>
 
     <!-- Camera / Cursor -->
-      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 .5" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed">
+      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 .5" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed; worldSettings.inputActive.fly: gearvr-fly-controls.active; worldSettings.inputActive.time: gearvr-time-controls.active">
         <!-- <a-entity id="acursor"
           position="0 0 -1"
           geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
@@ -193,23 +194,25 @@
           raycaster="objects: .clickable"
           sync-local-location
           player-controls> -->
-          <a-entity id="cursorIndicator"
-            geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;"
-            position="0 0 -1"
-            material="color: #ffffff; shader: flat;transparent: true; opacity: .5;"
-          >
-            <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverText: text.value"></a-entity>
-            <!-- <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity> -->
-            <a-animation attribute="geometry.thetaLength" dur="1000" end="mouseleave" begin="fusing" from=360 to=0 fill="backwards"></a-animation>
-            <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseleave" from=360 to=360></a-animation>
-            <a-animation attribute="geometry.thetaLength" dur="1" begin="click" from=360 to=360></a-animation>
-            <a-animation attribute="material.opacity" dur="125" begin="click" from="1" to=".5"></a-animation>
-          </a-entity>
+
           <a-entity id="acursor"
             cursor="fuse: false; fuseTimeout: 1000"
             raycaster="objects: .clickable; recursive: true; far: 100; near: 0"
-            position="0 0 0"
-            star-selector>
+            position="0 0 0">
+              <a-entity id="cursorIndicator"
+                geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;"
+                position="0 0 -1"
+                material="color: #ffffff; shader: flat; transparent: true; opacity: .5;"
+              >
+                <!-- <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverText: text.value"></a-entity>
+                <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 .05 0" redux-bind="worldSettings.selectedStar: text.value"></a-entity>
+                <a-animation attribute="material.color" dur="250" to="pink" begin="mouseenter"></a-animation>
+                <a-animation attribute="material.color" dur="250" to="white" begin="mouseleave"></a-animation>
+                <a-animation attribute="geometry.thetaLength" dur="1000" end="mouseleave" begin="fusing" from=360 to=0 fill="backwards"></a-animation>
+                <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseleave" from=360 to=360></a-animation>
+                <a-animation attribute="geometry.thetaLength" dur="1" begin="click" from=360 to=360></a-animation>
+                <a-animation attribute="material.opacity" dur="125" begin="click" from="1" to=".5"></a-animation> -->
+              </a-entity>
               <!-- <a-animation attribute="geometry.thetaLength" dur="1" begin="mouseLeave" from=360 to=360></a-animation> -->
           </a-entity>
         </a-entity>

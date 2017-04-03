@@ -7,7 +7,6 @@ AFRAME.registerComponent('follow-entity', {
     this.targetEl = document.getElementById(this.data.target);
   },
   tick: function() {
-    // console.log('following');
     this.el.setAttribute('position', this.targetEl.getAttribute('position'));
   }
 });

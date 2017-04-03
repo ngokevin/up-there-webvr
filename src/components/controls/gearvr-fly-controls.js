@@ -1,5 +1,13 @@
 var debounce = require('debounce');
 
+// These controls use the forward/back swipe on the GearVR to fly around,
+// and also currently handles clicks too, which maybe it shouldn't? There are
+// also lots of calculations in here for flying at a particular warp speed, as
+// defined by TNG conventions (speed = w^(10/3)*c), assuming a global scale of
+// one world unit per one parsec. You have to be somewhere in the high double-
+// digit warp levels to get anywhere before your phone's battery dies, so I
+// default it around there.
+
 /* globals AFRAME THREE */
 AFRAME.registerComponent('gearvr-fly-controls', {
   schema: {
@@ -18,6 +26,7 @@ AFRAME.registerComponent('gearvr-fly-controls', {
 
     if(AFRAME.utils.device.isMobile()) {
       this.el.sceneEl.addEventListener('enter-vr', () => {
+        console.log("🐋 Entering VR")
         navigator.getVRDisplays()
           .then( e => {
             // if we are on a mobile device that is not a gearVR, enable fusing
@@ -37,14 +46,12 @@ AFRAME.registerComponent('gearvr-fly-controls', {
             }
           })
           .catch( e => {
-            console.log("VR DETECTION ERROR")
+            console.log("👎 VR DETECTION ERROR ")
             console.log(e)
           })
-
       })
 
     }
-
 
     this.handleControlChange = this.handleControlChange.bind(this);
 
@@ -59,7 +66,13 @@ AFRAME.registerComponent('gearvr-fly-controls', {
     this.parsecsPerSecond = 9.71561e-9;
     this.setWarpSpeed(this.data.speed);
   },
+  setEventListeners: function(onOff) {
+    if(onOff) {
 
+    } else {
+
+    }
+  },
   setWarpSpeed: function(warpLevel) {
     let vel = Math.pow(warpLevel, 10/3); // velocity as a multiple of the speed of light
     this.data.warpSpeed = vel * this.parsecsPerSecond; // speed = parsecs per second at current warp level
@@ -79,13 +92,30 @@ AFRAME.registerComponent('gearvr-fly-controls', {
   update: function (oldData) {
     // console.log('old', oldData);
     // console.log('new', this.data);
-    if(this.data.warpSpeed !== oldData.warpSpeed) {
-      this.setWarpSpeed(this.data.speed);
-      // console.log('warp', this.data.warpSpeed);
+    // if(this.data.warpSpeed !== oldData.warpSpeed) {
+    //   this.setWarpSpeed(this.data.speed);
+    //   // console.log('warp', this.data.warpSpeed);
+    // }
+    // this.data = Object.assign({}, oldData, { warpSpeed: this.data.warpSpeed });
+    if(this.data.active !== oldData.active) {
+      console.log(`Active: ${this.data.active}`);
     }
-    this.data = Object.assign({}, oldData, { warpSpeed: this.data.warpSpeed });
+  },
+  play: function () {
+    var el = this.el;
+    el.addEventListener('buttonchanged', this.onButtonChanged);
+    el.addEventListener('buttondown', this.onButtonDown);
+    el.addEventListener('buttonup', this.onButtonUp);
+    el.addEventListener('model-loaded', this.onModelLoaded);
   },
 
+  pause: function () {
+    var el = this.el;
+    el.removeEventListener('buttonchanged', this.onButtonChanged);
+    el.removeEventListener('buttondown', this.onButtonDown);
+    el.removeEventListener('buttonup', this.onButtonUp);
+    el.removeEventListener('model-loaded', this.onModelLoaded);
+  },
   tick: function(time, timeDelta) {
     if(this.data.active) {
       this.direction.set(0,0,1); // start with a normalized forward vector

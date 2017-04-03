@@ -17,6 +17,7 @@ AFRAME.registerReducer('worldSettings', {
     PROCESSING_RATE: 'PROCESSING_RATE',
     HOVER_TEXT: 'HOVER_TEXT',
     STAR_DETAILS: 'STAR_DETAILS',
+    SET_INPUT_ACTIVE: 'SET_INPUT_ACTIVE',
 
     // STAR_SET MODIFIERS
     SELECT_STAR_SET: 'SELECT_STAR_SET',
@@ -35,6 +36,11 @@ AFRAME.registerReducer('worldSettings', {
     hoverText: "",
     starName: "Unknown",
     starCount: 0,
+    inputActive: {
+      fly: false,
+      click: false,
+      time: false
+    },
     starDetails: {
       name: "Unknown",
       radius: "",
@@ -64,6 +70,12 @@ AFRAME.registerReducer('worldSettings', {
   reducer: function (state, action) {
     state = state || this.initialState;
     switch (action.type) {
+
+      case this.actions.SET_INPUT_ACTIVE: {
+        var newState = Object.assign({}, state);
+        newState.inputActive = Object.assign({}, newState.inputActive, action.inputs);
+        return newState;
+      }
 
       case this.actions.SELECT_STAR_SET: {
         var newState = Object.assign({}, state);
@@ -128,10 +140,10 @@ AFRAME.registerReducer('worldSettings', {
 
       case this.actions.SELECT_STAR: {
         var newState = Object.assign({}, state);
-        if(action.id === undefined) {
+        if(action.value === undefined || isNaN(parseInt(action.value))) {
           newState.selectedStar = -1;
         } else {
-          newState.selectedStar = parseInt(action.id);
+          newState.selectedStar = parseInt(action.value);
         }
         return newState;
       }

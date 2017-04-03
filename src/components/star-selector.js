@@ -24,10 +24,11 @@ AFRAME.registerComponent('star-selector', {
       })
     }
 
-
     this.el.addEventListener('mouseenter', evt => {
-      // debugger;
+      console.log(`mouseEnter: ${evt.detail.intersectedEl.getAttribute('id')}`)
+
       let s = null;
+
       try {
         if(evt.detail.intersectedEl.classList.contains('hoverable')) {
           s = parseInt(evt.detail.intersectedEl.getAttribute('id').split('_')[1]);
@@ -36,14 +37,15 @@ AFRAME.registerComponent('star-selector', {
         console.log(e);
         return;
       }
+
       if(s !== null) {
         this.setHover(s);
       }
 
-      // this.setHover()
     })
     this.el.addEventListener('mouseleave', evt => {
       // debugger;
+      console.log(`mouseLeave: ${evt.detail.intersectedEl.getAttribute('id')}`)
       if(evt.detail.intersectedEl.classList.contains('hoverable')) {
         if(this.el.sceneEl.systems.redux.store.getState().worldSettings.hoverStar == evt.detail.intersectedEl.getAttribute('id').split('_')[1]) {
           this.setHover(-1);
@@ -67,7 +69,6 @@ AFRAME.registerComponent('star-selector', {
         } else {
           this.setSelected(s);
         }
-
       }
     });
   },

@@ -25,6 +25,19 @@ require('./systems/exoplanet.js')
 require('./reducers/worldSettings.js');
 
 // components
+
+//// controls
+require('./components/controls/gearvr-fly-controls.js');
+require('./components/controls/look-controls-alt.js');
+require('./components/controls/orbit-controls.js');
+require('./components/controls/player-controls.js');
+require('./components/controls/gearvr-time-controls.js');
+
+require('./components/controls/scale-ui-controls.js');
+require('./components/controls/starfield-controls.js');
+
+
+
 require('./components/action-dispatcher.js');
 require('./components/attribute-incrementer.js');
 require('./components/blend-model.js');
@@ -36,16 +49,13 @@ require('./components/event-caller.js');
 require('./components/exoplanet-view.js');
 require('./components/follow-entity.js');
 require('./components/formatted-store-value.js');
-require('./components/gearvr-fly-controls.js');
-// require('./components/gearvr-time-controls.js');
+
 require('./components/if-no-vr-headset.js');
 require('./components/indicator-light.js');
 require('./components/json-model.js');
 require('./components/line.js');
 require('./components/location-indicator.js');
-require('./components/look-controls-alt.js');
-require('./components/orbit-controls.js');
-require('./components/player-controls.js');
+
 require('./components/reticle.js');
 // require('./components/scale-ui.js');
 require('./components/sol-scale.js');
@@ -54,9 +64,7 @@ require('./components/star-set-indicator.js');
 require('./components/sync-local-location.js');
 require('./components/toggle-switch.js');
 require('./components/translate-ui.js');
-require('./components/scale-ui-controls.js');
 require('./components/starfield.js');
-require('./components/starfield-controls.js');
 require('./components/star-selector.js');
 require('./components/star-detail-view.js');
 require('./components/star-detail-exoplanet-spawner.js');

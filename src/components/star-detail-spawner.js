@@ -36,28 +36,35 @@
       this.pool = this.el.sceneEl.components.pool__star;
       this.tick = AFRAME.utils.throttleTick(this.throttledTick, 250, this);
       this.starfield = document.getElementById('starfield');
-      // this.starDB = this.starfield.components.starfield.starDB;
+
       this.ready = true;
 
       // lists of entities
-      // this.spawnQueue = [];
-      // this.despawnQueue = [];
       this.active = [];
       this.entities = [];
     },
-    getStarsInRange() {
+    getStarsInRange: function() {
       return this.starfield.components.starfield.getStarsNearWorldLocation(this.target.object3D.getWorldPosition(), this.data.radius);
     },
     update: function() {
       this.target = document.getElementById(this.data.target);
       if(this.data.selectedStar >= 0) {
         this.el.setAttribute('visible', 'false');
+        this.despawnAll();
       } else {
         setTimeout( () => {
           this.el.setAttribute('visible', 'true');
-        }, 5100);
-
+        }, 1100);
       }
+    },
+    despawnAll: function() {
+      this.active = [];
+      this.entities.map( c => {
+        c.setAttribute('id', 'dead')
+        c.classList.remove('clickable')
+        this.pool.returnEntity(c);
+      });
+      this.entities = [];
     },
     throttledTick: function() {
       if(!this.data.starfieldReady) return;
@@ -65,8 +72,9 @@
       if(this.pool === undefined) {
         this.pool = this.el.sceneEl.components.pool__star;
       }
+      debugger;
+      if(this.target != null && this.ready === true && this.pool !== undefined && this.data.selectedStar == -1) {
 
-      if(this.target != null && this.ready === true && this.pool !== undefined) {
         var stars = this.getStarsInRange();
         // debugger;
         // this.starDB = this.starfield.components.starfield.starDB;
@@ -76,13 +84,11 @@
             // if the star is brand new, spawn a marker for it
             if(this.active.indexOf(id) === -1) {
               let c = this.pool.requestEntity();
-
               c.classList.add('clickable');
-              c.classList.add('hoverable');
               let p = this.starfield.components.starfield.getStarPosition(id);
               c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
               c.setAttribute('id', `star_${id}`);
-              // c.setAttribute('reticle', 'starId', id);
+              c.setAttribute('action-dispatcher', 'value', parseInt(id));
               this.active.push(id);
               this.entities.push(c);
               this.el.appendChild(c);
