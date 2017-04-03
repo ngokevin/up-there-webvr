@@ -48,7 +48,7 @@ AFRAME.registerComponent('star-detail-view', {
       out = `${numberWithCommas(Math.round(distLy))} lightyears`
     }
 
-    return out;
+    return `Distance: ${out}`;
   },
   // returns a formatted radius in the proper units
   formatRadius: function(radiusSols) {
@@ -62,7 +62,7 @@ AFRAME.registerComponent('star-detail-view', {
     } else {
       out = `${(radiusKm / 1e9).toFixed(1)} billion km`;
     }
-    return out;
+    return `Radius: ${out}`;
   },
   formatStarName: function(name) {
     if(name === 'U') {

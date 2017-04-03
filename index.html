@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 200" pool__exoplanet="mixin: exoplanet; size: 9" pool__medtext="mixin: medFont; size: 9;">
+    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 200" pool__exoplanet="mixin: exoplanet; size: 9" pool__medtext="mixin: smFont; size: 9;">
       <a-assets>
         <!-- assets -->
         <!-- <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item> -->
@@ -25,6 +25,7 @@
 
         <a-mixin id="bigFont" text="align: center; width: 20; height: auto;"></a-mixin>
         <a-mixin id="medFont" text="align: center; width: 10; height: auto;"></a-mixin>
+        <a-mixin id="smFont" text="align: center; width: 5; height: auto;"></a-mixin>
 
 
         <a-mixin id="leftPanel" text="align: right; anchor: right;"></a-mixin>
@@ -58,15 +59,14 @@
 
             <!-- CLOSE BUTTON -->
             <a-entity mixin="medFont" position="-1 3 0" text="value: < Zoom Out; align: left;" action-dispatcher="type: SELECT_STAR" class="clickable">
-              <a-animation easing="ease-in-out" attribute="position" dur="1000" repeat="indefinite" to="-1.25 3 0" direction="alternate"></a-animation>
+              <a-animation easing="ease-in-out" attribute="position" dur="1000" repeat="indefinite" to="-1.15 3 0" direction="alternate"></a-animation>
             </a-entity>
 
             <!-- TITLE -->
             <a-entity id="star-detail-name" mixin="bigFont" position="0 2 0" text="value: Unknown" redux-bind="worldSettings.starDetails.name: text.value"></a-entity>
 
-
             <!-- LEFT INFO -->
-            <a-entity position="-2 .5 0" layout="type: box; margin: -.75">
+            <a-entity position="-3 .5 0" layout="type: box; margin: -.75">
               <a-entity position="-5 0 0" mixin="medFont leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.id: text.value"></a-entity>
               <a-entity position="-5 0 0" mixin="medFont leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.distance: text.value"></a-entity>
               <a-entity position="-5 0 0" mixin="medFont leftPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.radius: text.value"></a-entity>
@@ -74,10 +74,13 @@
             </a-entity>
 
             <!-- RIGHT INFO -->
-            <a-entity position="3 .5 0" rotation="-25 0 0" layout="type: box; margin: -.75">
-              <a-entity position="-5 1 0" mixin="medFont rightPanel" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanetCount: text.value"></a-entity>
-              <a-entity rotation="-45 0 0" star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId"></a-entity>
-              <a-entity rotation="0 0 0" star-detail-exoplanet-list redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-list.starId" layout="type: box; margin: -.75"></a-entity>
+            <a-entity position="4 0 0" rotation="0 0 0">
+              <a-entity position="0 2 0" mixin="medFont" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanetCount: text.value"></a-entity>
+              <a-entity rotation="-45 0 0" star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId">
+                <!-- sun dot -->
+                <a-entity material="shader: flat; color: #ffffff" geometry="primitive: sphere; radius: .1"></a-entity>
+              </a-entity>
+              <a-entity position="2 1 0" star-detail-exoplanet-list redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-list.starId" layout="type: box; margin: -.5"></a-entity>
             </a-entity>
 
 
@@ -178,7 +181,6 @@
       </a-entity> -->
       <a-entity id="right-hand"
                 if-no-vr-headset="visible: false"
-
                 gearvr-controls>
       </a-entity>
 
