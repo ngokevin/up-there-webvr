@@ -45,7 +45,7 @@ const SOLS_TO_PARSECS = 2.25461e-8
        let c = this.el.sceneEl.components.pool__exoplanet.requestEntity();
        c.setAttribute('exoplanet-view', 'planetId', i);
        c.setAttribute('exoplanet-view', 'systemScale', systemScale);
-      //  console.log(`Setting ${i} key on exoplanet...`)
+       
        this.el.appendChild(c);
        this.active.push(c);
      });

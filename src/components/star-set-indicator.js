@@ -12,7 +12,7 @@ AFRAME.registerComponent('star-set-indicator', {
 
     // initialize some geometry
     this.geo = new THREE.BufferGeometry();
-    this.maxIndicators = 1024;
+    this.maxIndicators = 768;
 
     // create attribute buffers for our indicator geometry
     var verts = new Float32Array(this.maxIndicators*3);
@@ -31,6 +31,8 @@ AFRAME.registerComponent('star-set-indicator', {
         },
         vertexShader: require('../glsl/indicator.vert'),
         fragmentShader: require('../glsl/indicator.frag'),
+        depthWrite: false,
+        depthTest: false,
         transparent: true
       });
 

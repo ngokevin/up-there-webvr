@@ -98,7 +98,7 @@
               c.setAttribute('id', `star_${id}`);
               c.setAttribute('action-dispatcher', 'value', parseInt(id));
               c.setAttribute('hover-text', this.formatStarName(this.starfield.components.starfield.starnames[id]));
-              // c.setAttribute('')
+              
               this.active.push(id);
               this.entities.push(c);
               this.el.appendChild(c);
