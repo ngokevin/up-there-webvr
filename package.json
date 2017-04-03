@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A-Painter",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack; gzip -yk build.js;",
     "start": "webpack-dev-server --host 0.0.0.0",
     "lint": "semistandard -v | snazzy",
     "deploy": "rsync -r --progress --exclude='node_modules/*' --exclude='.git/*' ./ flimshaw@flimshaw.net:~/vr.flimshaw.net/up-there-webvr/"

@@ -26,7 +26,7 @@ AFRAME.registerComponent('gearvr-fly-controls', {
 
     if(AFRAME.utils.device.isMobile()) {
       this.el.sceneEl.addEventListener('enter-vr', () => {
-        console.log("🐋 Entering VR")
+        console.log("🐋 Entering VR.")
         navigator.getVRDisplays()
           .then( e => {
             // if we are on a mobile device that is not a gearVR, enable fusing
@@ -62,9 +62,12 @@ AFRAME.registerComponent('gearvr-fly-controls', {
     this.cursor = document.getElementById('acursor');
 
     this.tick = this.tick.bind(this);
+
     this.direction = new THREE.Vector3(0, 0, 1);
     this.parsecsPerSecond = 9.71561e-9;
+
     this.setWarpSpeed(this.data.speed);
+
   },
   setEventListeners: function(onOff) {
     if(onOff) {
@@ -92,30 +95,30 @@ AFRAME.registerComponent('gearvr-fly-controls', {
   update: function (oldData) {
     // console.log('old', oldData);
     // console.log('new', this.data);
-    // if(this.data.warpSpeed !== oldData.warpSpeed) {
-    //   this.setWarpSpeed(this.data.speed);
-    //   // console.log('warp', this.data.warpSpeed);
-    // }
+    if(this.data.warpSpeed !== oldData.warpSpeed) {
+      this.setWarpSpeed(this.data.speed);
+      // console.log('warp', this.data.warpSpeed);
+    }
     // this.data = Object.assign({}, oldData, { warpSpeed: this.data.warpSpeed });
     if(this.data.active !== oldData.active) {
       console.log(`Active: ${this.data.active}`);
     }
   },
-  play: function () {
-    var el = this.el;
-    el.addEventListener('buttonchanged', this.onButtonChanged);
-    el.addEventListener('buttondown', this.onButtonDown);
-    el.addEventListener('buttonup', this.onButtonUp);
-    el.addEventListener('model-loaded', this.onModelLoaded);
-  },
-
-  pause: function () {
-    var el = this.el;
-    el.removeEventListener('buttonchanged', this.onButtonChanged);
-    el.removeEventListener('buttondown', this.onButtonDown);
-    el.removeEventListener('buttonup', this.onButtonUp);
-    el.removeEventListener('model-loaded', this.onModelLoaded);
-  },
+  // play: function () {
+  //   var el = this.el;
+  //   el.addEventListener('buttonchanged', this.onButtonChanged);
+  //   el.addEventListener('buttondown', this.onButtonDown);
+  //   el.addEventListener('buttonup', this.onButtonUp);
+  //   el.addEventListener('model-loaded', this.onModelLoaded);
+  // },
+  //
+  // pause: function () {
+  //   var el = this.el;
+  //   el.removeEventListener('buttonchanged', this.onButtonChanged);
+  //   el.removeEventListener('buttondown', this.onButtonDown);
+  //   el.removeEventListener('buttonup', this.onButtonUp);
+  //   el.removeEventListener('model-loaded', this.onModelLoaded);
+  // },
   tick: function(time, timeDelta) {
     if(this.data.active) {
       this.direction.set(0,0,1); // start with a normalized forward vector
