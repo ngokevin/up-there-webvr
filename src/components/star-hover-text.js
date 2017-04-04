@@ -11,7 +11,7 @@ AFRAME.registerComponent('star-hover-text', {
   setText: function(evt) {
     let el = evt.detail.intersectedEl;
     let text = el.getAttribute('hover-text');
-    debugger;
+    // debugger;
     if(text !== undefined) {
       this.el.setAttribute('text', 'value', text);
     } else {

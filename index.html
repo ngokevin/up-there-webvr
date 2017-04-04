@@ -12,28 +12,29 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 200" pool__exoplanet="mixin: exoplanet; size: 9" pool__medtext="mixin: smFont; size: 9;">
+    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 200" pool__exoplanet="mixin: exoplanet; size: 9" pool__medtext="mixin: exoplanetLabel; size: 9;">
+
       <a-assets>
         <!-- assets -->
-        <!-- <a-asset-item id="cubeobj" src="assets/models/cube-selector.obj"></a-asset-item> -->
         <a-asset-item id="starNames" src="assets/data/starnames.json"></a-asset-item>
         <a-asset-item id="exoplanets" src="assets/data/exoplanets.csv"></a-asset-item>
+
         <!-- mixins -->
         <a-mixin id="wirecube" geometry="primitive: box" scale=".1 .1 .1" material="shader: flat; color: #ff44aa; wireframe: true"></a-mixin>
-        <!-- <a-mixin id="star" geometry="primitive: box;" material="shader: placeholder;" scale=".05 .05 .05" rotation="90 0 0" class="star"></a-mixin> -->
         <a-mixin id="blue" material="color: #77ccff"></a-mixin>
 
+        <!-- typography -->
         <a-mixin id="bigFont" text="align: center; width: 20; height: auto;"></a-mixin>
         <a-mixin id="medFont" text="align: center; width: 10; height: auto;"></a-mixin>
         <a-mixin id="smFont" text="align: center; width: 5; height: auto;"></a-mixin>
 
+        <!-- star detail -->
         <a-mixin id="leftPanel" text="align: right; anchor: right;"></a-mixin>
         <a-mixin id="rightPanel" text="align: left; anchor: left;"></a-mixin>
         <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
         <a-mixin id="exoplanet" exoplanet-view geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0" material="shader: flat; color: #ffffff;"></a-mixin>
+        <a-mixin id="exoplanetLabel" text="width: 5; height: auto; align: center; anchor: center;" action-dispatcher="type: SELECT_PLANET; value: -1; evt: mouseenter" geometry="primitive: plane; width: 1; height: .25" material="shader: flat; color: #333"></a-mixin>
       </a-assets>
-
-      <!-- <a-entity mixin="reticle"></a-entity> -->
 
       <!-- STARFIELD -->
       <a-entity id="starfield" rotation="0 0 0" scale=".0005 .0005 .0005" position="0 0 -2" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
@@ -80,11 +81,22 @@
             <!-- RIGHT INFO -->
             <a-entity position="4 0 0" rotation="0 -35 0">
               <a-entity position="0 2 0" mixin="medFont" text="value: Unknown" redux-bind="worldSettings.starDetails.exoplanetCount: text.value"></a-entity>
+              <!-- exoplanet orbit spawner -->
               <a-entity rotation="0 0 0" star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId">
                 <!-- sun dot -->
                 <a-entity material="shader: flat; color: #ffffff" geometry="primitive: sphere; radius: .033"></a-entity>
               </a-entity>
+              <!-- exoplanet listing -->
               <a-entity position="2 1 0" star-detail-exoplanet-list redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-list.starId" layout="type: box; margin: -.5"></a-entity>
+              <a-entity position="-1 -1.5 0" star-detail-exoplanet-detail redux-bind="worldSettings.ui.hoverPlanet: star-detail-exoplanet-detail.hoverPlanet; worldSettings.selectedStar: star-detail-exoplanet-detail.selectedStar">
+                <a-entity layout="type: box; margin: -.33">
+                  <a-entity position="-5 0 0" mixin="smFont rightPanel" text="value: Planet Name:" redux-bind="worldSettings.starDetails.exoplanetDetails.name: text.value"></a-entity>
+                  <a-entity position="-5 0 0" mixin="smFont rightPanel" text="value: Orbital Distance:" redux-bind="worldSettings.starDetails.exoplanetDetails.distance: text.value"></a-entity>
+                  <a-entity position="-5 0 0" mixin="smFont rightPanel" text="value: Orbital Period:" redux-bind="worldSettings.starDetails.exoplanetDetails.period: text.value"></a-entity>
+                  <a-entity position="-5 0 0" mixin="smFont rightPanel" text="value: Radius: Unknown" redux-bind="worldSettings.starDetails.exoplanetDetails.radius: text.value"></a-entity>
+                  <a-entity position="-5 0 0" mixin="smFont rightPanel" text="value: Mass: Unknown" redux-bind="worldSettings.starDetails.exoplanetDetails.mass: text.value"></a-entity>
+                </a-entity>
+              </a-entity>
             </a-entity>
 
           </a-entity>

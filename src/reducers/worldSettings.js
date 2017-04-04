@@ -11,6 +11,7 @@ AFRAME.registerReducer('worldSettings', {
     STARFIELD_READY: 'STARFIELD_READY',
     UPDATE_CURSOR_POSITION: 'UPDATE_CURSOR_POSITION',
     SELECT_STAR: 'SELECT_STAR',
+    SELECT_PLANET: 'SELECT_PLANET',
     HOVER_STAR: 'HOVER_STAR',
     SET_BUSY: 'SET_BUSY',
     STAR_COUNT: 'STAR_COUNT',
@@ -51,6 +52,13 @@ AFRAME.registerReducer('worldSettings', {
       id: "",
       dbKey: -1,
       exoplanets: [],
+      exoplanetDetails: {
+        name: "Unknown",
+        distance: "dist",
+        period: "per",
+        radius: "radius",
+        mass: "mass"
+      },
       exoplanetCount: 0
     },
     ui: {
@@ -70,6 +78,16 @@ AFRAME.registerReducer('worldSettings', {
   reducer: function (state, action) {
     state = state || this.initialState;
     switch (action.type) {
+
+      case this.actions.SELECT_PLANET: {
+        var newState = Object.assign({}, state);
+        if(action.value !== undefined && !isNaN(parseInt(action.value))) {
+          newState.ui.hoverPlanet = parseInt(action.value);
+        } else {
+          newState.ui.hoverPlanet = -1;
+        }
+        return newState;
+      }
 
       case this.actions.SET_INPUT_ACTIVE: {
         var newState = Object.assign({}, state);

@@ -1,4 +1,5 @@
 rowid,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_bmassj,pl_bmassprov,pl_radj,pl_dens,pl_name,hip_name
+0,b,365.25000000,1.000000,1.000000,,0.00000,Msini,,,Earth,HIP 0
 1,b,326.03000000,1.290000,0.231000,,19.40000,Msini,,,11 Com b,HIP 60202
 2,b,516.22000000,1.540000,0.080000,,10.50000,Msini,,,11 UMi b,HIP 74793
 3,b,185.84000000,0.830000,0.000000,,4.80000,Msini,,,14 And b,HIP 116076

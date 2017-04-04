@@ -37,6 +37,8 @@ const SOLS_TO_PARSECS = 2.25461e-8
      sortedPlanets.map( (pDef, i) => {
        let c = this.el.sceneEl.components.pool__medtext.requestEntity();
        c.setAttribute('text', 'value', pDef['pl_name']);
+       c.setAttribute('action-dispatcher', 'value', i);
+       c.classList.add('clickable');
        console.log(`Setting name to ${pDef['pl_name']} on exoplanet...`)
        this.el.appendChild(c);
        this.active.push(c);

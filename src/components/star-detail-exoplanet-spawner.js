@@ -34,7 +34,13 @@ const SOLS_TO_PARSECS = 2.25461e-8
      })
 
      // the scale in parsecs of the largest orbit
-     parsecsScale = parseFloat(sortedPlanets[sortedPlanets.length-1].pl_orbsmax) * AU_TO_PARSEC;
+     if(sortedPlanets[sortedPlanets.length-1].pl_orbsmax !== '') {
+       parsecsScale = parseFloat(sortedPlanets[sortedPlanets.length-1].pl_orbsmax) * AU_TO_PARSEC;
+     // or default to 1 AU
+     } else {
+       parsecsScale = 1 * AU_TO_PARSEC;
+     }
+
 
      // calculate the scale value for that orbital radius to give it a real world scale of 1
      let systemScale = 1.0 / parsecsScale;
@@ -45,7 +51,7 @@ const SOLS_TO_PARSECS = 2.25461e-8
        let c = this.el.sceneEl.components.pool__exoplanet.requestEntity();
        c.setAttribute('exoplanet-view', 'planetId', i);
        c.setAttribute('exoplanet-view', 'systemScale', systemScale);
-       
+
        this.el.appendChild(c);
        this.active.push(c);
      });

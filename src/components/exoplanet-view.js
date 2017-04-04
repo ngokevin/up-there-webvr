@@ -25,7 +25,7 @@ AFRAME.registerComponent('exoplanet-view', {
     this.starfield = document.getElementById('starfield');
   },
   update: function() {
-    console.log(`System scale: ${this.data.systemScale}.`)
+    // console.log(`System scale: ${this.data.systemScale}.`)
     if(this.data.planetId > -1) {
       this.planetDef = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.exoplanets[this.data.planetId];
       if(this.planetDef !== undefined) {
@@ -38,7 +38,7 @@ AFRAME.registerComponent('exoplanet-view', {
         // let AU_PER_UNIT = UNITS_TO_PARSECS * PARSEC_TO_AU;
         // let orbitWidth = this.planetDef.pl_orbsmax / AU_PER_UNIT;
         let orbitRadius = this.planetDef.pl_orbsmax * AU_TO_PARSEC;
-        console.log(`Setting planet ${this.data.planetId} with a radius of ${orbitRadius} (${this.planetDef.pl_orbsmax}) parsecs to ${orbitRadius*this.data.systemScale} units.`);
+        // console.log(`Setting planet ${this.data.planetId} with a radius of ${orbitRadius} (${this.planetDef.pl_orbsmax}) parsecs to ${orbitRadius*this.data.systemScale} units.`);
 
         // set the inner radius to the proper scale
         this.el.setAttribute('geometry', 'radiusInner', (orbitRadius * this.data.systemScale));
