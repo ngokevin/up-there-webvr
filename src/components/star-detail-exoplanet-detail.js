@@ -11,7 +11,6 @@ const SOLS_TO_PARSECS = 2.25461e-8
      this.starfield = document.getElementById('starfield');
    },
    update: function(oldData) {
-     console.log(this.data)
      if(this.data.selectedStar !== oldData.selectedStar && this.data.selectedStar < 0) {
        this.el.sceneEl.systems.redux.store.dispatch({
          type: 'SELECT_PLANET',

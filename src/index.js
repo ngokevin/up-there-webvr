@@ -37,6 +37,10 @@ require('./components/controls/scale-ui-controls.js');
 require('./components/controls/starfield-controls.js');
 
 
+//// ui elements
+require('./components/ui/hover-color.js');
+
+
 
 require('./components/action-dispatcher.js');
 require('./components/attribute-incrementer.js');

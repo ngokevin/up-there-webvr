@@ -15,18 +15,23 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+var onColor = "#4499ff";
+var offColor = "#eeeeee";
+
 /* globals AFRAME THREE */
 AFRAME.registerComponent('exoplanet-view', {
   schema: {
     planetId: { type: 'int', default: -1 },
+    hoverPlanet: { type: 'int', default: -1 },
     systemScale: { type: 'float', default: 1.0 }
   },
   init: function () {
     this.starfield = document.getElementById('starfield');
   },
-  update: function() {
+  update: function(oldData) {
     // console.log(`System scale: ${this.data.systemScale}.`)
     if(this.data.planetId > -1) {
+
       this.planetDef = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.exoplanets[this.data.planetId];
       if(this.planetDef !== undefined) {
         // calculate the diameter of the orbit
@@ -46,6 +51,14 @@ AFRAME.registerComponent('exoplanet-view', {
 
         // console.log(`${UNITS_TO_PARSECS} parsecs in a single unit, the ${this.planetDef.pl_orbsmax} AU orbit is ${orbitWidth} scaled`);
 
+      }
+
+      if(oldData.hoverPlanet !== this.data.hoverPlanet) {
+        if(this.data.planetId === this.data.hoverPlanet) {
+          this.el.setAttribute('material', 'color', onColor);
+        } else {
+          this.el.setAttribute('material', 'color', offColor);
+        }
       }
     }
   }
