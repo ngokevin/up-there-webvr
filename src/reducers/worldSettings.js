@@ -37,6 +37,7 @@ AFRAME.registerReducer('worldSettings', {
     hoverText: "",
     starName: "Unknown",
     starCount: 0,
+    hoverColor: "#4499ff",
     inputActive: {
       fly: false,
       click: false,

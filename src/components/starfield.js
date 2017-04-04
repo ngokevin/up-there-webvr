@@ -339,7 +339,7 @@ AFRAME.registerComponent('starfield', {
 
     this.macroPosition = new THREE.Vector3();
     this.detailPosition = new THREE.Vector3();
-    this.detailDistance = 3.0;
+    this.detailDistance = 4.0;
     // this.el.object3D.frustrumCulled = false;
   },
 

@@ -1,7 +1,7 @@
 // dispatches an action on click events
 AFRAME.registerComponent('hover-color', {
   schema: {
-    onColor: {type: 'string', default: '#999'},
+    onColor: {type: 'string', default: '#4499ff'},
     offColor: {type: 'string', default: '#333'}
   },
   init: function() {
