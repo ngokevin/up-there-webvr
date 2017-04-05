@@ -47,9 +47,9 @@ const SOLS_TO_PARSECS = 2.25461e-8
 
         // format string versions of the variables for our ui
         let exoplanetDetails = {
-          name: `Planet name: ${p['pl_name']}`,
-          distance: `Orbital Distance: ${parseFloat(p['pl_orbsmax']).toFixed(2)} AU`,
-          period: `Orbital period: ${parseFloat(p['pl_orbper']).toFixed(2)} days`,
+          name: `Name: ${p['pl_name']}`,
+          distance: `Orbital Dist: ${parseFloat(p['pl_orbsmax']).toFixed(2)} AU`,
+          period: `Year length: ${parseFloat(p['pl_orbper']).toFixed(2)} days`,
           radius: `Radius: ${radius}`,
           mass: `Mass: ${mass}`,
         };

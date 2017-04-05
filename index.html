@@ -33,7 +33,7 @@
         <a-mixin id="rightPanel" text="align: left; anchor: left;"></a-mixin>
         <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
         <a-mixin id="exoplanet" exoplanet-view redux-bind="worldSettings.ui.hoverPlanet: exoplanet-view.hoverPlanet" geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0" material="shader: flat; color: #ffffff;"></a-mixin>
-        <a-mixin id="exoplanetLabel" text="width: 5; height: auto; align: center; anchor: center;" hover-color action-dispatcher="type: SELECT_PLANET; value: -1; evt: mouseenter" geometry="primitive: plane; width: 1.5; height: .25" material="shader: flat; color: #333"></a-mixin>
+        <a-mixin id="exoplanetLabel" text="width: 4; height: auto; align: center; anchor: center;" hover-color action-dispatcher="type: SELECT_PLANET; value: -1; evt: mouseenter" geometry="primitive: plane; width: 1.5; height: .25" material="shader: flat; color: #333"></a-mixin>
       </a-assets>
 
       <!-- STARFIELD -->
@@ -84,10 +84,10 @@
               <!-- exoplanet orbit spawner -->
               <a-entity rotation="0 0 0" star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId">
                 <!-- sun dot -->
-                <a-entity material="shader: flat; color: #ffffff" geometry="primitive: sphere; radius: .033"></a-entity>
+                <a-entity material="shader: flat; color: #ffffff" geometry="primitive: sphere; radius: .0033"></a-entity>
               </a-entity>
               <!-- exoplanet listing -->
-              <a-entity position="2 1 0" star-detail-exoplanet-list redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-list.starId" layout="type: box; margin: -.5"></a-entity>
+              <a-entity position="2 1 0" star-detail-exoplanet-list redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-list.starId" layout="type: box; margin: -.33"></a-entity>
               <a-entity position="-1 -1.5 0" star-detail-exoplanet-detail redux-bind="worldSettings.ui.hoverPlanet: star-detail-exoplanet-detail.hoverPlanet; worldSettings.selectedStar: star-detail-exoplanet-detail.selectedStar">
                 <a-entity layout="type: box; margin: -.33">
                   <a-entity position="-5 0 0" mixin="smFont rightPanel" text="value: Planet Name:" redux-bind="worldSettings.starDetails.exoplanetDetails.name: text.value"></a-entity>

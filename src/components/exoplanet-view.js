@@ -47,7 +47,7 @@ AFRAME.registerComponent('exoplanet-view', {
 
         // set the inner radius to the proper scale
         this.el.setAttribute('geometry', 'radiusInner', (orbitRadius * this.data.systemScale));
-        this.el.setAttribute('geometry', 'radiusOuter', (orbitRadius * this.data.systemScale) + .025);
+        this.el.setAttribute('geometry', 'radiusOuter', (orbitRadius * this.data.systemScale) + .0125);
 
         // console.log(`${UNITS_TO_PARSECS} parsecs in a single unit, the ${this.planetDef.pl_orbsmax} AU orbit is ${orbitWidth} scaled`);
 

@@ -6,7 +6,7 @@ AFRAME.registerComponent('star-set-indicator', {
     currentStarSet: { type: 'string', default: 'false'},
   },
   init: function() {
-    // this.el.classList.add('hoverable');
+    // starfield
     this.starfield = document.getElementById('starfield')
     this.store = this.el.sceneEl.systems.redux.store;
 
@@ -67,8 +67,6 @@ AFRAME.registerComponent('star-set-indicator', {
         color[(i*4+2)] = 1.;
         color[(i*4+3)] = 1.;
       })
-
-      // console.log(verts);
 
       this.geo.attributes.position.set(verts);
       this.geo.attributes.position.needsUpdate = true;
