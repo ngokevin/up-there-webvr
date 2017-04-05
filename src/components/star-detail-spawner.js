@@ -1,4 +1,4 @@
- const SOLS_TO_PARSECS = 2.25461e-8;
+const SOLS_TO_PARSECS = 2.25461e-8;
 
  // var mat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
  AFRAME.registerShader('placeholder', {
@@ -61,7 +61,7 @@
     despawnAll: function() {
       this.active = [];
       this.entities.map( c => {
-        c.setAttribute('id', 'dead')
+        // c.setAttribute('id', 'dead')
         c.classList.remove('clickable')
         this.pool.returnEntity(c);
       });
@@ -95,13 +95,14 @@
               c.classList.add('clickable');
               let p = this.starfield.components.starfield.getStarPosition(id);
               c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
-              c.setAttribute('id', `star_${id}`);
+              c.setAttribute('starid', `star_${id}`);
               c.setAttribute('action-dispatcher', 'value', parseInt(id));
               c.setAttribute('hover-text', this.formatStarName(this.starfield.components.starfield.starnames[id]));
-              
+
               this.active.push(id);
-              this.entities.push(c);
+
               this.el.appendChild(c);
+              this.entities.push(c);
             }
           });
         }
@@ -112,7 +113,7 @@
             var c = this.entities.find( e => e.getAttribute('id') === `star_${id}` );
             if(c !== undefined) {
               try {
-                c.setAttribute('id', 'dead')
+                // c.setAttribute('id', 'dead')
                 c.classList.remove('clickable')
                 this.pool.returnEntity(c);
               } catch(e) {

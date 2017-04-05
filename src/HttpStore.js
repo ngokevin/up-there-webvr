@@ -14,7 +14,7 @@ class HttpStore {
         res.on('end', this.handleEnd.bind(this))
       })
     } catch(err) {
-      console.log("Request failed")
+      console.log("Request failed.")
       console.log(err)
     }
 
@@ -86,7 +86,7 @@ class HttpStore {
     if(this.loading || this.queue.length > 0) {
       let q = this.queue.concat([]);
       this.queue = [];
-      console.log(`Sending ${q.length} records...`);
+      // console.log(`Sending ${q.length} records...`);
       return q;
     }
     return false;

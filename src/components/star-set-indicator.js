@@ -72,7 +72,7 @@ AFRAME.registerComponent('star-set-indicator', {
       this.geo.attributes.position.needsUpdate = true;
       this.geo.attributes.color.set(color);
       this.geo.attributes.color.needsUpdate = true;
-      this.geo.boundingSphere.radius = 1000 + Math.random();
+      // this.geo.boundingSphere.radius = 1000 + Math.random();
     }
   }
 });

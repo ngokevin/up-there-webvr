@@ -380,7 +380,7 @@ AFRAME.registerComponent('starfield', {
     parsecsScale = SOLS_TO_PARSECS * stardata.radius;
 
     // scale the parent so that the star will always be 1m in radius
-    let parentScale = .5 / parsecsScale;
+    let parentScale = 0.5 / parsecsScale;
 
     // tween the scale so that the star's radius in sols is
     this.tween = new AFRAME.TWEEN.Tween(scale)
