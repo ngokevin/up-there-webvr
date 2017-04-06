@@ -24,6 +24,7 @@ require('./utils.js');
 
 // systems
 require('./systems/exoplanet.js')
+require('./systems/ui.js')
 
 // reducers
 require('./reducers/worldSettings.js');
