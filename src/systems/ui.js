@@ -6,6 +6,7 @@ AFRAME.registerSystem('ui', {
   init: function () {
     console.log("🙉 UI system started.")
     this.graphicsSettings();
+    window.thescene = this.sceneEl;
   },
   graphicsSettings: function() {
     if(!AFRAME.utils.device.isMobile()) {

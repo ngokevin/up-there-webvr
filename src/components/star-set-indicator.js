@@ -4,6 +4,7 @@
 AFRAME.registerComponent('star-set-indicator', {
   schema: {
     currentStarSet: { type: 'string', default: 'false'},
+    selectedStar: { type: 'int', default: -1 }
   },
   init: function() {
     // starfield
@@ -17,6 +18,12 @@ AFRAME.registerComponent('star-set-indicator', {
     // create attribute buffers for our indicator geometry
     var verts = new Float32Array(this.maxIndicators*3);
     var color = new Float32Array(this.maxIndicators*4);
+
+    [verts, color].map( a => {
+      for(let i = 0; i < a.length; i++) {
+        a[i] = 0.0;
+      }
+    });
 
     this.geo.addAttribute( 'position', new THREE.BufferAttribute(verts, 3) );
     this.geo.addAttribute( 'color', new THREE.BufferAttribute(color, 4) );
@@ -37,13 +44,38 @@ AFRAME.registerComponent('star-set-indicator', {
       });
 
     let mesh = new THREE.Points(this.geo, this.mat);
+    mesh.name = 'mesh';
     mesh.frustrumCulled = false;
     this.el.setObject3D('mesh', mesh);
     this.update();
   },
-  update: function() {
+  maskStar: function(id, mask) {
+    // debugger;
+    let o = this.el.object3D.getObjectByName('mesh');
+    let sid = this.store.getState().worldSettings.starSets[this.data.currentStarSet].indexOf(id);
+    console.log(`🚗 ${sid}`);
+    o.geometry.attributes.color.setW(sid, parseFloat(mask));
+    o.geometry.attributes.color.needsUpdate = true;
+  },
+  update: function(oldData) {
+    if(this.data.currentStarSet != 'false'
+      && oldData
+      && this.data.selectedStar !== oldData.selectedStar
+      && (this.store.getState().worldSettings.starSets[this.data.currentStarSet].indexOf(this.data.selectedStar) !== -1 || this.store.getState().worldSettings.starSets[this.data.currentStarSet].indexOf(oldData.selectedStar) !== -1)
+    ) {
+      // if transitioning in, mask selected star
+      if(this.data.selectedStar > -1) {
+        this.maskStar(this.data.selectedStar, 0);
+      // otherwise if transitioning out, unmask the star from oldData
+      } else {
+        setTimeout(() => {
+          this.maskStar(oldData.selectedStar, 1);
+        }, 1100);
 
-    if(this.data.currentStarSet != "false") {
+      }
+      console.log(`🥑 You've selected a star that is in the current star set!`)
+    }
+    if(this.data.currentStarSet != "false" && oldData && oldData.currentStarSet != this.data.currentStarSet) {
       console.log("Rebuiling starset indicator... 🛴");
 
       let starList = this.store.getState().worldSettings.starSets[this.data.currentStarSet];
@@ -62,10 +94,10 @@ AFRAME.registerComponent('star-set-indicator', {
         verts[(i*3)+1] = star.position.y;
         verts[(i*3)+2] = star.position.z;
 
-        color[(i*4+0)] = 1.;
-        color[(i*4+1)] = 1.;
-        color[(i*4+2)] = 1.;
-        color[(i*4+3)] = 1.;
+        color[(i*4+0)] = 1.;// * Math.random();
+        color[(i*4+1)] = 1.;// * Math.random();
+        color[(i*4+2)] = 1.;// * Math.random();
+        color[(i*4+3)] = 1.;// * Math.random();
       })
 
       this.geo.attributes.position.set(verts);

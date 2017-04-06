@@ -44,7 +44,7 @@
       <a-entity id="starfield" rotation="0 0 0" scale=".0005 .0005 .0005" position="0 0 -2" redux-bind="worldSettings.scale: starfield.scale; worldSettings.time: starfield.time; worldSettings.selectedStar: starfield.selectedStar" starfield>
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
-        <a-entity id="star-set-highlighter" star-set-indicator redux-bind="worldSettings.currentStarSet: star-set-indicator.currentStarSet" visible="false"></a-entity>
+        <a-entity id="star-set-highlighter" star-set-indicator redux-bind="worldSettings.currentStarSet: star-set-indicator.currentStarSet; worldSettings.selectedStar: star-set-indicator.selectedStar" visible="false"></a-entity>
         <a-entity id="sun-indicator" redux-bind="worldSettings.sunIndicator: visible" geometry="primitive: sphere; radius: 1; segmentsWidth: 12; segmentsHeight: 24" material="shader: flat; wireframe: true; color: #aaedff; transparent: true" rotation="90 0 0" visible="false">
           <a-animation attribute="scale" dur="2000" from="0 0 0" to="1 1 1" easing="linear" repeat="indefinite"></a-animation>
           <a-animation attribute="material.opacity" dur="2000" from="1" to="0" repeat="indefinite" fill="backward"></a-animation>
