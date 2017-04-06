@@ -1,17 +1,21 @@
 require('aframe');
-
+// overwrite with the latest Sprite class that fixes a raycasting scale error
 THREE.Sprite = require('../vendor/Sprite');
+
 // require('aframe-extras');
 // require('aframe-html-shader');
+const x = '5';
 
 require('aframe-gearvr-controls-component');
 require('aframe-look-at-component');
 // require('aframe-auto-detect-controllers-component');
 require('aframe-redux-component');
+
 // require('aframe-lod');
 require('aframe-event-set-component');
 require('aframe-animation-component');
 require('aframe-layout-component');
+require('aframe-stats-in-vr-component');
 
 // require('../vendor/OrbitControls.js');
 

@@ -9,9 +9,12 @@ AFRAME.registerSystem('exoplanet', {
     this.exoplanetsDB = document.getElementById('exoplanets');
     this.starfield = document.getElementById('starfield');
     this.exoplanetIdTable = [];
+    window.scene = this.sceneEl;
+
     window.store = this.store = this.sceneEl.systems.redux.store;
     if(this.exoplanetsDB.hasLoaded) {
       this.processExoplanetsDb();
+      this.sceneEl.camera.matrixAutoUpdate = false;
     } else {
       this.exoplanetsDB.addEventListener('loaded', this.processExoplanetsDb.bind(this));
     }

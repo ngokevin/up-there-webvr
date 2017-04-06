@@ -12,7 +12,7 @@ AFRAME.registerComponent('star-set-indicator', {
 
     // initialize some geometry
     this.geo = new THREE.BufferGeometry();
-    this.maxIndicators = 768;
+    this.maxIndicators = 512;
 
     // create attribute buffers for our indicator geometry
     var verts = new Float32Array(this.maxIndicators*3);
@@ -39,7 +39,7 @@ AFRAME.registerComponent('star-set-indicator', {
     let mesh = new THREE.Points(this.geo, this.mat);
     mesh.frustrumCulled = false;
     this.el.setObject3D('mesh', mesh);
-
+    this.update();
   },
   update: function() {
 

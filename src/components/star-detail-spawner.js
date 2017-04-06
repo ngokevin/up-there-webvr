@@ -42,14 +42,15 @@ const SOLS_TO_PARSECS = 2.25461e-8;
 
       // lists of entities
       this.active = [];
+      this.inactive = [];
       this.entities = [];
     },
     getStarsInRange: function() {
       return this.starfield.components.starfield.getStarsNearWorldLocation(this.target.object3D.getWorldPosition(), this.data.radius);
     },
-    update: function() {
+    update: function(oldData) {
       this.target = document.getElementById(this.data.target);
-      if(this.data.selectedStar >= 0) {
+      if(this.data.selectedStar != oldData.selectedStar && this.data.selectedStar >= 0) {
         this.el.setAttribute('visible', 'false');
         this.despawnAll();
       } else {
@@ -110,11 +111,13 @@ const SOLS_TO_PARSECS = 2.25461e-8;
         // otherwise, if a star is no longer in range, remove it and return it to the object pool
         this.active = this.active.filter( (id) => {
           if(stars.indexOf(id) === -1) {
-            var c = this.entities.find( e => e.getAttribute('id') === `star_${id}` );
+            var c = this.entities.find( e => e.getAttribute('starid') === `star_${id}` );
             if(c !== undefined) {
               try {
                 // c.setAttribute('id', 'dead')
+
                 c.classList.remove('clickable')
+                console.log(`Removing entity ${id}`);
                 this.pool.returnEntity(c);
               } catch(e) {
                 // debugger;

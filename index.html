@@ -6,7 +6,11 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="img/icon-256.png">
     <meta name="description" content="Paint in VR in your browser. Powered by A-Frame.">
+    <script>
+        var gliEmbedDebug = true;
+    </script>
     <script src="build.js"></script>
+    <!-- <script src="src/core/embed.js"></script> -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
@@ -32,7 +36,7 @@
         <a-mixin id="leftPanel" text="align: right; anchor: right;"></a-mixin>
         <a-mixin id="rightPanel" text="align: left; anchor: left;"></a-mixin>
         <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
-        <a-mixin id="exoplanet" exoplanet-view redux-bind="worldSettings.ui.hoverPlanet: exoplanet-view.hoverPlanet" geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0" material="shader: flat; color: #ffffff;"></a-mixin>
+        <a-mixin id="exoplanet" exoplanet-view redux-bind="worldSettings.ui.hoverPlanet: exoplanet-view.hoverPlanet" geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0; segmentsPhi: 1; segmentsTheta: 24;" material="shader: flat; color: #ffffff;"></a-mixin>
         <a-mixin id="exoplanetLabel" text="width: 4; height: auto; align: center; anchor: center;" hover-color action-dispatcher="type: SELECT_PLANET; value: -1; evt: mouseenter" geometry="primitive: plane; width: 1.5; height: .25" material="shader: flat; color: #333"></a-mixin>
       </a-assets>
 
@@ -52,7 +56,7 @@
       <!-- ✨✨✨ STAR DETAIL VIEW ✨✨✨  -->
       <a-entity id="star-detail-parent">
 
-        <a-entity id="star-detail-view" scale="0 0 0" geometry="primitive: sphere;" material="shader: flat; color: 0x9999ff" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar">
+        <a-entity id="star-detail-view" scale="0 0 0" geometry="primitive: sphere; segmentsWidth: 12; segmentsHeight: 24;" material="shader: flat; color: 0x9999ff" star-detail-view redux-bind="worldSettings.selectedStar: star-detail-view.selectedStar">
 
           <!-- detail ui parent, maintains angle to camera -->
           <a-entity id="star-detail-text" look-at="[camera]">
@@ -84,7 +88,7 @@
               <!-- exoplanet orbit spawner -->
               <a-entity rotation="0 0 0" star-detail-exoplanet-spawner redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-spawner.starId">
                 <!-- sun dot -->
-                <a-entity material="shader: flat; color: #ffffff" geometry="primitive: sphere; radius: .0033"></a-entity>
+                <a-entity material="shader: flat; color: #ffffff" geometry="primitive: circle; radius: .0033"></a-entity>
               </a-entity>
               <!-- exoplanet listing -->
               <a-entity position="2 1 0" star-detail-exoplanet-list redux-bind="worldSettings.starDetails.dbKey: star-detail-exoplanet-list.starId" layout="type: box; margin: -.33"></a-entity>
@@ -199,7 +203,7 @@
     <!-- Camera / Cursor -->
       <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 .5" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed; worldSettings.inputActive.fly: gearvr-fly-controls.active; worldSettings.inputActive.time: gearvr-time-controls.active">
         <!-- <a-entity id="acursor"
-          position="0 0 -1"
+          po sition="0 0 -1"
           geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
           material="color: #ffffff; shader: flat;transparent: true; opacity: .5"
           raycaster="objects: .clickable"
@@ -211,7 +215,7 @@
             raycaster="objects: .clickable; recursive: true; far: 100; near: 0"
             position="0 0 0">
               <a-entity id="cursorIndicator"
-                geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;"
+                geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015; segmentsPhi: 1; segmentsTheta: 24;"
                 position="0 0 -1"
                 material="color: #ffffff; shader: flat; transparent: true; opacity: .5;"
               ></a-entity>
