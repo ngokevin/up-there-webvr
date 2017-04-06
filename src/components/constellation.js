@@ -11,7 +11,7 @@ var stardata = require('../../assets/data/stardata.json');
           uniforms: {
             "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
             "starfieldScale": { type: "f", value: this.el.getAttribute('scale').x },
-            "uTime": { type: "f", value: 0.1 },
+            "uTime": { type: "f", value: 0.0 },
             "uStarfieldTime": { type: "f", value: 0.0 },
             "uDetailDrawDistance": { type: "f", value: 15.0 }
           },

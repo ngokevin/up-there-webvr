@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" antialias="true" pool__star="mixin: star; size: 100; dynamic: true" pool__exoplanet="mixin: exoplanet; size: 9" pool__medtext="mixin: exoplanetLabel; size: 9;">
+    <a-scene logarithmicDepthBuffer="true" redux="reducers: worldSettings" pool__star="mixin: star; size: 100; dynamic: true" pool__exoplanet="mixin: exoplanet; size: 9" pool__medtext="mixin: exoplanetLabel; size: 9;">
 
       <a-assets>
         <!-- assets -->
@@ -36,7 +36,7 @@
         <a-mixin id="leftPanel" text="align: right; anchor: right;"></a-mixin>
         <a-mixin id="rightPanel" text="align: left; anchor: left;"></a-mixin>
         <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
-        <a-mixin id="exoplanet" exoplanet-view redux-bind="worldSettings.ui.hoverPlanet: exoplanet-view.hoverPlanet" geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0; segmentsPhi: 1; segmentsTheta: 24;" material="shader: flat; color: #ffffff;"></a-mixin>
+        <a-mixin id="exoplanet" exoplanet-view redux-bind="worldSettings.ui.hoverPlanet: exoplanet-view.hoverPlanet" geometry="primitive: ring; radiusInner: 1.1; radiusOuter: 1.0; segmentsPhi: 1; segmentsTheta: 24;" material="shader: flat; color: #dddddd;"></a-mixin>
         <a-mixin id="exoplanetLabel" text="width: 4; height: auto; align: center; anchor: center;" hover-color action-dispatcher="type: SELECT_PLANET; value: -1; evt: mouseenter" geometry="primitive: plane; width: 1.5; height: .25" material="shader: flat; color: #333"></a-mixin>
       </a-assets>
 
@@ -48,7 +48,7 @@
 
         <!-- STARFIELD READY TRANSITION ANIMATIONS -->
         <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" to="-90 0 0"></a-animation>
-        <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="5000" begin="starfieldReady" to=".5 .5 .5"></a-animation>
+        <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="5000" begin="starfieldReady" to=".35 .35 .35"></a-animation>
         <a-animation easing="ease-in-out" attribute="position" dur="5000" begin="starfieldReady" to="0 0 0"></a-animation>
       </a-entity>
 

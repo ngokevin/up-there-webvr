@@ -67,6 +67,8 @@ AFRAME.registerComponent('starfield', {
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
+        // depthTest: false,
+        // depthWrite: false,
         transparent: true
       });
 
@@ -328,7 +330,7 @@ AFRAME.registerComponent('starfield', {
     geo.addAttribute( 'starScale', new THREE.BufferAttribute(starScale, 1) );
     geo.addAttribute( 'radius', new THREE.BufferAttribute(radius, 1) );
 
-    geo.attributes.position.setDynamic(true);
+    // geo.attributes.position.setDynamic(true);
 
     this.geo = geo;
     this.points = new THREE.Points(this.geo, this.starfieldMat);
@@ -348,8 +350,10 @@ AFRAME.registerComponent('starfield', {
     let s = this.getStarWorldLocation(id);
     this.scaleParent.position.set(s.x, s.y, s.z);
     this.scaleParent.scale.set(1, 1, 1);
+    let l = performance.now()
     this.scaleParent.updateMatrixWorld();
-
+    l = performance.now() - l;
+    console.log(`Parent calculation: ${l}`)
     // parent the starfield to the scaleParent location without changing its world transform
     THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
     var scale = { v: 1 };
@@ -416,7 +420,11 @@ AFRAME.registerComponent('starfield', {
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
                   })
                   .onComplete( () => {
+                    let l = performance.now()
                     this.scaleParent.updateMatrixWorld();
+                    l = performance.now() - l;
+                    console.log(`Detachment: ${l}`)
+                    // this.scaleParent.updateMatrixWorld();
                     this.maskStar(id, 1.0);
                     THREE.SceneUtils.detach(this.el.object3D, this.scaleParent, this.el.sceneEl.object3D);
                     console.log('done 🦑');
