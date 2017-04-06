@@ -109,16 +109,18 @@ const SOLS_TO_PARSECS = 2.25461e-8;
         }
 
         // otherwise, if a star is no longer in range, remove it and return it to the object pool
+        // let aLen = this.active.length;
         this.active = this.active.filter( (id) => {
-          if(stars.indexOf(id) === -1) {
+          if(stars.indexOf(id) == -1) {
             var c = this.entities.find( e => e.getAttribute('starid') === `star_${id}` );
+            this.entities.splice(this.entities.indexOf(c), 1);
             if(c !== undefined) {
               try {
                 // c.setAttribute('id', 'dead')
-
                 c.classList.remove('clickable')
-                console.log(`Removing entity ${id}`);
+                // console.log(`Removing entity ${id}`);
                 this.pool.returnEntity(c);
+
               } catch(e) {
                 // debugger;
                 console.log(`Can't remove ${id} entity`, c);
@@ -128,6 +130,7 @@ const SOLS_TO_PARSECS = 2.25461e-8;
           }
           return true;
         })
+        // console.log(`culled ${aLen - this.active.length} stars from the listing`);
 
       }
     }
