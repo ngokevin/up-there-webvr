@@ -1,5 +1,13 @@
 var starSets = require('./starSets');
 
+const MOBILE = 'MOBILE'
+    , DESKTOP = 'DESKTOP'
+    , RIFT = 'RIFT'
+    , VIVE = 'VIVE'
+    , GEARVR = 'GEARVR'
+    , DAYDREAM = 'DAYDREAM'
+    , CARDBOARD = 'CARDBOARD'
+
 AFRAME.registerReducer('worldSettings', {
   actions: {
     SCALE_DOWN: 'SCALE_DOWN',
@@ -14,11 +22,16 @@ AFRAME.registerReducer('worldSettings', {
     SELECT_PLANET: 'SELECT_PLANET',
     HOVER_STAR: 'HOVER_STAR',
     SET_BUSY: 'SET_BUSY',
+    SET_LOADING: 'SET_LOADING',
     STAR_COUNT: 'STAR_COUNT',
     PROCESSING_RATE: 'PROCESSING_RATE',
     HOVER_TEXT: 'HOVER_TEXT',
     STAR_DETAILS: 'STAR_DETAILS',
     SET_INPUT_ACTIVE: 'SET_INPUT_ACTIVE',
+    SET_SYSTEM_TYPE: 'SET_SYSTEM_TYPE',
+    SET_CONTROL_TYPE: 'SET_CONTROL_TYPE',
+    SET_VR_SYSTEM: 'SET_VR_SYSTEM',
+    SET_SUN_INDICATOR: 'SET_SUN_INDICATOR',
 
     // STAR_SET MODIFIERS
     SELECT_STAR_SET: 'SELECT_STAR_SET',
@@ -36,6 +49,8 @@ AFRAME.registerReducer('worldSettings', {
     hoverStar: 0,
     hoverText: "",
     starName: "Unknown",
+    systemType: MOBILE,
+    sunIndicator: false,
     starCount: 0,
     hoverColor: "#4499ff",
     inputActive: {
@@ -71,9 +86,11 @@ AFRAME.registerReducer('worldSettings', {
     starSets: {},
     processingRate: 512,
     busy: true,
+    loading: true,
     cursorPosition: { x: 0, y: 0, z: 0 },
     minScale: .001,
-    minSpeed: 1
+    minSpeed: 1,
+    vrSystem: false
   },
 
   reducer: function (state, action) {
@@ -86,6 +103,32 @@ AFRAME.registerReducer('worldSettings', {
           newState.ui.hoverPlanet = parseInt(action.value);
         } else {
           newState.ui.hoverPlanet = -1;
+        }
+        return newState;
+      }
+
+      case this.actions.SET_SYSTEM_TYPE: {
+        var newState = Object.assign({}, state);
+        if(action.value !== undefined) {
+          newState.systemType = action.value;
+        }
+        return newState;
+      }
+
+      case this.actions.SET_SUN_INDICATOR: {
+        var newState = Object.assign({}, state);
+        if(action.value == true) {
+          newState.sunIndicator = action.value;
+        } else {
+          newState.sunIndicator = false;
+        }
+        return newState;
+      }
+
+      case this.actions.SET_VR_SYSTEM: {
+        var newState = Object.assign({}, state);
+        if(action.value !== undefined) {
+          newState.vrSystem = action.value;
         }
         return newState;
       }
@@ -138,6 +181,16 @@ AFRAME.registerReducer('worldSettings', {
       }
 
       case this.actions.SET_BUSY: {
+        var newState = Object.assign({}, state);
+        if(action.val == 'true') {
+          newState.busy = true;
+        } else {
+          newState.busy = false;
+        }
+        return newState;
+      }
+
+      case this.actions.SET_LOADING: {
         var newState = Object.assign({}, state);
         if(action.val == 'true') {
           newState.busy = true;

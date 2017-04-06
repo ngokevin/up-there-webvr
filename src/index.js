@@ -8,6 +8,8 @@ const x = '5';
 
 require('aframe-gearvr-controls-component');
 require('aframe-look-at-component');
+AFRAME.registerComponent('fps-look-controls', require('aframe-fps-look-component').component);
+
 // require('aframe-auto-detect-controllers-component');
 require('aframe-redux-component');
 

@@ -18,6 +18,11 @@ AFRAME.registerComponent('gearvr-fly-controls', {
   },
 
   init: function () {
+
+    if(!AFRAME.utils.device.isGearVR) {
+      return;
+    }
+
     this.cursor = document.getElementById('acursor');
     this.hand = document.getElementById('right-hand');
     this.handleClick = this.handleClick.bind(this);

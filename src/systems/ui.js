@@ -11,5 +11,17 @@ AFRAME.registerSystem('ui', {
     if(!AFRAME.utils.device.isMobile()) {
       this.sceneEl.setAttribute('antialias', 'true');
     }
+  },
+  controlSettings: function() {
+
+    if(AFRAME.utils.device.isGearVR()) {
+
+      // set VR system to GEARVR, and let components do the rest?
+      this.el.sceneEl.systems.redux.store.dispatch({
+        type: 'SET_VR_SYSTEM',
+        value: 'GEARVR'
+      });
+
+    }
   }
 });

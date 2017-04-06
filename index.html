@@ -45,7 +45,10 @@
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
         <a-entity id="star-set-highlighter" star-set-indicator redux-bind="worldSettings.currentStarSet: star-set-indicator.currentStarSet" visible="false"></a-entity>
-
+        <a-entity id="sun-indicator" redux-bind="worldSettings.sunIndicator: visible" geometry="primitive: sphere; radius: 1; segmentsWidth: 12; segmentsHeight: 24" material="shader: flat; wireframe: true; color: #aaedff; transparent: true" rotation="90 0 0" visible="false">
+          <a-animation attribute="scale" dur="2000" from="0 0 0" to="1 1 1" easing="linear" repeat="indefinite"></a-animation>
+          <a-animation attribute="material.opacity" dur="2000" from="1" to="0" repeat="indefinite" fill="backward"></a-animation>
+        </a-entity>
         <!-- STARFIELD READY TRANSITION ANIMATIONS -->
         <a-animation easing="ease-in-out" attribute="rotation" dur="1000" begin="starfieldReady" to="-90 0 0"></a-animation>
         <a-animation easing="ease-in-out" attribute="scale" delay="900" dur="5000" begin="starfieldReady" to=".35 .35 .35"></a-animation>
@@ -128,7 +131,7 @@
         <!-- control panel -->
         <a-entity id="control-panel" position="0 -1.25  -.45" rotation="-75 0 0">
 
-          <!-- CONSTELLATION CONTROLS -->
+          <!-- EXOPLANET CONTROLS -->
           <a-entity id="exoplanet-controls" position="-.5 0 0">
             <!-- <a-entity id="scale-legend" position="0 .5 .1">
               <a-entity text="value: scale; align: center; width: 2" position="0 .1 0" rotation="45 0 0" mixin="blue" formattedstorevalue='storePath: worldSettings.scale; formattedStringFunc: (s) => { return `${((1/parseFloat(s)) * 3.26156).toFixed(3)} lightyears` }' redux-bind="worldSettings.scale: formattedstorevalue.storeTemp"></a-entity>
@@ -143,8 +146,22 @@
             </a-entity>
           </a-entity>
 
+          <a-entity id="sun-indicator-controls" position="0 0 0">
+            <!-- <a-entity id="scale-legend" position="0 .5 .1">
+              <a-entity text="value: scale; align: center; width: 2" position="0 .1 0" rotation="45 0 0" mixin="blue" formattedstorevalue='storePath: worldSettings.scale; formattedStringFunc: (s) => { return `${((1/parseFloat(s)) * 3.26156).toFixed(3)} lightyears` }' redux-bind="worldSettings.scale: formattedstorevalue.storeTemp"></a-entity>
+              <a-entity mixin="blue" id="scale-legend" geometry="primitive: box; width: 1; height: .01; depth: .01" material="shader: flat;" ></a-entity>
+              <a-entity mixin="blue" id="scale-legend" position="-.5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
+              <a-entity mixin="blue" id="scale-legend" geometry="primitive: box; width: 1; height: .01; depth: .01" material="shader: flat;" ></a-entity>
+              <a-entity mixin="blue" id="scale-legend" position=".5 0 0" geometry="primitive: box; width: .01; height: .03; depth: .01" material="shader: flat;" ></a-entity>
+            </a-entity> -->
+            <a-entity position="0 .15 0" text="align: center; value: show sun; width: 1"></a-entity>
+            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="show sun/earth location" toggle-switch="morph: On" entity-visibility-toggle="target: sun-indicator" class="clickable">
+              <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
+            </a-entity>
+          </a-entity>
+
           <!-- CONSTELLATION CONTROLS -->
-          <a-entity id="constellation-controls">
+          <a-entity id="constellation-controls" position=".5 0 0">
             <!-- <a-entity id="scale-legend" position="0 .5 .1">
               <a-entity text="value: scale; align: center; width: 2" position="0 .1 0" rotation="45 0 0" mixin="blue" formattedstorevalue='storePath: worldSettings.scale; formattedStringFunc: (s) => { return `${((1/parseFloat(s)) * 3.26156).toFixed(3)} lightyears` }' redux-bind="worldSettings.scale: formattedstorevalue.storeTemp"></a-entity>
               <a-entity mixin="blue" id="scale-legend" geometry="primitive: box; width: 1; height: .01; depth: .01" material="shader: flat;" ></a-entity>
@@ -202,13 +219,6 @@
 
     <!-- Camera / Cursor -->
       <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 0 .5" look-controls wasd-controls="fly: true" gearvr-fly-controls redux-bind="worldSettings.speed: gearvr-fly-controls.speed; worldSettings.inputActive.fly: gearvr-fly-controls.active; worldSettings.inputActive.time: gearvr-time-controls.active">
-        <!-- <a-entity id="acursor"
-          po sition="0 0 -1"
-          geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-          material="color: #ffffff; shader: flat;transparent: true; opacity: .5"
-          raycaster="objects: .clickable"
-          sync-local-location
-          player-controls> -->
 
           <a-entity id="acursor"
             cursor="fuse: false; fuseTimeout: 1000"
@@ -221,7 +231,7 @@
               ></a-entity>
               <a-entity id="cursorHoverText"
                 position="0 -.125 -1"
-                text="value: Default; align: center; width: 2; height: auto; anchor: center"
+                text="value: ; align: center; width: 2; height: auto; anchor: center"
                 star-hover-text
               ></a-entity>
                 <!-- <a-entity text="value: ; align: center; width: 1; height: .125;" position="0 -.05 0" redux-bind="worldSettings.hoverText: text.value"></a-entity>
