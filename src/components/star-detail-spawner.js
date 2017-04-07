@@ -26,21 +26,24 @@ const SOLS_TO_PARSECS = 2.25461e-8;
 
   AFRAME.registerComponent('star-detail-spawner', {
     schema: {
-      target: {type: 'string', default: 'cursorIndicator'},
+      target: {type: 'string', default: 'acamera'},
       maxStars: { type: 'int', default: 10 },
       mixin: { type: 'string', default: 'wirecube'},
-      radius: { type: 'float', default: 2 },
+      radius: { type: 'float', default: 4 },
+      starsPerFrame: { type: 'float', default: 3},
       selectedStar: { type: 'int', default: -1 },
       starfieldReady: { type: 'boolean', default: false }
     },
     init: function() {
       this.pool = this.el.sceneEl.components.pool__star;
-      this.tick = AFRAME.utils.throttleTick(this.throttledTick, 250, this);
+      this.tick = AFRAME.utils.throttleTick(this.throttledTick, 50, this);
       this.starfield = document.getElementById('starfield');
 
       this.ready = true;
-
+      this.lastPosition = '';
+      this.moving = true;
       // lists of entities
+      this.pending = [];
       this.active = [];
       this.inactive = [];
       this.entities = [];
@@ -75,6 +78,81 @@ const SOLS_TO_PARSECS = 2.25461e-8;
         return name;
       }
     },
+    spawnStars: function(count) {
+      while(count > 0 && this.pending.length > 0) {
+        let id = this.pending.shift();
+        this.spawnStar(id);
+        count--;
+      }
+    },
+    despawnStar: function(id) {
+      var c = this.entities.find( e => e.getAttribute('starid') === `star_${id}` );
+      this.entities.splice(this.entities.indexOf(c), 1);
+      if(c !== undefined) {
+        try {
+          // c.setAttribute('id', 'dead')
+          c.classList.remove('clickable')
+          // console.log(`Removing entity ${id}`);
+          this.pool.returnEntity(c);
+        } catch(e) {
+          // debugger;
+          console.log(`Can't remove ${id} entity`, c);
+        }
+      }
+    },
+    spawnStar: function(id) {
+      let c = this.pool.requestEntity();
+      c.classList.add('clickable');
+      let p = this.starfield.components.starfield.getStarPosition(id);
+      c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
+      c.setAttribute('starid', `star_${id}`);
+      c.setAttribute('action-dispatcher', 'value', parseInt(id));
+      c.setAttribute('hover-text', this.formatStarName(this.starfield.components.starfield.starnames[id]));
+
+      this.active.push(id);
+
+      this.el.appendChild(c);
+      this.entities.push(c);
+    },
+    refreshIndicators: function() {
+
+      var stars = this.getStarsInRange();
+
+      // mark new stars in range as pending
+      if(stars.length > 0) {
+
+        stars.map( id => {
+          let isPending = this.pending.indexOf(id) !== -1;
+          let isActive = this.active.indexOf(id) !== -1;
+
+          // if an in-range star isn't pending or active, mark it pending
+          if(isActive) {
+            // skip active, in-range stars
+          } else if(!isPending) {
+            // add in range stars that aren't yet pending
+            this.pending.push(id);
+          }
+        });
+      }
+
+      // remove active stars no longer in range
+      this.active = this.active.filter( (id) => {
+        if(stars.indexOf(id) == -1) {
+          this.despawnStar(id);
+          return false;
+        }
+        return true;
+      })
+
+      // remove pending stars no longer in range
+      this.pending = this.pending.filter( (id) => {
+        if(stars.indexOf(id) == -1) {
+          return false;
+        }
+        return true;
+      })
+
+    },
     throttledTick: function() {
       if(!this.data.starfieldReady) return;
 
@@ -83,54 +161,33 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       }
 
       if(this.target != null && this.ready === true && this.pool !== undefined && this.data.selectedStar == -1) {
+        let p = this.target.getAttribute('position');
 
-        var stars = this.getStarsInRange();
-        // debugger;
-        // this.starDB = this.starfield.components.starfield.starDB;
-        if(stars.length > 0) {
-          // debugger;
-          stars.map( id => {
-            // if the star is brand new, spawn a marker for it
-            if(this.active.indexOf(id) === -1) {
-              let c = this.pool.requestEntity();
-              c.classList.add('clickable');
-              let p = this.starfield.components.starfield.getStarPosition(id);
-              c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
-              c.setAttribute('starid', `star_${id}`);
-              c.setAttribute('action-dispatcher', 'value', parseInt(id));
-              c.setAttribute('hover-text', this.formatStarName(this.starfield.components.starfield.starnames[id]));
+        let r = Object.keys(p).map( (s,i) => {
+            return Math.round(p[s]) === Math.round(this.lastPosition[s]);
+        });
 
-              this.active.push(id);
+        // moving is true if any of the values doesn't equal the last posiition
+        let m = r.indexOf(false) !== -1;
 
-              this.el.appendChild(c);
-              this.entities.push(c);
-            }
-          });
+        if(this.moving) {
+          if(!m) {
+            this.moving = false;
+            this.refreshIndicators();
+            console.log(`🛑 Stopped moving.`);
+          }
+        } else {
+          if(m) {
+            this.refreshIndicators();
+            this.moving = true;
+            console.log(`🏁 Started moving.`)
+          }
         }
 
-        // otherwise, if a star is no longer in range, remove it and return it to the object pool
-        // let aLen = this.active.length;
-        this.active = this.active.filter( (id) => {
-          if(stars.indexOf(id) == -1) {
-            var c = this.entities.find( e => e.getAttribute('starid') === `star_${id}` );
-            this.entities.splice(this.entities.indexOf(c), 1);
-            if(c !== undefined) {
-              try {
-                // c.setAttribute('id', 'dead')
-                c.classList.remove('clickable')
-                // console.log(`Removing entity ${id}`);
-                this.pool.returnEntity(c);
+        this.lastPosition = this.target.getAttribute('position');
 
-              } catch(e) {
-                // debugger;
-                console.log(`Can't remove ${id} entity`, c);
-              }
-            }
-            return false;
-          }
-          return true;
-        })
-        // console.log(`culled ${aLen - this.active.length} stars from the listing`);
+        // spawn a max of one star per frame
+        this.spawnStars(this.data.starsPerFrame);
 
       }
     }

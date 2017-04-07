@@ -27,7 +27,7 @@ AFRAME.registerComponent('blend-model', {
         this.el.setObject3D('mesh', o);
         obj = o;
       } else {
-        this.el.setObject3D('mesh', group);
+        this.el.setObject3D('mesh', group.children[0]);
         obj = group;
       }
 

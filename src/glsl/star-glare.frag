@@ -5,7 +5,6 @@ varying float vPointSize;
 
 uniform sampler2D starDecal;
 uniform sampler2D sphereMask;
-uniform sampler2D starGlare;
 uniform float uTime;
 uniform float uDetailDrawDistance;
 

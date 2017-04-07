@@ -32,14 +32,12 @@ AFRAME.registerComponent('star-set-indicator', {
     this.mat = new THREE.ShaderMaterial({
         uniforms: {
           "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
-          "decal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/reticle.png" ) },
+          "decal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/indicator.png" ) },
           "uTime": { type: "f", value: 0.1 },
           "uStarfieldTime": { type: "f", value: 0.0 }
         },
         vertexShader: require('../glsl/indicator.vert'),
         fragmentShader: require('../glsl/indicator.frag'),
-        depthWrite: false,
-        depthTest: false,
         transparent: true
       });
 
