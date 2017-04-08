@@ -78,7 +78,7 @@ AFRAME.registerReducer('worldSettings', {
       exoplanetCount: 0
     },
     ui: {
-      selectedStar: -1,
+      selectedStar: 0,
       hoverStar: -1,
       selectedPlanet: -1,
       hoverPlanet: -1

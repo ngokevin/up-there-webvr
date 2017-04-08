@@ -88,10 +88,10 @@ AFRAME.registerComponent('star-detail-view', {
     newStar.distance = this.formatDistance(p.distanceTo(new THREE.Vector3(0,0,0)));
 
     let color = new THREE.Color(star.color.x, star.color.y, star.color.z);
-    newStar.color = color.getHexString();
+    newStar.hexColor = color.getHexString();
     this.el.setAttribute('material', 'color', `#${newStar.color}`);
 
-    newStar.id = `ID: HD ${star.id}`;
+    newStar.id = `ID: ${star.id}`;
     newStar.dbKey = this.data.selectedStar;
 
     let planetCount = this.getExoplanets(star.id).length;
