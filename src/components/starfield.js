@@ -60,7 +60,7 @@ AFRAME.registerComponent('starfield', {
           "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
           "starDecal": { type: "t", value: new THREE.TextureLoader().load( "assets/images/star-decal.png" ) },
           "starGlare": { type: "t", value: new THREE.TextureLoader().load( "assets/images/lensflare4.jpg" ) },
-          "sphereMask": { type: "t", value: new THREE.TextureLoader().load( "assets/images/sphere-mask.png" ) },
+          "sphereMask": { type: "t", value: new THREE.TextureLoader().load( "assets/images/star-decal.png" ) },
           "starfieldScale": { type: "f", value: this.el.getAttribute('scale').x },
           "uTime": { type: "f", value: 0.1 },
           "uStarfieldTime": { type: "f", value: 0.0 },

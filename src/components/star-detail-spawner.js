@@ -174,13 +174,13 @@ const SOLS_TO_PARSECS = 2.25461e-8;
           if(!m) {
             this.moving = false;
             this.refreshIndicators();
-            console.log(`🛑 Stopped moving.`);
+            // console.log(`🛑 Stopped moving.`);
           }
         } else {
           if(m) {
             this.refreshIndicators();
             this.moving = true;
-            console.log(`🏁 Started moving.`)
+            // console.log(`🏁 Started moving.`)
           }
         }
 

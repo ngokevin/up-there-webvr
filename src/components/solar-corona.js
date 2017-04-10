@@ -1,8 +1,4 @@
 // Component to change to random color on click.
-
-
-
-
 AFRAME.registerComponent('solar-corona', {
   schema: {
     src: {type: 'string'},

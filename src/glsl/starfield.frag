@@ -30,7 +30,7 @@ vec4 starSurface() {
 }
 
 void main() {
-  if(vPointSize <= 2.5) {
+  if(vPointSize <= 3.0) {
     gl_FragColor = vStarColor;
   } else {
     gl_FragColor = texture2D(sphereMask, gl_PointCoord) * vStarColor;
