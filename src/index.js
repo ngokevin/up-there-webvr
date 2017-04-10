@@ -1,7 +1,8 @@
 require('aframe');
 // overwrite with the latest Sprite class that fixes a raycasting scale error
 THREE.Sprite = require('../vendor/Sprite');
-
+require('../css/main.scss');
+require('./components/solar-corona.js');
 // require('aframe-extras');
 // require('aframe-html-shader');
 const x = '5';
@@ -71,7 +72,6 @@ require('./components/location-indicator.js');
 require('./components/reticle.js');
 // require('./components/scale-ui.js');
 require('./components/sol-scale.js');
-require('./components/solar-corona.js');
 require('./components/star-hover-text.js');
 require('./components/star-set-indicator.js');
 require('./components/sync-local-location.js');

@@ -17,6 +17,7 @@ AFRAME.registerComponent('solar-corona', {
     nTex2.wrapS = nTex2.wrapT = THREE.RepeatWrapping;
 
 
+    console.log('hi')
     this.coronaMat = new THREE.ShaderMaterial({
         uniforms: {
           "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },

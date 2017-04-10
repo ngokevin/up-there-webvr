@@ -11,7 +11,7 @@
     </script>
     <script src="build.js"></script>
     <!-- <script src="src/core/embed.js"></script> -->
-    <link rel="stylesheet" href="css/main.css">
+    <!-- <link rel="stylesheet" href="css/main.css"> -->
     <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
@@ -65,7 +65,7 @@
           <!-- detail ui parent, maintains angle to camera -->
           <a-entity id="star-detail-text" look-at="[camera]">
 
-            <a-entity solar-corona="src: assets/models/star-detail-mesh.json;" rotation="-90 0 0" scale="150 150 150" redux-bind="worldSettings.starDetails.hexColor: solar-corona.color"></a-entity>
+            <a-entity solar-corona="src: assets/models/star-detail-mesh.json;" rotation="-90 0 0" redux-bind="worldSettings.starDetails.hexColor: solar-corona.color"></a-entity>
 
             <!-- TITLE -->
             <a-entity id="star-detail-name" mixin="bigFont crimson" position="0 2.5 0" text="value: Unknown" redux-bind="worldSettings.starDetails.name: text.value"></a-entity>
