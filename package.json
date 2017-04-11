@@ -34,7 +34,7 @@
     "aframe-event-set-component": "^3.0.2",
     "aframe-extras": "^3.3.4",
     "aframe-gearvr-controls-component": "^0.1.6",
-    "aframe-html-shader": "^0.1.1",
+    "aframe-html-shader": "git@github.com:flimshaw/aframe-html-shader.git",
     "aframe-layout-component": "^4.0.2",
     "aframe-lod": "git+https://github.com/flimshaw/aframe-lod.git",
     "aframe-look-at-component": "^0.2.0",

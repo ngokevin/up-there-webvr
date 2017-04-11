@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>A-Painter</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="img/icon-256.png">
+    <meta name="description" content="Paint in VR in your browser. Powered by A-Frame.">
+    <script src="build.js"></script>
+    <!-- <link rel="stylesheet" href="css/main.css"> -->
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+  </head>
+  <body>
+    <a-scene>
+            <a-assets>
+              <!-- assets -->
+              <a-asset-item id="star-detail-ui-asset" src="assets/models/star-detail-ui.json"></a-asset-item>
+            </a-assets>
+
+            <a-entity id="right-hand" gearvr-controls></a-entity>
+
+      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" gearvr-fly-controls look-controls wasd-controls>
+        <a-entity id="acursor"
+          cursor="fuse: false; fuseTimeout: 1000"
+          raycaster="objects: .clickable; recursive: true; far: 100; near: 0"
+          position="0 0 0">
+        </a-entity>
+      </a-entity>
+
+      <a-entity star-detail-ui position="0 1 -5" material="shader:html;target:#star-detail;transparent: true;fps:-1;width: 1024; height: 1024;"></a-entity>
+    </a-scene>
+
+    <div id="star-detail">
+      <div id="header" class="stats panel top-left">
+        <h1>${name}</h1>
+        <h2>${class} - ${type}</h2>
+      </div>
+
+      <div class="stats data-list panel bottom-left">
+        <div>
+          <label>Radius:</label>
+          <span>${radius.toFixed(2)} sols</span>
+        </div>
+        <div>
+          <label>Mass:</label>
+          <span>${mass.toFixed(2)} sols</span>
+        </div>
+        <div>
+          <label>Density:</label>
+          <span>${density.toFixed(2)} sols</span>
+        </div>
+        <div>
+          <label>Surface Temperature:</label>
+          <span>${parseInt(temp)} kelvin</span>
+        </div>
+        <div class="hr-location">
+          <img src="assets/images/hr-background.jpg" />
+        </div>
+
+        <div class="sky-location">
+          <img src="assets/images/starmap-background.jpg" />
+        </div>
+
+      </div>
+
+      <div class="time-data data-list panel bottom-right">
+        <div>
+          <label>Distance:</label>
+          <span>${distance.toFixed(1)} lghtyears</span>
+        </div>
+        <div>
+          <label>Current earth date:</label>
+          <span>${currentDate}</span>
+        </div>
+        <div>
+          <label>In radio range:</label>
+          <span>${radioRange ? 'Yes' : 'No'}</span>
+        </div>
+        <div>
+          <label>Date of first radio contact:</label>
+          <span>${radioContactDate}</span>
+        </div>
+
+        <div class="planetary-systems">
+          <h2>3 planets</h2>
+          <div class="planet">
+
+          </div>
+        </div>
+      </div>
+
+
+
+
+    </div>
+
+  </body>
+</html>

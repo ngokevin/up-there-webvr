@@ -14,7 +14,7 @@ AFRAME.registerComponent('gearvr-fly-controls', {
     active: {type: 'boolean', default: false},
     direction: {type: 'float', default: 0.0},
     warpSpeed: {type: 'float', default: 1.0},
-    speed: {type: 'float', default: 1.0}
+    speed: {type: 'float', default: 60.0}
   },
 
   init: function () {

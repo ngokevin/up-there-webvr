@@ -5,3 +5,7 @@ node_modules
 npm-debug.log*
 build.js
 stats.json
+css/main.css
+css/main.css.map
+build.js.gz
+.sass-cache
