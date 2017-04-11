@@ -3,6 +3,12 @@ var webpack = require('webpack');
 var ClosureCompilerPlugin = require('webpack-closure-compiler');
 
 var PLUGINS = [];
+
+// include EJS template loader plugin
+PLUGINS.push( new webpack.ProvidePlugin({
+  _: "underscore"
+}));
+
 if (process.env.NODE_ENV === 'production') {
   PLUGINS.push(    new ClosureCompilerPlugin({
         compiler: {
@@ -33,6 +39,7 @@ module.exports = {
           }]
       },
       { test: /\.(glsl|frag|vert)$/, loader: 'raw-loader', exclude: /node_modules/ },
-      { test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/ }
+      { test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/ },
+      { test: /\.ejs$/, loader: 'ejs-loader' }
     ]}
 };
