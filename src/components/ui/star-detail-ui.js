@@ -42,7 +42,6 @@ AFRAME.registerComponent('star-detail-ui', {
         if(c.name.indexOf('ui.') !== -1) {
           c.material = this.htmlMat;
         }
-
       })
 
       group.rotation.y = Math.PI;
@@ -53,10 +52,8 @@ AFRAME.registerComponent('star-detail-ui', {
   },
   update: function (oldData) {
     if(!this.ready) return;
-
-    this.targetEl.innerHTML = detailTemplate({
-      name: "Proxima Centuri"
-    });
+    
+    this.targetEl.innerHTML = detailTemplate(this.system.getStarDetails());
     setTimeout(() => {
       this.el.emit('update-html-texture');
     }, 850);

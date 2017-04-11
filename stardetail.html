@@ -12,9 +12,10 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
   </head>
   <body>
-    <a-scene>
+    <a-scene redux="reducers: worldSettings" >
             <a-assets>
               <!-- assets -->
+              <a-asset-item id="starNames" src="assets/data/starnames.json"></a-asset-item>
               <a-asset-item id="star-detail-ui-asset" src="assets/models/star-detail-ui.json"></a-asset-item>
             </a-assets>
 
@@ -28,7 +29,11 @@
         </a-entity>
       </a-entity>
 
-      <a-entity star-detail-ui position="0 1 -5" material="shader:html;target:#star-detail;transparent: true;fps:-1;width: 1024; height: 1024;"></a-entity>
+      <!-- <a-entity id="starfield" starfield></a-entity> -->
+
+      <a-entity id="star-detail-parent">
+        <a-entity star-detail-ui position="0 1 -5" material="shader:html;target:#star-detail;transparent: true;fps:-1;width: 1024; height: 1024;"></a-entity>
+      </a-entity>
     </a-scene>
 
     <div id="star-detail">

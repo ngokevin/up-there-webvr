@@ -12,7 +12,7 @@ require('aframe-look-at-component');
 // AFRAME.registerComponent('fps-look-controls', require('aframe-fps-look-component').component);
 //
 // // require('aframe-auto-detect-controllers-component');
-// require('aframe-redux-component');
+require('aframe-redux-component');
 //
 // require('aframe-lod');
 // require('aframe-event-set-component');
@@ -28,10 +28,12 @@ require('aframe-stats-in-vr-component');
 // // systems
 // require('./systems/exoplanet.js')
 // require('./systems/ui.js')
+require('./systems/star-detail-ui.js')
+require('./systems/star-data.js')
 // // require('./systems/effect-system.js')
 //
 // // reducers
-// require('./reducers/worldSettings.js');
+require('./reducers/worldSettings.js');
 //
 // // components
 //
@@ -78,7 +80,7 @@ require('./components/blend-model.js');
 // require('./components/sync-local-location.js');
 // require('./components/toggle-switch.js');
 // require('./components/translate-ui.js');
-// require('./components/starfield.js');
+require('./components/starfield.js');
 // require('./components/star-selector.js');
 
 // require('./components/star-detail-view.js');

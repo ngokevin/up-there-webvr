@@ -68,8 +68,6 @@ AFRAME.registerComponent('starfield', {
         },
         vertexShader: require('../glsl/starfield.vert'),
         fragmentShader: require('../glsl/starfield.frag'),
-        // depthTest: false,
-        // depthWrite: false,
         transparent: true
       });
 
@@ -684,8 +682,6 @@ AFRAME.registerComponent('starfield', {
             val: this.spawnedStars
           })
 
-          // console.log(`Processed ${this.spawnedStars} stars 🐝`)
-
           if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
             console.log(`Starfield ready. ${newStars} Processed ${this.spawnedStars} stars 🐝`)
             this.el.setAttribute('starfield', { state: STARFIELD_READY });
@@ -699,8 +695,7 @@ AFRAME.registerComponent('starfield', {
               this.el.sceneEl.systems.redux.store.dispatch({
                 type: 'STARFIELD_READY'
               })
-
-            }, 5000);
+            }, 1000);
 
           }
 
