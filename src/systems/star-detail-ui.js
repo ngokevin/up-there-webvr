@@ -101,14 +101,22 @@ AFRAME.registerSystem('star-detail-ui', {
   },
   generatePanelButton: function(obj) {
 
+    let s = obj.name.split('.');
+    let templateName = s[s.length-1];
+
+    // create the entity and attach the object as its root obj
     let e = document.createElement('a-entity');
     e.setObject3D('mesh', obj);
     e.classList.add('clickable');
 
+    e.setAttribute('action-dispatcher', {
+      type: 'SELECT_PANEL',
+      value: templateName
+    })
+
     // create a template for the given panel button
     let a = obj.name.split('.');
     let template = this.templates[a[a.length-1]];
-    console.log(template({}));
 
     return e;
   },

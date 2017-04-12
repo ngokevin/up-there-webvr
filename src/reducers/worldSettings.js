@@ -20,6 +20,7 @@ AFRAME.registerReducer('worldSettings', {
     UPDATE_CURSOR_POSITION: 'UPDATE_CURSOR_POSITION',
     SELECT_STAR: 'SELECT_STAR',
     SELECT_PLANET: 'SELECT_PLANET',
+    SELECT_PANEL: 'SELECT_PANEL',
     HOVER_STAR: 'HOVER_STAR',
     SET_BUSY: 'SET_BUSY',
     SET_LOADING: 'SET_LOADING',
@@ -82,7 +83,9 @@ AFRAME.registerReducer('worldSettings', {
       selectedStar: 0,
       hoverStar: -1,
       selectedPlanet: -1,
-      hoverPlanet: -1
+      hoverPlanet: -1,
+      selectedPanel: -1,
+      hoverPanel: -1
     },
     starSets: {},
     processingRate: 512,
@@ -97,6 +100,17 @@ AFRAME.registerReducer('worldSettings', {
   reducer: function (state, action) {
     state = state || this.initialState;
     switch (action.type) {
+
+      case this.actions.SELECT_PANEL: {
+        var newState = Object.assign({}, state);
+        if(action.value !== undefined && !isNaN(parseInt(action.value))) {
+          newState.ui.selectedPanel = parseInt(action.value);
+        } else {
+          newState.ui.selectedPanel = -1;
+        }
+        console.log(`Updated panel to ${action.value}`)
+        return newState;
+      }
 
       case this.actions.SELECT_PLANET: {
         var newState = Object.assign({}, state);

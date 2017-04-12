@@ -55,7 +55,7 @@ require('./components/ui/star-detail-ui.js');
 //
 //
 //
-// require('./components/action-dispatcher.js');
+require('./components/action-dispatcher.js');
 // require('./components/attribute-incrementer.js');
 require('./components/blend-model.js');
 // require('./components/button-switch.js');

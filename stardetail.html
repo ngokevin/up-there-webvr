@@ -27,6 +27,11 @@
           cursor="fuse: false; fuseTimeout: 1000"
           raycaster="objects: .clickable; recursive: true; far: 100; near: 0"
           position="0 0 0">
+              <a-entity id="cursorIndicator"
+                geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015; segmentsPhi: 1; segmentsTheta: 24;"
+                position="0 0 -1"
+                material="color: #ffffff; shader: flat; transparent: true; opacity: .5;"
+              ></a-entity>
         </a-entity>
       </a-entity>
 
