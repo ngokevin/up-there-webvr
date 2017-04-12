@@ -84,7 +84,7 @@ AFRAME.registerReducer('worldSettings', {
       hoverStar: -1,
       selectedPlanet: -1,
       hoverPlanet: -1,
-      selectedPanel: -1,
+      selectedPanel: '',
       hoverPanel: -1
     },
     starSets: {},
@@ -103,10 +103,10 @@ AFRAME.registerReducer('worldSettings', {
 
       case this.actions.SELECT_PANEL: {
         var newState = Object.assign({}, state);
-        if(action.value !== undefined && !isNaN(parseInt(action.value))) {
-          newState.ui.selectedPanel = parseInt(action.value);
+        if(action.value !== undefined) {
+          newState.ui.selectedPanel = action.value;
         } else {
-          newState.ui.selectedPanel = -1;
+          newState.ui.selectedPanel = '';
         }
         console.log(`Updated panel to ${action.value}`)
         return newState;

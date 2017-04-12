@@ -3,11 +3,6 @@ require('../components/ui/star-detail-btn');
 //require('../components/ui/star-detail-panel');
 require('../components/ui/star-detail-panel-display');
 
-// require templates
-var overviewTemplate = require('../components/ui/templates/overview.ejs');
-var planetsTemplate = require('../components/ui/templates/planets.ejs');
-var locationTemplate = require('../components/ui/templates/location.ejs');
-
 const YEAR_MS = 365.25*24*60*60*1000;
 
 var defaultStar = {
@@ -59,11 +54,6 @@ AFRAME.registerSystem('star-detail-ui', {
   init: function() {
     this.panelCount = 0;
     this.panels = [];
-    this.templates = {
-      overview: overviewTemplate,
-      planets: planetsTemplate,
-      location: locationTemplate
-    }
   },
   // accepts a star id and updates s
   update: function(id) {
@@ -85,8 +75,8 @@ AFRAME.registerSystem('star-detail-ui', {
     let e = document.createElement('a-entity');
     e.setObject3D('mesh', obj);
 
-    e.setAttribute('star-detail-panel-display');
-    e.setAttribute('redux-bind', { 'worldSettings.selectedPanel': 'star-detail-panel-display.selectedPanel' });
+    e.setAttribute('star-detail-panel-display', { name: id });
+    e.setAttribute('redux-bind', 'worldSettings.ui.selectedPanel: star-detail-panel-display.selectedPanel' );
     e.setAttribute('material', {
       shader: 'html',
       target: `#${id}`,
@@ -113,10 +103,6 @@ AFRAME.registerSystem('star-detail-ui', {
       type: 'SELECT_PANEL',
       value: templateName
     })
-
-    // create a template for the given panel button
-    let a = obj.name.split('.');
-    let template = this.templates[a[a.length-1]];
 
     return e;
   },
