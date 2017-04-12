@@ -31,19 +31,24 @@ ul {
 
 #star-detail {
   width: 1024px;
-  height: 1024px;
+  height: 512px;
   top: 0;
   position: absolute;
   z-index: -1;
 }
 
+.top {
+  z-index: 1000;
+}
+
 .panel {
   position: absolute;
-  width: 512px;
+  width: 1024px;
   height: 512px;
+  overflow: hidden;
   box-sizing: border-box;
   color: #fff;
-  background-color: rgba(0,0,0,.75);
+  background-color: rgba(0,0,0,1);
   &.top-left {
     top: 0;
     left: 0;
@@ -66,9 +71,11 @@ ul {
 }
 
 #header {
+  width: 512px;
   text-align: center;
+  background-color: transparent;
   h1 {
-    font-size: 3em;
+    font-size: 5em;
     margin: .5em 0 0 0;
   },
   h2 {

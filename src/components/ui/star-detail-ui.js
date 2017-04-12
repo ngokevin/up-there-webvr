@@ -16,6 +16,8 @@ AFRAME.registerComponent('star-detail-ui', {
     this.targetEl = document.getElementById(this.data.targetEl);
     this.ready = false;
 
+    this.frameMat = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load( "assets/images/star-detail-frame-atlas.jpg" ) })
+
     this.updateMaterials = this.updateMaterials.bind(this);
 
     this.el.addEventListener('html-ready', (evt) => {
@@ -38,9 +40,15 @@ AFRAME.registerComponent('star-detail-ui', {
 
       // apply materials to each object in the asset
       group.children.forEach( c => {
+
         // all dynamic/html driven ui elements share a single material
         if(c.name.indexOf('ui.') !== -1) {
           c.material = this.htmlMat;
+        }
+
+        // all panel elements also share a single atlas
+        if(c.name.indexOf('frame.') !== -1) {
+          c.material = this.frameMat;
         }
       })
 
@@ -52,7 +60,7 @@ AFRAME.registerComponent('star-detail-ui', {
   },
   update: function (oldData) {
     if(!this.ready) return;
-    
+
     this.targetEl.innerHTML = detailTemplate(this.system.getStarDetails());
     setTimeout(() => {
       this.el.emit('update-html-texture');
