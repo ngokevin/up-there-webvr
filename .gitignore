@@ -9,3 +9,4 @@ css/main.css
 css/main.css.map
 build.js.gz
 .sass-cache
+*.blend*

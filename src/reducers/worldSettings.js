@@ -46,6 +46,7 @@ AFRAME.registerReducer('worldSettings', {
     currentStarSet: false,
     starfieldReady: false,
     selectedStar: -1,
+    selectedPanel: -1,
     hoverStar: 0,
     hoverText: "",
     starName: "Unknown",

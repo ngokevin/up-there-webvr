@@ -31,7 +31,7 @@
       </a-entity>
 
       <a-entity id="star-detail-parent">
-        <a-entity star-detail-ui position="0 0 0" material="shader:html;target:#star-detail;transparent: true;fps:-1;width: 1024; height: 1024;"></a-entity>
+        <a-entity star-detail-ui redux-bind="worldSettings.selectedStar: star-detail-ui.selectedStar; worldSettings.selectedPanel: star-detail-ui.selectedPanel "></a-entity>
       </a-entity>
     </a-scene>
 

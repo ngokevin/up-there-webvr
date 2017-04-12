@@ -29,6 +29,7 @@ require('aframe-stats-in-vr-component');
 // require('./systems/exoplanet.js')
 // require('./systems/ui.js')
 require('./systems/star-detail-ui.js')
+
 require('./systems/star-data.js')
 // // require('./systems/effect-system.js')
 //
