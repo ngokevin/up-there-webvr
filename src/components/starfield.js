@@ -287,7 +287,6 @@ AFRAME.registerComponent('starfield', {
       c += q.count;
       this.updateGeometry(q.buf, q.offset, q.count);
     }
-    // console.log(`Updated ${c} stars`)
 
     if(c > 0) {
       this.posAttribute.updateRange.count = c/4;
@@ -297,7 +296,6 @@ AFRAME.registerComponent('starfield', {
     }
 
   },
-
   maskStar: function(id, mask) {
     // debugger;
     let o = this.el.object3D.getObjectByName('starfieldPoints', true);

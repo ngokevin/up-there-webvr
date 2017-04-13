@@ -51,6 +51,10 @@ var defaultStar = {
 
 /* globals AFRAME */
 AFRAME.registerSystem('star-detail-ui', {
+  schema: {
+    selectedStar: { type: 'int', default: -1},
+    selectedPanel: { type: 'string', default: ''}
+  },
   init: function() {
     this.panelCount = 0;
     this.panels = [];

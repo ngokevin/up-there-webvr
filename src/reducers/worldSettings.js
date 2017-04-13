@@ -6,7 +6,11 @@ const MOBILE = 'MOBILE'
     , VIVE = 'VIVE'
     , GEARVR = 'GEARVR'
     , DAYDREAM = 'DAYDREAM'
-    , CARDBOARD = 'CARDBOARD'
+    , CARDBOARD = 'CARDBOARD';
+
+const STARDATA_NEW = 'STARDATA_NEW';
+const STARDATA_BUILDING = 'STARDATA_BUILDING';
+const STARDATA_READY = 'STARDATA_READY';
 
 AFRAME.registerReducer('worldSettings', {
   actions: {
@@ -33,6 +37,7 @@ AFRAME.registerReducer('worldSettings', {
     SET_CONTROL_TYPE: 'SET_CONTROL_TYPE',
     SET_VR_SYSTEM: 'SET_VR_SYSTEM',
     SET_SUN_INDICATOR: 'SET_SUN_INDICATOR',
+    SET_STAR_DATA_STATE: 'SET_STAR_DATA_STATE',
 
     // STAR_SET MODIFIERS
     SELECT_STAR_SET: 'SELECT_STAR_SET',
@@ -44,6 +49,7 @@ AFRAME.registerReducer('worldSettings', {
     scale: .0005,
     speed: 50,
     time: 0,
+    starDataState: STARDATA_NEW,
     currentStarSet: false,
     starfieldReady: false,
     selectedStar: -1,
@@ -80,7 +86,7 @@ AFRAME.registerReducer('worldSettings', {
       exoplanetCount: 0
     },
     ui: {
-      selectedStar: 0,
+      selectedStar: -1,
       hoverStar: -1,
       selectedPlanet: -1,
       hoverPlanet: -1,
@@ -100,6 +106,13 @@ AFRAME.registerReducer('worldSettings', {
   reducer: function (state, action) {
     state = state || this.initialState;
     switch (action.type) {
+
+
+      case this.actions.SET_STAR_DATA_STATE: {
+        var newState = Object.assign({}, state);
+        newState.starDataState = action.value;
+        return newState;
+      }
 
       case this.actions.SELECT_PANEL: {
         var newState = Object.assign({}, state);

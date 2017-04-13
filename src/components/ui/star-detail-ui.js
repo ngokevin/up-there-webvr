@@ -7,7 +7,9 @@ AFRAME.registerComponent('star-detail-ui', {
     targetEl: { type: 'string', default: 'star-detail' },
     morphTargets: {type: 'boolean', default: false},
     targetObjectName: { type: 'string', default: undefined },
-    color: { type: 'string', default: '#ffffff' }
+    color: { type: 'string', default: '#ffffff' },
+    selectedPanel: { type: 'string', default: ''},
+    selectedStar: { type: 'int', default: -1}
   },
   init: function () {
     this.objectLoader = new THREE.ObjectLoader();
