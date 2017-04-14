@@ -33,7 +33,8 @@ const STARDATA_READY = 'STARDATA_READY';
 AFRAME.registerSystem('star-data', {
   schema: {
     selectedStar: { type: 'int', default: -1 },
-    tick: { type: 'boolean', default: true }
+    tick: { type: 'boolean', default: true },
+    dataDownloaded: { type: 'boolean', default: false }
   },
   init: function() {
 
@@ -52,6 +53,12 @@ AFRAME.registerSystem('star-data', {
     this.stardataHttpStore = new HttpStore('./assets/data/stardata.bin', this.dataFields.length);
 
     // SPATIAL HASH
+    this.totalStarCount = 107643;
+    this.starDB = [];
+    this.starLocations = [];
+    this.starIdLookup = {};
+    this.starCount = 0
+    this.spawnedStars = 0
     this.spatialHash = {};
     this.hashResolution = 1.0;
     this.hashSearchRadius = {
@@ -87,6 +94,15 @@ AFRAME.registerSystem('star-data', {
     this.spatialHash[h].push(idx);
     return h
   },
+  getColorForTemp: function(temp) {
+    let tempRound = Math.floor((temp/100))*100;
+    tempRound = Math.max(1000, Math.min(40000, tempRound));
+    let i = Math.floor(tempRound/100) - 10;
+      // console.log(i);
+    let c = colorTable[i];
+
+    return new THREE.Vector4(c[1], c[2], c[3], 1.0);
+  },
   processStarData: function() {
 
     // take the first chunk off the data queue
@@ -112,32 +128,28 @@ AFRAME.registerSystem('star-data', {
     for(var i = 0; i < starCount; i++) {
 
       // construct GPU buffers for each value
-      p.x = verts[(i * 3) + 0] = ar[(i * fields.length) + 0];
-      p.y = verts[(i * 3) + 1] = ar[(i * fields.length) + 1];
-      p.z = verts[(i * 3) + 2] = ar[(i * fields.length) + 2];
+      p.x = ar[(i * fields.length) + 0];
+      p.y = ar[(i * fields.length) + 1];
+      p.z = ar[(i * fields.length) + 2];
 
       // override the sun to perfectly center it
       if(starCount === 0) {
-        p.x = verts[(i * 3) + 0] = 0.0;
-        p.y = verts[(i * 3) + 1] = 0.0;
-        p.z = verts[(i * 3) + 2] = 0.0;
+        p.x = 0.0;
+        p.y = 0.0;
+        p.z = 0.0;
       }
 
-      v.x = velocity[(i * 3) + 0] = ar[(i * fields.length) + 3];
-      v.y = velocity[(i * 3) + 1] = ar[(i * fields.length) + 4];
-      v.z = velocity[(i * 3) + 2] = ar[(i * fields.length) + 5];
+      v.x = ar[(i * fields.length) + 3];
+      v.y = ar[(i * fields.length) + 4];
+      v.z = ar[(i * fields.length) + 5];
 
       // precalculate the color of the star based on its temperature
       let c = this.getColorForTemp(ar[(i * fields.length) + 7])
-      color[(i * 4) + 0] = Math.min(1, c.x * 1.15);
-      color[(i * 4) + 1] = Math.min(1, c.y * 1.15);
-      color[(i * 4) + 2] = Math.min(1, c.z * 1.15);
-      color[(i * 4) + 3] = c.w;
 
       // build the star record
       starRec.position = Object.assign({}, p);
       starRec.mag = ar[(i * fields.length) + 6];
-      starRec.color = Object.assign({}, c);
+      starRec.color = c;
       starRec.radius = ar[(i * fields.length) + 8];
       starRec.temp = ar[(i * fields.length) + 7];
       starRec.velocity = Object.assign({}, v);
@@ -149,7 +161,7 @@ AFRAME.registerSystem('star-data', {
       // also add its position to the id lookup array
       this.starLocations.push(Object.assign({}, p));
       this.starDB.push(Object.assign({}, starRec));
-      this.starIdLookup[id[i]] = 0 + this.spawnedStars;
+      this.starIdLookup[starRec.id] = 0 + this.spawnedStars;
 
       this.spawnedStars++;
     }
@@ -159,6 +171,44 @@ AFRAME.registerSystem('star-data', {
       this.spawnLimit += this.rebuildCheckSteps;
     }
 
+  },
+  splitPackets: function(packets, maxSize) {
+
+    let splitBuffers = [];
+
+    packets.map( starBuffer => {
+      let buff = starBuffer.buf;
+      let fields = this.dataFields;
+      let starOffset = (starBuffer.offset / 4) / fields.length;
+      let starCount = (starBuffer.count / 4) / fields.length;
+      let bytesPerStar = 4 * fields.length;
+
+      // in chunks of maxSize items, iterate until we're out of stars
+      for(let i = 0; i < starCount; i += maxSize) {
+
+        let b
+          , a;
+
+        if(i+maxSize >= starCount) {
+          b = Buffer.from(buff, (i*bytesPerStar), (starCount*bytesPerStar) - (i*bytesPerStar))
+          a = new Float32Array(buff.buffer, (i*bytesPerStar), (starCount*fields.length) - (i*fields.length))
+        } else {
+          // b = buff.slice(starBuffer.offset + (i*bytesPerStar), maxSize*bytesPerStar);
+          b = Buffer.from(buff, (i*bytesPerStar), maxSize*bytesPerStar)
+          a = new Float32Array(buff.buffer, (i*bytesPerStar), maxSize*fields.length)
+        }
+
+        splitBuffers.push({
+          buf: b,
+          arr: a,
+          offset: starBuffer.offset + (i*bytesPerStar),
+          count: b.length
+        });
+
+      }
+    })
+
+    return splitBuffers;
   },
   // accepts a star id and updates s
   update: function(id) {
@@ -178,12 +228,33 @@ AFRAME.registerSystem('star-data', {
         })
         break;
       case STARDATA_BUILDING:
-        console.log(`Stardata Building!`);
+        let newStars = this.stardataHttpStore.getPackets();
+
+        if(newStars && newStars.length > 0) {
+          // console.log("splitting stars", newStars);
+          let sStars = this.splitPackets(newStars, 1024);
+          this.starDataQueue = this.starDataQueue.concat(sStars);
+        } else if(newStars === false) {
+          this.data.dataDownloaded = true;
+        }
+
+        this.processStarData();
+
+        this.sceneEl.systems.redux.store.dispatch({
+          type: 'STAR_COUNT',
+          val: this.spawnedStars
+        })
+
+        if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
+          console.log(`Starfield ready. Processed ${this.spawnedStars} stars 🐝`)
+          this.sceneEl.systems.redux.store.dispatch({
+            type: 'SET_STAR_DATA_STATE',
+            value: STARDATA_READY
+          })
+        }
         break;
       case STARDATA_READY:
-        console.log(`Stardata Ready!`);
         break;
-
     }
   }
 });
