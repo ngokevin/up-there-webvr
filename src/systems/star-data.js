@@ -79,7 +79,7 @@ AFRAME.registerSystem('star-data', {
       });
 
     // setup HTTP store for stardata.bin
-    this.dataFields = ['x','y','z','vx','vy','vz','mag','temp','radius','id'];
+    this.dataFields = ['x','y','z','vx','vy','vz','mag','temp','radius','id','mass'];
     this.stardataHttpStore = new HttpStore('./assets/data/stardata.bin', this.dataFields.length);
 
     // SPATIAL HASH
@@ -143,22 +143,14 @@ AFRAME.registerSystem('star-data', {
   getStarDetails: function(id) {
     let s = this.starDB[id];
 
-    let sd = Object.assign({}, defaultStar);
+    // start with all the data available in our db
+    let sd = Object.assign({}, s);
 
-    // NAME
-    if( this.starMetaInfo.starNames[id] === 'U' ) {
-      sd.name = 'Unnamed';
-    } else {
-      sd.name = this.starMetaInfo.starNames[id];
-    }
+    // lookup star classes and types from dataset
+    sd.starClass = this.starMetaInfo.starTypes.starClasses[ this.starMetaInfo.starTypes.starClassValues[id] ];
+    sd.starType = this.starMetaInfo.starTypes.starTypes[ this.starMetaInfo.starTypes.starTypeValues[id] ]
 
-    // STATS
-    let stats = {};
-
-    stats.starClass = this.starMetaInfo.starTypes.starClasses[ this.starMetaInfo.starTypes.starClassValues[id] ];
-    stats.starType = this.starMetaInfo.starTypes.starTypes[ this.starMetaInfo.starTypes.starTypeValues[id] ]
-
-    console.log(stats);
+    console.log(sd);
   },
   // SPATIAL QUERY FUNCTIONS
   getHashKey: function(pos) {
@@ -284,6 +276,7 @@ AFRAME.registerSystem('star-data', {
       starRec.temp = ar[(i * fields.length) + 7];
       starRec.velocity = Object.assign({}, v);
       starRec.id = ar[(i * fields.length) + 9];
+      starRec.mass = ar[(i * fields.length) + 10];
 
       // add the star to the local spatial hash for fast querying
       this.addStarToHash(p, this.spawnedStars);
