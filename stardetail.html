@@ -20,6 +20,9 @@
         <a-asset-item id="star-detail-ui-asset" src="assets/models/star-detail-ui.json"></a-asset-item>
       </a-assets>
 
+      <!-- STARFIELD -->
+      <a-entity position="0 0 -2" starfield redux-bind="worldSettings.starDataState: starfield.starDataState"></a-entity>
+
       <a-entity id="right-hand" gearvr-controls></a-entity>
 
       <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 1.6 1" gearvr-fly-controls look-controls wasd-controls>

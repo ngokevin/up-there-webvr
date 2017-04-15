@@ -68,12 +68,12 @@ AFRAME.registerReducer('worldSettings', {
     },
     starDetails: {
       name: "Unknown",
-      radius: "",
-      temp: "",
-      distance: "",
+      radius: 1,
+      temp: 1,
+      distance: 1,
       distanceParsecs: 1.3,
-      hexColor: "",
-      id: "",
+      hexColor: 1,
+      id: 1,
       dbKey: -1,
       exoplanets: [],
       exoplanetDetails: {

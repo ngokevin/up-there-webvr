@@ -19,7 +19,6 @@ AFRAME.registerComponent('star-detail-panel-display', {
     // debugger;
   },
   update: function() {
-    debugger;
     if(this.templates[this.data.selectedPanel] !== undefined) {
       let o = this.templates[this.data.selectedPanel](this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails);
       document.getElementById(this.data.name).innerHTML = o;

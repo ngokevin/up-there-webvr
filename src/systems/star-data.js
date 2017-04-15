@@ -83,17 +83,69 @@ AFRAME.registerSystem('star-data', {
 
     }
   },
+  // SPATIAL QUERY FUNCTIONS
   getHashKey: function(pos) {
     return `${Math.floor(pos.x)}_${Math.floor(pos.y)}_${Math.floor(pos.z)}`;
   },
+  getStarsNearLocation: function(pos) {
+
+    var list = []
+      , hashKeys = []
+      , h = '';
+
+    for(var x = pos.x - (this.hashResolution * this.hashSearchRadius.x); x <= pos.x + (this.hashResolution * this.hashSearchRadius.x); x += this.hashResolution) {
+      for(var y = pos.y - (this.hashResolution * this.hashSearchRadius.y); y <= pos.y + (this.hashResolution * this.hashSearchRadius.y); y += this.hashResolution) {
+        for(var z = pos.z - (this.hashResolution * this.hashSearchRadius.z); z <= pos.z + (this.hashResolution * this.hashSearchRadius.z); z += this.hashResolution) {
+          let p = { x: x, y: y, z: z };
+          h = this.getHashKey(p);
+          if(hashKeys.indexOf(p) === -1) {
+            hashKeys.push(p);
+            if(this.spatialHash[h] !== undefined) {
+              list = list.concat(this.spatialHash[h]);
+            }
+          }
+        }
+      }
+    }
+
+    return list;
+  },
+  getStarsInRadius: function(pos, radius) {
+
+    var list = []
+      , hashKeys = []
+      , h = '';
+
+    for(var x = pos.x - (this.hashResolution * radius); x <= pos.x + (this.hashResolution * radius); x += this.hashResolution) {
+      for(var y = pos.y - (this.hashResolution * radius); y <= pos.y + (this.hashResolution * radius); y += this.hashResolution) {
+        for(var z = pos.z - (this.hashResolution * radius); z <= pos.z + (this.hashResolution * radius); z += this.hashResolution) {
+          let p = { x: x, y: y, z: z };
+          h = this.getHashKey(p);
+          if(hashKeys.indexOf(p) === -1) {
+            hashKeys.push(p);
+            if(this.spatialHash[h] !== undefined) {
+              list = list.concat(this.spatialHash[h]);
+            }
+          } else {
+            // console.log(`dupe! ${h}`)
+          }
+
+        }
+      }
+    }
+
+    return list;
+  },
   addStarToHash: function(pos, idx) {
-    let h = this.getHashKey(pos);
+    var h = this.getHashKey(pos);
     if(this.spatialHash[h] === undefined) {
       this.spatialHash[h] = [];
     }
     this.spatialHash[h].push(idx);
     return h
   },
+
+  // STAR FORMATTING FUNCTIONS
   getColorForTemp: function(temp) {
     let tempRound = Math.floor((temp/100))*100;
     tempRound = Math.max(1000, Math.min(40000, tempRound));
@@ -106,20 +158,21 @@ AFRAME.registerSystem('star-data', {
   processStarData: function() {
 
     // take the first chunk off the data queue
-    let starBuffer = this.starDataQueue.shift();
+    var starBuffer = this.starDataQueue.shift();
 
     if(starBuffer === undefined) return;
 
     // create a few temp objects to use
-    let p = {};
-    let v = {};
-    let starRec = {};
+    var p = {};
+    var v = {};
+    var starRec = {};
 
     // grab some local convenience vars
-    let buff = starBuffer.buf;
-    let fields = this.dataFields;
-    let offset = (starBuffer.offset / 4) / fields.length;
+    var buff = starBuffer.buf;
+    var fields = this.dataFields;
+    var offset = (starBuffer.offset / 4) / fields.length;
     var ar = starBuffer.arr;
+    var c;
 
     // calculate the number of stars based on the length of the buffer
     var starCount = ar.length / fields.length;
@@ -144,7 +197,7 @@ AFRAME.registerSystem('star-data', {
       v.z = ar[(i * fields.length) + 5];
 
       // precalculate the color of the star based on its temperature
-      let c = this.getColorForTemp(ar[(i * fields.length) + 7])
+      c = this.getColorForTemp(ar[(i * fields.length) + 7])
 
       // build the star record
       starRec.position = Object.assign({}, p);
@@ -156,7 +209,7 @@ AFRAME.registerSystem('star-data', {
       starRec.id = ar[(i * fields.length) + 9];
 
       // add the star to the local spatial hash for fast querying
-      let shv = this.addStarToHash(p, this.spawnedStars);
+      this.addStarToHash(p, this.spawnedStars);
 
       // also add its position to the id lookup array
       this.starLocations.push(Object.assign({}, p));
@@ -167,7 +220,6 @@ AFRAME.registerSystem('star-data', {
     }
 
     if(this.spawnedStars > this.spawnLimit) {
-      this.updateGeometryAttributes();
       this.spawnLimit += this.rebuildCheckSteps;
     }
 
@@ -177,16 +229,16 @@ AFRAME.registerSystem('star-data', {
     let splitBuffers = [];
 
     packets.map( starBuffer => {
-      let buff = starBuffer.buf;
-      let fields = this.dataFields;
-      let starOffset = (starBuffer.offset / 4) / fields.length;
-      let starCount = (starBuffer.count / 4) / fields.length;
-      let bytesPerStar = 4 * fields.length;
+      var buff = starBuffer.buf;
+      var fields = this.dataFields;
+      var starOffset = (starBuffer.offset / 4) / fields.length;
+      var starCount = (starBuffer.count / 4) / fields.length;
+      var bytesPerStar = 4 * fields.length;
 
       // in chunks of maxSize items, iterate until we're out of stars
-      for(let i = 0; i < starCount; i += maxSize) {
+      for(var i = 0; i < starCount; i += maxSize) {
 
-        let b
+        var b
           , a;
 
         if(i+maxSize >= starCount) {
@@ -218,7 +270,7 @@ AFRAME.registerSystem('star-data', {
     // skip the loop once things are settled
     if(!this.data.tick) return;
 
-    let s = this.store.getState().worldSettings.starDataState;
+    var s = this.store.getState().worldSettings.starDataState;
     switch(s) {
       case STARDATA_NEW:
         console.log(`Stardata New! Starting to build...`);
@@ -231,7 +283,6 @@ AFRAME.registerSystem('star-data', {
         let newStars = this.stardataHttpStore.getPackets();
 
         if(newStars && newStars.length > 0) {
-          // console.log("splitting stars", newStars);
           let sStars = this.splitPackets(newStars, 1024);
           this.starDataQueue = this.starDataQueue.concat(sStars);
         } else if(newStars === false) {
@@ -239,11 +290,6 @@ AFRAME.registerSystem('star-data', {
         }
 
         this.processStarData();
-
-        this.sceneEl.systems.redux.store.dispatch({
-          type: 'STAR_COUNT',
-          val: this.spawnedStars
-        })
 
         if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
           console.log(`Starfield ready. Processed ${this.spawnedStars} stars 🐝`)

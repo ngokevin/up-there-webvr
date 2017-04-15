@@ -36,7 +36,7 @@ const SOLS_TO_PARSECS = 2.25461e-8;
     },
     init: function() {
       this.pool = this.el.sceneEl.components.pool__star;
-      this.tick = AFRAME.utils.throttleTick(this.throttledTick, 50, this);
+      // this.tick = AFRAME.utils.throttleTick(this.throttledTick, 50, this);
       this.starfield = document.getElementById('starfield');
 
       this.ready = true;
