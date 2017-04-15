@@ -16,7 +16,8 @@
 
       <a-assets>
         <!-- assets -->
-        <a-asset-item id="starNames" src="assets/data/starnames.json"></a-asset-item>
+        <a-asset-item id="starNames" src="assets/data/starNames.json"></a-asset-item>
+        <a-asset-item id="starTypes" src="assets/data/starTypes.json"></a-asset-item>
         <a-asset-item id="star-detail-ui-asset" src="assets/models/star-detail-ui.json"></a-asset-item>
       </a-assets>
 
@@ -39,7 +40,8 @@
       </a-entity>
 
       <a-entity id="star-detail-parent">
-        <a-entity star-detail-ui redux-bind="worldSettings.selectedStar: star-detail-ui.selectedStar; worldSettings.selectedPanel: star-detail-ui.selectedPanel "></a-entity>
+        <a-entity geometry="primitive: box" position="0 2 -2" scale=".1 .1 .1" class="clickable" action-dispatcher="type: SELECT_STAR; value: 0"></a-entity>
+        <a-entity star-detail-ui redux-bind="worldSettings.selectedStar: star-detail-ui.selectedStar; worldSettings.selectedPanel: star-detail-ui.selectedPanel"></a-entity>
       </a-entity>
     </a-scene>
 

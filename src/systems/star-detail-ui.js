@@ -79,6 +79,7 @@ AFRAME.registerSystem('star-detail-ui', {
     let e = document.createElement('a-entity');
     e.setObject3D('mesh', obj);
 
+    // setup material and redux attributes and bindings
     e.setAttribute('star-detail-panel-display', { name: id });
     e.setAttribute('redux-bind', 'worldSettings.ui.selectedPanel: star-detail-panel-display.selectedPanel' );
     e.setAttribute('material', {

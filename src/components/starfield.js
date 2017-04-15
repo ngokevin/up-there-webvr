@@ -367,7 +367,7 @@ AFRAME.registerComponent('starfield', {
 
     let offset = this.spawnedStars - i;
 
-    // if it's the last frame, splice empty stars off each array before sending to the gpu
+    // if it's the last frame, slice empty stars off each array before sending to the gpu
     if(i < this.starsPerFrame) {
       verts = verts.slice(0, i * 3);
       absmag = absmag.slice(0, i);
@@ -383,36 +383,25 @@ AFRAME.registerComponent('starfield', {
     this.geo.attributes.position.needsUpdate = true;
     this.geo.attributes.position.updateRange.count = verts.length;
     this.geo.attributes.position.updateRange.offset = offset * 3;
-    //
+
     this.geo.attributes.absmag.array.set(absmag, offset)
-    // this.geo.attributes.absmag.needsUpdate = true;
-    // this.geo.attributes.absmag.updateRange.count = absmag.length;
-    // this.geo.attributes.absmag.updateRange.offset = offset;
-    //
     this.geo.attributes.temp.array.set(temp, offset)
-    // this.geo.attributes.temp.needsUpdate = true;
-    // this.geo.attributes.temp.updateRange.count = temp.length;
-    // this.geo.attributes.temp.updateRange.offset = offset;
-    //
+
     this.geo.attributes.starColor.array.set(color, offset * 4)
     this.geo.attributes.starColor.needsUpdate = true;
     this.geo.attributes.starColor.updateRange.count = color.length;
     this.geo.attributes.starColor.updateRange.offset = offset * 4;
-    //
+
     this.geo.attributes.starScale.array.set(starScale, offset)
     this.geo.attributes.starScale.needsUpdate = true;
     this.geo.attributes.starScale.updateRange.count = starScale.length;
     this.geo.attributes.starScale.updateRange.offset = offset;
-    //
+
     this.geo.attributes.velocity.array.set(velocity, offset * 3)
-    // this.geo.attributes.velocity.needsUpdate = true;
-    // this.geo.attributes.velocity.updateRange.count = velocity.length;
-    // this.geo.attributes.velocity.updateRange.offset = offset * 3;
-    //
+
+
+
     this.geo.attributes.radius.array.set(radius, offset)
-    // this.geo.attributes.radius.needsUpdate = true;
-    // this.geo.attributes.radius.updateRange.count = radius.length;
-    // this.geo.attributes.radius.updateRange.offset = offset;
 
     if(this.geo.boundingSphere.radius < 1000) {
       this.geo.boundingSphere.radius = 1000;
@@ -422,10 +411,9 @@ AFRAME.registerComponent('starfield', {
       this.updateGeometryAttributes();
       this.spawnLimit += this.rebuildCheckSteps;
     }
-    // this.geo.computeBoundingSphere();
+
     this.geometryReady = true;
     return false;
-
   },
 
   updateGeometryAttributes: function() {
@@ -499,7 +487,6 @@ AFRAME.registerComponent('starfield', {
           return;
         }
 
-        console.log(`Processing data ${this.starCount}... ✨`)
         let res = this.processStarData();
 
         this.el.sceneEl.systems.redux.store.dispatch({

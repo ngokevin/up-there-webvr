@@ -241,9 +241,9 @@ AFRAME.registerReducer('worldSettings', {
       case this.actions.SELECT_STAR: {
         var newState = Object.assign({}, state);
         if(action.value === undefined || isNaN(parseInt(action.value))) {
-          newState.selectedStar = -1;
+          newState.ui.selectedStar = -1;
         } else {
-          newState.selectedStar = parseInt(action.value);
+          newState.ui.selectedStar = parseInt(action.value);
         }
         return newState;
       }

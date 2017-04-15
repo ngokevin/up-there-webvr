@@ -5,16 +5,44 @@ var HttpStore = require('../HttpStore');
 
 // real simple local memoize function just in case
 var memoize = function(fn) {
-    var cache = {}
-      , fn = fn;
+  var cache = {}
+    , fn = fn;
 
-    return function(arg) {
-      if(arg in cache) {
-        return cache[arg]
-      } else {
-        return cache[arg] = fn(arg);
-      }
+  return function(arg) {
+    if(arg in cache) {
+      return cache[arg]
+    } else {
+      return cache[arg] = fn(arg);
     }
+  }
+}
+
+const YEAR_MS = 365.25*24*60*60*1000;
+
+// default star settings
+const defaultStar = {
+  name: 'Invalid Star',
+  stats: {
+    starClass: 'Uh Oh',
+    starType: 'Whoops!',
+    radius: 1.0,
+    mass: 1.0,
+    temp: 5800,
+    position: { x: 0, y: 0, z: 0 },
+    velocity: { x: 0, y: 0, z: 0 }
+  },
+  planets: []
+};
+
+// default planet settings
+const defaultPlanet = {
+  name: 'Invalid Planet',
+  stats: {
+    orbitalDistance: 1.0,
+    orbitalPeriod: 1.0,
+    radius: 1.0,
+    mass: 1.0
+  }
 }
 
 // Define a few strings for states
@@ -39,14 +67,16 @@ AFRAME.registerSystem('star-data', {
   init: function() {
 
     // DATA LOADING - setup database listeners
-    this.starnamesEl = document.getElementById('starNames');
-    if(this.starnamesEl.hasLoaded) {
-      this.starnames = JSON.parse(THREE.Cache.files[this.starnamesEl.getAttribute('src')]);
-    } else {
-      this.starnamesEl.addEventListener('loaded', (evt) => {
-        this.starnames = JSON.parse(THREE.Cache.files[this.starnamesEl.getAttribute('src')]);
+    this.starMetaInfo = null;
+    Promise.all(this.waitForAssets(['starNames', 'starTypes']))
+      .then(v => {
+        this.starMetaInfo = {};
+        this.starMetaInfo.starNames = v[0];
+        this.starMetaInfo.starTypes = v[1];
       })
-    }
+      .catch(e => {
+        console.log(`🌪 star data error: ${e}`)
+      });
 
     // setup HTTP store for stardata.bin
     this.dataFields = ['x','y','z','vx','vy','vz','mag','temp','radius','id'];
@@ -71,17 +101,64 @@ AFRAME.registerSystem('star-data', {
     // Data processing queue
     this.starDataQueue = [];
 
+    // external data asset hash
+    this.starmetadata = {}
+
     // Subscribe to redux store updates
     this.store = this.sceneEl.systems.redux.store;
-    this.unsubscribe = this.store.subscribe( this.handleUpdate.bind(this) );
+    this.unsubscribe = this.sceneEl.systems.redux.store.subscribe( this.storeUpdate.bind(this) );
   },
-  handleUpdate: function(evt) {
+  waitForAssets: function(idList) {
+    return idList.map( id => {
+
+      return new Promise( (res, rej) => {
+
+        let el = document.getElementById(id);
+        if(el.hasLoaded) {
+          res(JSON.parse(THREE.Cache.files[el.getAttribute('src')]));
+        } else {
+          el.addEventListener('loaded', (evt) => {
+            res(JSON.parse(THREE.Cache.files[el.getAttribute('src')]));
+          })
+        }
+
+      })
+
+    })
+
+  },
+  storeUpdate: function(evt) {
+    console.log('store update')
     if(this.store.getState().worldSettings.ui.selectedStar !== this.data.selectedStar) {
       this.data.selectedStar = this.store.getState().worldSettings.ui.selectedStar;
+      if(this.data.selectedStar > -1) {
+        // generate the proper star details
+        this.getStarDetails(this.data.selectedStar);
+      }
       console.log(`🏪 store updated to ${this.data.selectedStar}`);
     } else {
 
     }
+  },
+  getStarDetails: function(id) {
+    let s = this.starDB[id];
+
+    let sd = Object.assign({}, defaultStar);
+
+    // NAME
+    if( this.starMetaInfo.starNames[id] === 'U' ) {
+      sd.name = 'Unnamed';
+    } else {
+      sd.name = this.starMetaInfo.starNames[id];
+    }
+
+    // STATS
+    let stats = {};
+
+    stats.starClass = this.starMetaInfo.starTypes.starClasses[ this.starMetaInfo.starTypes.starClassValues[id] ];
+    stats.starType = this.starMetaInfo.starTypes.starTypes[ this.starMetaInfo.starTypes.starTypeValues[id] ]
+
+    console.log(stats);
   },
   // SPATIAL QUERY FUNCTIONS
   getHashKey: function(pos) {
