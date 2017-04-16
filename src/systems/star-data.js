@@ -150,6 +150,9 @@ AFRAME.registerSystem('star-data', {
     sd.starClass = this.starMetaInfo.starTypes.starClasses[ this.starMetaInfo.starTypes.starClassValues[id] ];
     sd.starType = this.starMetaInfo.starTypes.starTypes[ this.starMetaInfo.starTypes.starTypeValues[id] ]
 
+    // lookup the star name
+    sd.name = this.starMetaInfo.starNames[id];
+    return sd;
   },
   getStarPosition: function(id) {
     return this.starDB[id].position;

@@ -44,7 +44,6 @@ require('./components/controls/gearvr-fly-controls.js');
 // require('./components/controls/orbit-controls.js');
 // require('./components/controls/player-controls.js');
 // require('./components/controls/gearvr-time-controls.js');
-//
 // require('./components/controls/scale-ui-controls.js');
 // require('./components/controls/starfield-controls.js');
 //
@@ -76,7 +75,7 @@ require('./components/blend-model.js');
 require('./components/reticle.js');
 // // require('./components/scale-ui.js');
 // require('./components/sol-scale.js');
-// require('./components/star-hover-text.js');
+require('./components/ui/hover-text-display.js');
 // require('./components/star-set-indicator.js');
 // require('./components/sync-local-location.js');
 // require('./components/toggle-switch.js');

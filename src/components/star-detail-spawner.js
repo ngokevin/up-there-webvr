@@ -107,7 +107,7 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
       c.setAttribute('starid', `star_${id}`);
       c.setAttribute('action-dispatcher', 'value', parseInt(id));
-      c.setAttribute('hover-text', this.formatStarName(this.el.sceneEl.systems['star-data'].starDB[id].names));
+      c.setAttribute('hover-text', this.formatStarName(this.el.sceneEl.systems['star-data'].getStarDetails(id).name));
 
       this.active.push(id);
 
