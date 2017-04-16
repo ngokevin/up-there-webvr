@@ -36,7 +36,7 @@ const SOLS_TO_PARSECS = 2.25461e-8;
     },
     init: function() {
       this.pool = this.el.sceneEl.components.pool__star;
-      // this.tick = AFRAME.utils.throttleTick(this.throttledTick, 50, this);
+      this.tick = AFRAME.utils.throttleTick(this.throttledTick, 50, this);
       this.starfield = document.getElementById('starfield');
 
       this.ready = true;
@@ -103,11 +103,11 @@ const SOLS_TO_PARSECS = 2.25461e-8;
     spawnStar: function(id) {
       let c = this.pool.requestEntity();
       c.classList.add('clickable');
-      let p = this.starfield.components.starfield.getStarPosition(id);
+      let p = this.el.sceneEl.systems['star-data'].getStarPosition(id);
       c.setAttribute('position', `${p.x} ${p.y} ${p.z}`);
       c.setAttribute('starid', `star_${id}`);
       c.setAttribute('action-dispatcher', 'value', parseInt(id));
-      c.setAttribute('hover-text', this.formatStarName(this.starfield.components.starfield.starnames[id]));
+      c.setAttribute('hover-text', this.formatStarName(this.el.sceneEl.systems['star-data'].starDB[id].names));
 
       this.active.push(id);
 

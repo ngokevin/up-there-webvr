@@ -73,7 +73,7 @@ require('./components/blend-model.js');
 // require('./components/line.js');
 // require('./components/location-indicator.js');
 //
-// require('./components/reticle.js');
+require('./components/reticle.js');
 // // require('./components/scale-ui.js');
 // require('./components/sol-scale.js');
 // require('./components/star-hover-text.js');
@@ -88,4 +88,4 @@ require('./components/starfield.js');
 // require('./components/star-detail-exoplanet-spawner.js');
 // require('./components/star-detail-exoplanet-detail.js');
 // require('./components/star-detail-exoplanet-list.js');
-// require('./components/star-detail-spawner.js');
+require('./components/star-detail-spawner.js');

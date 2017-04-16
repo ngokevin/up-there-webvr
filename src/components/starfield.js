@@ -16,19 +16,6 @@ const STARFIELD_SCALING = 'STARFIELD_SCALING';
 const STARFIELD_DETAIL_VIEW = 'STARFIELD_DETAIL_VIEW';
 const STARFIELD_NEW = 'STARFIELD_NEW';
 
-var memoize = function(fn) {
-    var cache = {}
-      , fn = fn;
-
-    return function(arg) {
-      if(arg in cache) {
-        return cache[arg]
-      } else {
-        return cache[arg] = fn(arg);
-      }
-    }
-}
-
 AFRAME.registerComponent('starfield', {
   schema: {
     src: {type: 'asset'},
@@ -81,7 +68,7 @@ AFRAME.registerComponent('starfield', {
     this.starsPerFrame = 500;
 
     // create a set of arrays once and overwrite, no need to instantiate
-    // new arrays every frame
+    // new arrays every frame, saves on garbage collection/mem alloc
     this.starPackBuffer = {
       verts: new Float32Array(this.starsPerFrame * 3),
       absmag: new Float32Array(this.starsPerFrame),
@@ -108,7 +95,6 @@ AFRAME.registerComponent('starfield', {
   },
 
   getStarPositionVec3: function(id) {
-    // console.log(id);
     let p = this.stardata.getStarPosition(id);
     return new THREE.Vector3(p.x, p.y, p.z);
   },
@@ -399,8 +385,6 @@ AFRAME.registerComponent('starfield', {
 
     this.geo.attributes.velocity.array.set(velocity, offset * 3)
 
-
-
     this.geo.attributes.radius.array.set(radius, offset)
 
     if(this.geo.boundingSphere.radius < 1000) {
@@ -497,9 +481,8 @@ AFRAME.registerComponent('starfield', {
         if(res) {
           console.log(`🐝 Starfield ready. Processed ${this.spawnedStars} stars.`)
           this.el.setAttribute('starfield', { state: STARFIELD_READY });
-          this.el.emit('starfieldReady', true);
           this.updateGeometryAttributes();
-
+          this.el.emit('starfieldReady', true);
           this.el.sceneEl.systems.redux.store.dispatch({
             type: 'STARFIELD_READY'
           })
@@ -509,7 +492,7 @@ AFRAME.registerComponent('starfield', {
 
     }
     let p = this.camera.getAttribute('position');
-    let s = this.el.getAttribute('scale').x;
+    // let s = this.el.getAttribute('scale').x;
 
     this.starfieldMat.uniforms['starfieldScale'].value = this.tws.val;
     this.starfieldMat.uniforms['cameraPosition'].value = this.el.object3D.worldToLocal(new THREE.Vector3(p.x, p.y, p.z));
