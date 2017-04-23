@@ -65,7 +65,7 @@ require('./components/blend-model.js');
 // require('./components/exoplanet-view.js');
 // require('./components/follow-entity.js');
 // require('./components/formatted-store-value.js');
-//
+
 // require('./components/if-no-vr-headset.js');
 // require('./components/indicator-light.js');
 // require('./components/json-model.js');

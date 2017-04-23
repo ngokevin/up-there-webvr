@@ -90,12 +90,9 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       this.entities.splice(this.entities.indexOf(c), 1);
       if(c !== undefined) {
         try {
-          // c.setAttribute('id', 'dead')
           c.classList.remove('clickable')
-          // console.log(`Removing entity ${id}`);
           this.pool.returnEntity(c);
         } catch(e) {
-          // debugger;
           console.log(`Can't remove ${id} entity`, c);
         }
       }

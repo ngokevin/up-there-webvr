@@ -1,8 +1,6 @@
-// import {TweenLite, Power2} from "gsap";
 const SOLS_TO_PARSECS = 2.25461e-8
     , AU_TO_PARSEC = 4.84814e-6;
 
-// var stardata = require('../../data/stardata.json')
 var fields = ['x','y','z','vx','vy','vz','absmag','temp','radius','id']; // all float32s
 var stardata = require('../../assets/data/stardata.json');
 var colorTable = require('../colorTable.json');
@@ -24,7 +22,8 @@ AFRAME.registerComponent('starfield', {
     time: { type: 'float', default: 0.0},
     selectedStar: { type: 'int', default: -1},
     dataDownloaded: { type: 'bool', default: false},
-    starDataState: { type: 'string', default: ''}
+    starDataState: { type: 'string', default: ''},
+    starDetails: {}
   },
 
   init: function () {
@@ -413,41 +412,28 @@ AFRAME.registerComponent('starfield', {
     if(this.data.starDataState !== oldData.starDataState) {
       console.log(this.data.starDataState);
     }
-    //
-    // switch(this.data.state) {
-    //
-    //   case STARFIELD_NEW:
-    //
-    //     return;
-    //     break;
-    //
-    //   case STARFIELD_BUILDING:
-    //     break;
-    //
-    //   case STARFIELD_DIRTY:
-    //     this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
-    //     break;
-    //
-    //   case STARFIELD_READY:
-    //
-    //     if(this.data.selectedStar !== oldData.selectedStar) {
-    //      if(this.data.selectedStar >= 0) {
-    //         setTimeout( () => {
-    //           this.setScaleParentToStar(this.data.selectedStar);
-    //         }, 100)
-    //       } else {
-    //         this.clearScaleParent(oldData.selectedStar);
-    //       }
-    //     }
-    //     break;
-    //
-    //
-    //   case STARFIELD_SCALING:
-    //     break;
-    //
-    //   case STARFIELD_DETAIL_VIEW:
-    //     break;
-    // }
+
+    switch(this.data.state) {
+
+      case STARFIELD_READY:
+
+        if(this.data.selectedStar !== oldData.selectedStar) {
+         if(this.data.selectedStar >= 0) {
+            setTimeout( () => {
+              this.setScaleParentToStar(this.data.selectedStar);
+            }, 100)
+          } else {
+            this.clearScaleParent(oldData.selectedStar);
+          }
+        }
+        break;
+
+      case STARFIELD_SCALING:
+        break;
+
+      case STARFIELD_DETAIL_VIEW:
+        break;
+    }
   },
   tick: function(time, delta) {
     switch(this.el.getAttribute('starfield').state) {

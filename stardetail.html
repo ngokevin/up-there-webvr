@@ -26,7 +26,7 @@
       </a-assets>
 
       <!-- STARFIELD -->
-      <a-entity id="starfield" position="0 0 -2" starfield redux-bind="worldSettings.starDataState: starfield.starDataState">
+      <a-entity id="starfield" position="0 0 -2" starfield redux-bind="worldSettings.starDataState: starfield.starDataState; worldSettings.selectedStar: starfield.selectedStar; worldSettings.starDetails: starfield.starDetails">
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady"></a-entity>
       </a-entity>
