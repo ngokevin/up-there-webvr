@@ -32,6 +32,7 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       radius: { type: 'float', default: 4 },
       starsPerFrame: { type: 'float', default: 3},
       selectedStar: { type: 'int', default: -1 },
+      zoomLevel: { type: 'string', default: 'MACRO_VIEW'},
       starfieldReady: { type: 'boolean', default: false }
     },
     init: function() {
@@ -53,13 +54,15 @@ const SOLS_TO_PARSECS = 2.25461e-8;
     },
     update: function(oldData) {
       this.target = document.getElementById(this.data.target);
-      if(this.data.selectedStar != oldData.selectedStar && this.data.selectedStar >= 0) {
-        this.el.setAttribute('visible', 'false');
-        this.despawnAll();
-      } else {
-        setTimeout( () => {
-          this.el.setAttribute('visible', 'true');
-        }, 1100);
+      if(this.data.selectedStar != oldData.selectedStar) {
+        if(this.data.selectedStar >= 0) {
+          this.el.setAttribute('visible', 'false');
+          this.despawnAll();
+        } else {
+          setTimeout( () => {
+            this.el.setAttribute('visible', 'true');
+          }, 1100);
+        }
       }
     },
     despawnAll: function() {

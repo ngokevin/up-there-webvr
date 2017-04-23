@@ -14,6 +14,10 @@ const STARFIELD_SCALING = 'STARFIELD_SCALING';
 const STARFIELD_DETAIL_VIEW = 'STARFIELD_DETAIL_VIEW';
 const STARFIELD_NEW = 'STARFIELD_NEW';
 
+const ZOOM_VIEW = 'ZOOM_VIEW';
+const MACRO_VIEW = 'MACRO_VIEW';
+const GALAXY_VIEW = 'GALAXY_VIEW';
+
 AFRAME.registerComponent('starfield', {
   schema: {
     src: {type: 'asset'},
@@ -192,7 +196,6 @@ AFRAME.registerComponent('starfield', {
     geo.addAttribute( 'starScale', new THREE.BufferAttribute(starScale, 1) );
     geo.addAttribute( 'radius', new THREE.BufferAttribute(radius, 1) );
 
-
     this.geo = geo;
     this.points = new THREE.Points(this.geo, this.starfieldMat);
     this.points.name = "starfieldPoints";
@@ -205,30 +208,25 @@ AFRAME.registerComponent('starfield', {
     this.detailDistance = 4.0;
 
     this.geometryReady = true;
-    // this.el.object3D.frustrumCulled = false;
   },
 
   // scale the starfield to show the selected star at the proper scale
   setScaleParentToStar: function(id) {
+    // get the star location and move the scaleParent to it
     let s = this.getStarWorldLocation(id);
     this.scaleParent.position.set(s.x, s.y, s.z);
     this.scaleParent.scale.set(1, 1, 1);
-    let l = performance.now()
     this.scaleParent.updateMatrixWorld();
-    l = performance.now() - l;
-    console.log(`Parent calculation: ${l}`)
+
     // parent the starfield to the scaleParent location without changing its world transform
     THREE.SceneUtils.attach(this.el.object3D, this.el.sceneEl.object3D, this.scaleParent);
-    var scale = { v: 1 };
-    this.maskStar(id, 0.0);
-    let stardata = this.getStarData(id);
 
     // save current starfield world position to tween back to
     this.macroPosition.copy(this.scaleParent.position);
 
-    // calculate destination position some distance away from the camera
+    // calculate destination position some distance away from the camera's forward vector
     let d = new THREE.Vector3(0, 0, 1);
-    d.applyQuaternion(this.camera.object3D.quaternion);
+    // d.applyQuaternion(this.camera.object3D.quaternion);
     this.detailPosition.copy(this.camera.object3D.position).sub(d.multiplyScalar(this.detailDistance));
 
     // tween the position to be the right distance away from wherever the camera is currently gazing
@@ -243,13 +241,19 @@ AFRAME.registerComponent('starfield', {
                         .start();
 
     let starDetails = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails;
-
-    parsecsScale = SOLS_TO_PARSECS * stardata.radius;
+    parsecsScale = SOLS_TO_PARSECS * starDetails.radius;
 
     // scale the parent so that the star will always be 1m in radius
     let parentScale = 0.5 / parsecsScale;
+    let sdui = document.getElementById('star-detail-ui');
+    sdui.setAttribute('scale', `${1/parentScale} ${1/parentScale} ${1/parentScale}`);
+    sdui.setAttribute('visible', 'true');
+
+    // set the opacity of the current star to zero while we zoom
+    this.maskStar(id, 0.0);
 
     // tween the scale so that the star's radius in sols is
+    var scale = { v: 1 };
     this.tween = new AFRAME.TWEEN.Tween(scale)
                   .to({ v: parentScale }, 1000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.InOut)
@@ -279,7 +283,6 @@ AFRAME.registerComponent('starfield', {
                   .to({ v: 1.0 }, 1000)
                   .easing(AFRAME.TWEEN.Easing.Quintic.Out)
                   .onUpdate( () => {
-                    // console.log('updating')
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
                   })
                   .onComplete( () => {
@@ -287,14 +290,24 @@ AFRAME.registerComponent('starfield', {
                     this.scaleParent.updateMatrixWorld();
                     l = performance.now() - l;
                     console.log(`Detachment: ${l}`)
-                    // this.scaleParent.updateMatrixWorld();
                     this.maskStar(id, 1.0);
                     THREE.SceneUtils.detach(this.el.object3D, this.scaleParent, this.el.sceneEl.object3D);
                     console.log('done 🦑');
                   })
                   .start();
   },
-
+  setView: function(view) {
+    switch(view) {
+      case ZOOM_VIEW:
+        let s = this.el.sceneEl.systems.redux.store.getState().worldSettings.ui.selectedStar;
+        this.setScaleParentToStar(s);
+        console.log(`Zooming to ${s}`);
+        break;
+      case MACRO_VIEW:
+        console.log(`Returning to macro view.`);
+        break;
+    }
+  },
   processStarData: function() {
 
     if(this.starCount >= this.stardata.starDB.length) return true;
@@ -416,14 +429,11 @@ AFRAME.registerComponent('starfield', {
     switch(this.data.state) {
 
       case STARFIELD_READY:
-
         if(this.data.selectedStar !== oldData.selectedStar) {
          if(this.data.selectedStar >= 0) {
-            setTimeout( () => {
-              this.setScaleParentToStar(this.data.selectedStar);
-            }, 100)
+            this.setView(ZOOM_VIEW);
           } else {
-            this.clearScaleParent(oldData.selectedStar);
+            this.setView(MACRO_VIEW);
           }
         }
         break;

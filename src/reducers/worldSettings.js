@@ -12,6 +12,9 @@ const STARDATA_NEW = 'STARDATA_NEW';
 const STARDATA_BUILDING = 'STARDATA_BUILDING';
 const STARDATA_READY = 'STARDATA_READY';
 
+const MACRO_VIEW = 'MACRO_VIEW'
+    , DETAIL_VIEW = 'DETAIL_VIEW';
+
 AFRAME.registerReducer('worldSettings', {
   actions: {
     SCALE_DOWN: 'SCALE_DOWN',
@@ -38,6 +41,8 @@ AFRAME.registerReducer('worldSettings', {
     SET_VR_SYSTEM: 'SET_VR_SYSTEM',
     SET_SUN_INDICATOR: 'SET_SUN_INDICATOR',
     SET_STAR_DATA_STATE: 'SET_STAR_DATA_STATE',
+    SET_ZOOM_LEVEL: 'SET_ZOOM_LEVEL',
+
 
     // STAR_SET MODIFIERS
     SELECT_STAR_SET: 'SELECT_STAR_SET',
@@ -54,6 +59,7 @@ AFRAME.registerReducer('worldSettings', {
     starfieldReady: false,
     selectedStar: -1,
     selectedPanel: -1,
+    zoomLevel: MACRO_VIEW,
     hoverStar: 0,
     hoverText: "",
     starName: "Unknown",
@@ -107,6 +113,12 @@ AFRAME.registerReducer('worldSettings', {
     state = state || this.initialState;
     switch (action.type) {
 
+
+      case this.actions.SET_ZOOM_LEVEL: {
+        var newState = Object.assign({}, state);
+        newState.zoomLevel = action.value;
+        return newState;
+      }
 
       case this.actions.SET_STAR_DATA_STATE: {
         var newState = Object.assign({}, state);

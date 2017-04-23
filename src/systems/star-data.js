@@ -61,6 +61,7 @@ const STARDATA_READY = 'STARDATA_READY';
 AFRAME.registerSystem('star-data', {
   schema: {
     selectedStar: { type: 'int', default: -1 },
+    zoomLevel: { type: 'string', default: '' },
     tick: { type: 'boolean', default: true },
     dataDownloaded: { type: 'boolean', default: false }
   },
@@ -128,14 +129,32 @@ AFRAME.registerSystem('star-data', {
 
   },
   storeUpdate: function(evt) {
-    console.log('store update')
     if(this.store.getState().worldSettings.ui.selectedStar !== this.data.selectedStar) {
       this.data.selectedStar = this.store.getState().worldSettings.ui.selectedStar;
       if(this.data.selectedStar > -1) {
-        // generate the proper star details
-        this.getStarDetails(this.data.selectedStar);
+
+        // generate the proper star details and update the store
+        let details = this.getStarDetails(this.data.selectedStar);
+        this.store.dispatch({
+          type: 'STAR_DETAILS',
+          value: details
+        });
+
+        // once everything is ready, trigger a view change
+        this.store.dispatch({
+          type: 'SET_ZOOM_LEVEL',
+          value: 'DETAIL_VIEW'
+        });
+
+      } else {
+        // return to the macro view
+        this.store.dispatch({
+          type: 'SET_ZOOM_LEVEL',
+          value: 'MACRO_VIEW'
+        });
       }
-      console.log(`🏪 store updated to ${this.data.selectedStar}`);
+      let z = this.store.getState().worldSettings.zoomLevel;
+      console.log(`🏪 store updated to ${this.data.selectedStar}, ${z}`);
     } else {
 
     }
