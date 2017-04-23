@@ -14,7 +14,7 @@ const STARFIELD_SCALING = 'STARFIELD_SCALING';
 const STARFIELD_DETAIL_VIEW = 'STARFIELD_DETAIL_VIEW';
 const STARFIELD_NEW = 'STARFIELD_NEW';
 
-const ZOOM_VIEW = 'ZOOM_VIEW';
+const DETAIL_VIEW = 'DETAIL_VIEW';
 const MACRO_VIEW = 'MACRO_VIEW';
 const GALAXY_VIEW = 'GALAXY_VIEW';
 
@@ -25,6 +25,7 @@ AFRAME.registerComponent('starfield', {
     state: { type: 'string', default: STARFIELD_NEW },
     time: { type: 'float', default: 0.0},
     selectedStar: { type: 'int', default: -1},
+    zoomLevel: { type: 'string', default: 'MACRO_VIEW'},
     dataDownloaded: { type: 'bool', default: false},
     starDataState: { type: 'string', default: ''},
     starDetails: {}
@@ -298,12 +299,13 @@ AFRAME.registerComponent('starfield', {
   },
   setView: function(view) {
     switch(view) {
-      case ZOOM_VIEW:
+      case DETAIL_VIEW:
         let s = this.el.sceneEl.systems.redux.store.getState().worldSettings.ui.selectedStar;
         this.setScaleParentToStar(s);
         console.log(`Zooming to ${s}`);
         break;
       case MACRO_VIEW:
+        this.clearScaleParent();
         console.log(`Returning to macro view.`);
         break;
     }
@@ -422,18 +424,18 @@ AFRAME.registerComponent('starfield', {
   },
 
   update: function (oldData) {
-    if(this.data.starDataState !== oldData.starDataState) {
-      console.log(this.data.starDataState);
-    }
 
     switch(this.data.state) {
 
       case STARFIELD_READY:
-        if(this.data.selectedStar !== oldData.selectedStar) {
-         if(this.data.selectedStar >= 0) {
-            this.setView(ZOOM_VIEW);
-          } else {
-            this.setView(MACRO_VIEW);
+        if(this.data.zoomLevel !== oldData.zoomLevel) {
+          switch(this.data.zoomLevel) {
+            case 'MACRO_VIEW':
+              this.setView(MACRO_VIEW);
+              break;
+            case 'DETAIL_VIEW':
+              this.setView(DETAIL_VIEW);
+              break;
           }
         }
         break;
