@@ -213,6 +213,7 @@ AFRAME.registerComponent('starfield', {
 
   // scale the starfield to show the selected star at the proper scale
   setScaleParentToStar: function(id) {
+
     // get the star location and move the scaleParent to it
     let s = this.getStarWorldLocation(id);
     this.scaleParent.position.set(s.x, s.y, s.z);
@@ -225,26 +226,10 @@ AFRAME.registerComponent('starfield', {
     // save current starfield world position to tween back to
     this.macroPosition.copy(this.scaleParent.position);
 
-    // calculate destination position some distance away from the camera's forward vector
-    let d = new THREE.Vector3(0, 0, 1);
-    // d.applyQuaternion(this.camera.object3D.quaternion);
-    this.detailPosition.copy(this.camera.object3D.position).sub(d.multiplyScalar(this.detailDistance));
-
-    // tween the position to be the right distance away from wherever the camera is currently gazing
-    this.posTween = new AFRAME.TWEEN.Tween(this.scaleParent.position)
-                      .to(
-                        {
-                          x: this.detailPosition.x,
-                          y: this.detailPosition.y,
-                          z: this.detailPosition.z
-                        }, 1000)
-                        .easing(AFRAME.TWEEN.Easing.Exponential.InOut)
-                        .start();
-
     let starDetails = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails;
     parsecsScale = SOLS_TO_PARSECS * starDetails.radius;
 
-    // scale the parent so that the star will always be 1m in radius
+    // make the detail ui visible, and scale it appropriately to the star
     let parentScale = 0.5 / parsecsScale;
     let sdui = document.getElementById('star-detail-ui');
     sdui.setAttribute('scale', `${1/parentScale} ${1/parentScale} ${1/parentScale}`);
@@ -264,19 +249,9 @@ AFRAME.registerComponent('starfield', {
                   .start();
   },
   clearScaleParent: function(id) {
-    var scale = { v: this.scaleParent.scale.x };
 
-    // tween the scaleparent position back to our previous location
-    this.posTween.stop();
-    this.posTween = new AFRAME.TWEEN.Tween(this.scaleParent.position)
-                      .to(
-                        {
-                          x: this.macroPosition.x,
-                          y: this.macroPosition.y,
-                          z: this.macroPosition.z
-                        }, 1000)
-                        .easing(AFRAME.TWEEN.Easing.Exponential.InOut)
-                        .start();
+    // get the current scale to tween from
+    var scale = { v: this.scaleParent.scale.x };
 
     // tween the scaleparent scale back to 1
     this.tween.stop();
@@ -287,13 +262,12 @@ AFRAME.registerComponent('starfield', {
                     this.scaleParent.scale.set(scale.v, scale.v, scale.v);
                   })
                   .onComplete( () => {
-                    let l = performance.now()
+                    // update the matrix world of the parent and detach the starfield again
                     this.scaleParent.updateMatrixWorld();
-                    l = performance.now() - l;
-                    console.log(`Detachment: ${l}`)
-                    this.maskStar(id, 1.0);
                     THREE.SceneUtils.detach(this.el.object3D, this.scaleParent, this.el.sceneEl.object3D);
-                    console.log('done 🦑');
+
+                    // unhide the original star
+                    this.maskStar(id, 1.0);
                   })
                   .start();
   },
