@@ -15,7 +15,7 @@ const STARDATA_READY = 'STARDATA_READY';
 const MACRO_VIEW = 'MACRO_VIEW'
     , DETAIL_VIEW = 'DETAIL_VIEW';
 
-AFRAME.registerReducer('worldSettings', {
+var reducer = module.exports = {
   actions: {
     SCALE_DOWN: 'SCALE_DOWN',
     SCALE_UP: 'SCALE_UP',
@@ -73,9 +73,12 @@ AFRAME.registerReducer('worldSettings', {
       time: false
     },
     starDetails: {
-      name: "Unknown",
-      radius: 1,
-      temp: 1,
+      name: "Vega",
+      radius: 12.01,
+      temperature: 5800,
+      mass: 1,
+      type: 'Dwarf',
+      class: 'V',
       distance: 1,
       distanceParsecs: 1.3,
       hexColor: 1,
@@ -316,4 +319,7 @@ AFRAME.registerReducer('worldSettings', {
       }
     }
   }
-});
+};
+if(AFRAME !== undefined) {
+  AFRAME.registerReducer('worldSettings', reducer);
+}

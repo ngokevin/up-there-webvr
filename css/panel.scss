@@ -1,0 +1,105 @@
+.panel {
+  border: 1px solid #fff;
+}
+
+.header {
+  height: 25%;
+  position: absolute;
+  background-color: #000;
+  z-index: 1000;
+  h1, h2 {
+    text-align: center;
+    margin: 0;
+    letter-spacing: 5px;
+    font-family: $serifFont
+  }
+  h1 {
+    font-size: 4em;
+    margin-top: -4px;
+  }
+  h2 {
+    font-family: $sansFont;
+    letter-spacing: 2px;
+    font-size: 1.25em;
+  }
+}
+
+.overview {
+  .spec {
+    padding: 30px 20px;
+    box-sizing: border-box;
+    background-color: #000;
+    z-index: 1000;
+    h3 {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0;
+      font-family: $sansFont;
+    }
+    h4 {
+      font-size: 3em;
+      margin: -10px 0 0 0;
+      padding: 0;
+    }
+  }
+  .star-comparison {
+    overflow: hidden;
+    label {
+      font-family: $sansFont;
+      text-align: center;
+      text-transform: uppercase;
+      display: block;
+      width: 100px;
+      mix-blend-mode: difference;
+    }
+    .star {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 100%;
+      width: 100px;
+      height: 100px;
+    }
+    .targetStar {
+      position: absolute;
+      &.star-bigger {
+        top: 60%;
+        left: 15%;
+        .starWrapper {
+          position: absolute;
+          top: -70px;
+          left: 100px;
+          .star {
+            left: -100px;
+            top: -50px;
+          }
+        }
+        label {
+          position: relative;
+          left: -40px;
+        }
+      }
+      &.star-smaller {
+        top: 60%;
+        left: 15%;
+        .starWrapper {
+          position: absolute;
+          top: -120px;
+          width: 100px;
+          height: 100px;
+          .star {
+
+          }
+        }
+      }
+    }
+    .sol {
+      position: absolute;
+      top: 60%;
+      left: 60%;
+      .star {
+        top: -120px;
+        left: 0;
+      }
+    }
+  }
+}

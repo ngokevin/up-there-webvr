@@ -1,9 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 
+$serifFont: 'Crimson Text', serif;
+$sansFont: 'Ubuntu', sans-serif;
+
+@import 'grid.scss';
+@import 'panel.scss';
+
 body {
   background-color: #000;
   color: #fff;
-  font-family: 'Source Sans Pro', sans-serif;
+  // font-family: 'Source Sans Pro', sans-serif;
+  font-family: $serifFont;
 }
 
 .a-canvas {

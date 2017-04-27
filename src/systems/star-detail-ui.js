@@ -85,7 +85,7 @@ AFRAME.registerSystem('star-detail-ui', {
     e.setAttribute('material', {
       shader: 'html',
       target: `#${id}`,
-      transparent: true,
+      // transparent: true,
       fps: -1,
       width: 1024,
       height: 512

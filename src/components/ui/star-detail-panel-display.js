@@ -20,7 +20,7 @@ AFRAME.registerComponent('star-detail-panel-display', {
   },
   update: function() {
     if(this.templates[this.data.selectedPanel] !== undefined) {
-      let o = this.templates[this.data.selectedPanel](this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails);
+      let o = this.templates[this.data.selectedPanel](this.el.sceneEl.systems.redux.store.getState().worldSettings);
       document.getElementById(this.data.name).innerHTML = o;
       console.log(`Updated: ${o}`);
       this.el.emit('update-html-texture');

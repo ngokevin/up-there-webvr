@@ -5,6 +5,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack; gzip -fk build.js;",
     "start": "webpack-dev-server --host 0.0.0.0",
+    "panel": "webpack-dev-server --config panel.webpack.config.js --host 0.0.0.0",
     "lint": "semistandard -v | snazzy",
     "deploy": "rsync -r --progress --exclude='node_modules/*' --exclude='.git/*' ./ flimshaw@flimshaw.net:~/vr.flimshaw.net/up-there-webvr/"
   },
