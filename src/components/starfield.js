@@ -458,6 +458,19 @@ AFRAME.registerComponent('starfield', {
           this.el.sceneEl.systems.redux.store.dispatch({
             type: 'STARFIELD_READY'
           })
+          this.el.sceneEl.systems.redux.store.dispatch({
+            type: 'SET_BUSY',
+            value: false
+          })
+          this.el.sceneEl.systems.redux.store.dispatch({
+            type: 'SET_INPUT_ACTIVE',
+            inputs: {
+              fly: true,
+              click: true,
+              time: true
+            }
+          })
+          document.getElementById('acursor').setAttribute('visible', 'true')
         }
 
         break;

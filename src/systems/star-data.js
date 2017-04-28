@@ -431,6 +431,11 @@ AFRAME.registerSystem('star-data', {
 
         this.processStarData();
 
+        this.sceneEl.systems.redux.store.dispatch({
+          type: 'RECORD_COUNT',
+          val: this.spawnedStars
+        })
+
         if(this.data.dataDownloaded && this.starDataQueue.length == 0) {
           console.log(`Starfield ready. Processed ${this.spawnedStars} stars 🐝`)
           this.sceneEl.systems.redux.store.dispatch({

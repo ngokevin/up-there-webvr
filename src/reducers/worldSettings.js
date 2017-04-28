@@ -32,6 +32,7 @@ var reducer = module.exports = {
     SET_BUSY: 'SET_BUSY',
     SET_LOADING: 'SET_LOADING',
     STAR_COUNT: 'STAR_COUNT',
+    RECORD_COUNT: 'RECORD_COUNT',
     PROCESSING_RATE: 'PROCESSING_RATE',
     HOVER_TEXT: 'HOVER_TEXT',
     STAR_DETAILS: 'STAR_DETAILS',
@@ -66,6 +67,7 @@ var reducer = module.exports = {
     systemType: MOBILE,
     sunIndicator: false,
     starCount: 0,
+    recordCount: 0,
     hoverColor: "#4499ff",
     inputActive: {
       fly: false,
@@ -232,6 +234,18 @@ var reducer = module.exports = {
       case this.actions.STAR_COUNT: {
         var newState = Object.assign({}, state);
         newState.starCount = action.val;
+        return newState;
+      }
+
+      case this.actions.SET_CURSOR: {
+        var newState = Object.assign({}, state);
+        newState.cursorVisible = action.val;
+        return newState;
+      }
+
+      case this.actions.RECORD_COUNT: {
+        var newState = Object.assign({}, state);
+        newState.recordCount = action.val;
         return newState;
       }
 

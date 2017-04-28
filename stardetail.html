@@ -25,6 +25,26 @@
         <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
       </a-assets>
 
+      <!-- LOADING INDICATOR -->
+      <a-entity id="loading" redux-bind="worldSettings.busy: visible" position="0 2 -2" scale="2 2 2">
+        <a-entity>
+          <a-entity mixin="crimson" text="value: Up There; align: center; width: 3; height: auto" position="0 .5 0"></a-entity>
+          <a-entity mixin="crimson" text="value: Loading stardata...; align: center; width: 1; height: auto" position="0 .35 0"></a-entity>
+
+          <a-entity position="0 0 0" >
+            <a-entity mixin="crimson" text="align: center; width: 1; height: auto" position="0 -.05 0" redux-bind="worldSettings.recordCount: text.value"></a-entity>
+            <a-entity mixin="crimson" text="value: records; align: center; width: 1; height: auto" position="0 -.1 0"></a-entity>
+          </a-entity>
+          <a-entity position="0 -.25 0" >
+            <a-entity mixin="crimson" text="align: center; width: 1; height: auto" position="0 -.05 0" redux-bind="worldSettings.starCount: text.value"></a-entity>
+            <a-entity mixin="crimson" text="value: stars; align: center; width: 1; height: auto" position="0 -.1 0"></a-entity>
+          </a-entity>
+          <!-- <a-entity mixin="wirecube" position="0 -.42 0" scale=".025 .025 .025">
+            <a-animation attribute="rotation" dur="2000" fill="forwards" to="180 360 0" repeat="indefinite"></a-animation>
+          </a-entity> -->
+        </a-entity>
+      </a-entity>
+
       <!-- STARFIELD -->
       <a-entity id="starfield" position="0 0 -2" starfield redux-bind="worldSettings.starDataState: starfield.starDataState; worldSettings.zoomLevel: starfield.zoomLevel; worldSettings.ui.selectedStar: starfield.selectedStar; worldSettings.starDetails: starfield.starDetails">
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
@@ -35,6 +55,7 @@
 
       <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 1.6 1" gearvr-fly-controls look-controls wasd-controls>
         <a-entity id="acursor"
+          visible="false"
           cursor="fuse: false; fuseTimeout: 1000"
           raycaster="objects: .clickable; recursive: true; far: 100; near: 0"
           position="0 0 0">
