@@ -13,12 +13,12 @@
 
         </div>
         <% starDetails.exoplanets.map( function(f) { %>
-        <div class="planetOrbit" style="transform: scale(<%=f.distance%>)">
-          <div class="planet" style="transform: scale(<%=1/f.distance%>)">
+        <div class="planetOrbit" style="transform: scale(<%=f.pl_orbsmax%>)">
+          <div class="planet" style="transform: scale(<%=1/f.pl_orbsmax%>)">
             <div class="info">
-              <h3><%= f.name %></h3>
-              - <h4><%= f.distance %> AU</h4>
-              - <h4><%= f.radius %> AU</h4>
+              <h3><%= f.pl_name %></h3>
+              <h4><%= parseFloat(f.pl_orbsmax).toFixed(1) %> AU</h4>
+              <h4><%= parseFloat(f.pl_orbsmax).toFixed(1) %> days</h4>
             </div>
           </div>
         </div>

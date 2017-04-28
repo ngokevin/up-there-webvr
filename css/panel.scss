@@ -15,7 +15,7 @@
   }
   h1 {
     font-size: 4em;
-    margin-top: -4px;
+    // margin-top: -4px;
   }
   h2 {
     font-family: $sansFont;
@@ -145,7 +145,15 @@ $starDiameter: 25px;
           left: 50px;
           width: 200px;
           h3,h4 {
-            display: inline;
+            margin: 0;
+            padding: 0;
+            line-height: 1em;
+          }
+          h3 {
+            font-size: 1.25em;
+          }
+          h4 {
+            font-family: $sansFont;
           }
         }
       }
