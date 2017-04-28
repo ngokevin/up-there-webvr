@@ -38,9 +38,9 @@ AFRAME.registerSystem('exoplanet', {
     let s = [];
     this.exoplanetTable.map( p => {
       let i = parseInt(p[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]);
-      let sid = this.starfield.components.starfield.starIdLookup[i];
+      let sid = this.sceneEl.systems['star-data'].starIdLookup[i];
 
-      if(sid !== undefined && this.starfield.components.starfield.getStarData(sid) !== undefined) {
+      if(sid !== undefined && this.sceneEl.systems['star-data'].getStarData(sid) !== undefined) {
         if(s.indexOf(sid) === -1) {
           s.push(sid);
         }
@@ -61,7 +61,7 @@ AFRAME.registerSystem('exoplanet', {
     // find all the planets who's hipparcos id matches
     let p = this.exoplanetTable.filter( s => {
       let exHip = parseInt(s[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]);
-      let sHip = this.starfield.components.starfield.starIdLookup[exHip];
+      let sHip = this.sceneEl.systems['star-data'].starIdLookup[exHip];
       return id == exHip
     });
 

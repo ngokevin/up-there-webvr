@@ -53,7 +53,7 @@
 
       <a-entity id="star-detail-parent">
         <a-entity id="star-detail-ui" look-at="[camera]" star-detail-ui scale="0 0 0" visible="false" redux-bind="worldSettings.selectedStar: star-detail-ui.selectedStar; worldSettings.selectedPanel: star-detail-ui.selectedPanel" look-at>
-          <a-entity geometry="primitive: box" position="0 2 -2" scale=".1 .1 .1" class="clickable" action-dispatcher="type: SELECT_STAR; value: -1"></a-entity>
+          <a-entity geometry="primitive: box" position="-1 0 -2" scale=".4 .2 .1" class="clickable" action-dispatcher="type: SELECT_STAR; value: -1" material="color: #cc0000"></a-entity>
         </a-entity>
       </a-entity>
     </a-scene>

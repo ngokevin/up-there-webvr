@@ -1,1 +1,24 @@
-PLANETS
+<div class="panel container planets">
+  <div class="full-width header border-bottom">
+    <h1><%= starDetails.name %></h1>
+    <h2>Class <%= starDetails.class %> <%= starDetails.type %></h2>
+  </div>
+  <div class="bottom_3-of-4 full-width">
+    <div class="planetContainer">
+      <div class="star">
+
+      </div>
+      <% starDetails.exoplanets.map( function(f) { %>
+      <div class="planetOrbit" style="transform: scale(<%=f.distance%>)">
+        <div class="planet" style="transform: scale(<%=1/f.distance%>)">
+          <div class="info">
+            <h3><%= f.name %></h3>
+            - <h4><%= f.distance %> AU</h4>
+            - <h4><%= f.radius %> AU</h4>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@ var fields = ['x','y','z','vx','vy','vz','absmag','temp','radius','id']; // all 
 var stardata = require('../../assets/data/stardata.json');
 var colorTable = require('../colorTable.json');
 var HttpStore = require('../HttpStore');
-
+var csv = require('csv-string');
 // real simple local memoize function just in case
 var memoize = function(fn) {
   var cache = {}
@@ -74,6 +74,7 @@ AFRAME.registerSystem('star-data', {
         this.starMetaInfo = {};
         this.starMetaInfo.starNames = v[0];
         this.starMetaInfo.starTypes = v[1];
+        // this.starMetaInfo.exoplanets = v[2];
       })
       .catch(e => {
         console.log(`🌪 star data error: ${e}`)
@@ -116,10 +117,39 @@ AFRAME.registerSystem('star-data', {
 
         let el = document.getElementById(id);
         if(el.hasLoaded) {
-          res(JSON.parse(THREE.Cache.files[el.getAttribute('src')]));
+          if(el.getAttribute('src').indexOf('json') !== -1) {
+            res(JSON.parse(THREE.Cache.files[el.getAttribute('src')]));
+          } else {
+            let arr = csv.parse(THREE.Cache.files[el.getAttribute('src')]);
+            let header = arr.shift();
+            let newArr = arr.map( p => {
+              let o = {};
+              p.map( (v,i) => {
+                o[header[i]] = v;
+              })
+              return o;
+            });
+            console.log(newArr);
+            res(newArr);
+          }
+
         } else {
           el.addEventListener('loaded', (evt) => {
-            res(JSON.parse(THREE.Cache.files[el.getAttribute('src')]));
+            if(el.getAttribute('src').indexOf('json') !== -1) {
+              res(JSON.parse(THREE.Cache.files[el.getAttribute('src')]));
+            } else {
+              let arr = csv.parse(THREE.Cache.files[el.getAttribute('src')]);
+              let header = arr.shift();
+              let newArr = arr.map( p => {
+                let o = {};
+                p.map( (v,i) => {
+                  o[header[i]] = v;
+                })
+                return o;
+              });
+              console.log(newArr);
+              res(newArr);
+            }
           })
         }
 
@@ -138,6 +168,16 @@ AFRAME.registerSystem('star-data', {
         this.store.dispatch({
           type: 'STAR_DETAILS',
           value: details
+        });
+
+        // once everything is ready, trigger a view change
+        this.store.dispatch({
+          type: 'SELECT_PANEL',
+          value: '-1'
+        });
+        this.store.dispatch({
+          type: 'SELECT_PANEL',
+          value: 'overview'
         });
 
         // once everything is ready, trigger a view change
@@ -168,6 +208,9 @@ AFRAME.registerSystem('star-data', {
     // lookup star classes and types from dataset
     sd.starClass = this.starMetaInfo.starTypes.starClasses[ this.starMetaInfo.starTypes.starClassValues[id] ];
     sd.starType = this.starMetaInfo.starTypes.starTypes[ this.starMetaInfo.starTypes.starTypeValues[id] ]
+
+    // lookup exoplanets
+    sd.exoplanets = this.sceneEl.systems.exoplanet.getExoplanets(sd.id);
 
     // lookup the star name
     sd.name = this.starMetaInfo.starNames[id];
@@ -228,6 +271,9 @@ AFRAME.registerSystem('star-data', {
     }
 
     return list;
+  },
+  getStarData: function(id) {
+    return this.starDB[id];
   },
   addStarToHash: function(pos, idx) {
     var h = this.getHashKey(pos);
@@ -297,7 +343,7 @@ AFRAME.registerSystem('star-data', {
       starRec.mag = ar[(i * fields.length) + 6];
       starRec.color = c;
       starRec.radius = ar[(i * fields.length) + 8];
-      starRec.temp = ar[(i * fields.length) + 7];
+      starRec.temperature = ar[(i * fields.length) + 7];
       starRec.velocity = Object.assign({}, v);
       starRec.id = ar[(i * fields.length) + 9];
       starRec.mass = ar[(i * fields.length) + 10];

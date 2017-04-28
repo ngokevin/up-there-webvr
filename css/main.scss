@@ -17,15 +17,6 @@ body {
   background-color: #000;
 }
 
-// .star-detail {
-//   color: #fff;
-//   width: 512px;
-//   height: 512px;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-// }
-
 ul {
   margin: 0;
   padding: 0;
@@ -108,19 +99,7 @@ ul {
   }
 }
 
-.planets {
-  position: relative;
-}
 
-.planet {
-  border-radius: 1000px;
-  border: 2px solid #aaccff;
-  width: 512px;
-  height: 512px;
-  margin: 0 auto;
-  position: absolute;
-  top: 0;
-}
 
 // .planets svg {
 //   width: 512px;

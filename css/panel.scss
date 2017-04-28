@@ -6,7 +6,7 @@
   height: 25%;
   position: absolute;
   background-color: #000;
-  z-index: 1000;
+  z-index: 1001;
   h1, h2 {
     text-align: center;
     margin: 0;
@@ -25,6 +25,7 @@
 }
 
 .overview {
+  // top: 770px;
   .spec {
     padding: 30px 20px;
     box-sizing: border-box;
@@ -99,6 +100,54 @@
       .star {
         top: -120px;
         left: 0;
+      }
+    }
+  }
+}
+
+$planetOrbitDiameter: 500px;
+$planetDiameter: 20px;
+$starDiameter: 25px;
+
+.planets {
+  .planetContainer {
+    position: absolute;
+    top: 512*.75*.5px;
+    left: -$planetOrbitDiameter*.5;
+    .star {
+      border-radius: 1000px;
+      background-color: #fff;
+      width: $starDiameter;
+      height: $starDiameter;
+      position: absolute;
+      top: -$starDiameter*.5+2px;
+      left: ($planetOrbitDiameter*.5)-($starDiameter*.5);
+      z-index: 1003;
+    }
+    .planetOrbit {
+      position: absolute;
+      top: -$planetOrbitDiameter*.5;
+      border-radius: 1000px;
+      border: 2px solid #aaccff;
+      width: $planetOrbitDiameter;
+      height: $planetOrbitDiameter;
+      .planet {
+        border-radius: 1000px;
+        background-color: #fff;
+        width: $planetDiameter;
+        height: $planetDiameter;
+        position: absolute;
+        right: -$planetDiameter*.5;
+        top: ($planetOrbitDiameter*.5)-($starDiameter*.5);
+        z-index: 1003;
+        .info {
+          position: absolute;
+          left: 50px;
+          width: 200px;
+          h3,h4 {
+            display: inline;
+          }
+        }
       }
     }
   }

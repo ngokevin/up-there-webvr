@@ -37,6 +37,10 @@ AFRAME.registerComponent('star-detail-ui', {
       this.unsubscribe = this.modelJson.addEventListener('loaded', this.parseJsonFile.bind(this));
     }
   },
+  // this loads info from the scene json file and attaches star-detail-ui planes
+  // and buttons to the appropriate behavior.
+  // There is probably a better way to do this,
+  // but I am a limited creature.
   parseJsonFile: function() {
     if(this.unsubscribe) {
       this.modelJson.removeEventListener(this.unsubscribe);
@@ -80,11 +84,10 @@ AFRAME.registerComponent('star-detail-ui', {
   },
   update: function (oldData) {
     if(!this.ready) return;
+    if(oldData !== undefined && oldData.selectedStar !== this.data.selectedStar && this.data.selectedStar > -1) {
+      document.getElementById('panel-display0').emit('update-html-texture');
+    }
 
-    this.targetEl.innerHTML = detailTemplate(this.system.getStarDetails());
-    setTimeout(() => {
-      // this.el.emit('update-html-texture');
-    }, 850);
   },
   tick: function(time, timeDelta) {
     // this.el.emit('update-html-texture');

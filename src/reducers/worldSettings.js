@@ -84,7 +84,19 @@ var reducer = module.exports = {
       hexColor: 1,
       id: 1,
       dbKey: -1,
-      exoplanets: [],
+      exoplanets: [{
+        name: "Vega b",
+        distance: 1,
+        period: 2.5,
+        radius: 2,
+        mass: 2
+      },{
+        name: "Vega c",
+        distance: 1.8,
+        period: 3.95,
+        radius: 16,
+        mass: 222
+      }],
       exoplanetDetails: {
         name: "Unknown",
         distance: "dist",
@@ -201,7 +213,7 @@ var reducer = module.exports = {
 
       case this.actions.STAR_DETAILS: {
         var newState = Object.assign({}, state);
-        newState.starDetails = Object.assign({}, newState.starDetails, action.val);
+        newState.starDetails = Object.assign({}, newState.starDetails, action.value);
         return newState;
       }
 
@@ -320,6 +332,11 @@ var reducer = module.exports = {
     }
   }
 };
-if(AFRAME !== undefined) {
-  AFRAME.registerReducer('worldSettings', reducer);
+
+try {
+  if(AFRAME !== undefined) {
+    AFRAME.registerReducer('worldSettings', reducer);
+  }
+} catch(e) {
+
 }
