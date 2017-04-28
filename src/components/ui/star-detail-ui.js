@@ -12,6 +12,7 @@ AFRAME.registerComponent('star-detail-ui', {
     selectedStar: { type: 'int', default: -1}
   },
   init: function () {
+
     this.objectLoader = new THREE.ObjectLoader();
     this.modelJson = document.getElementById('star-detail-ui-asset');
     // debugger;
@@ -20,8 +21,38 @@ AFRAME.registerComponent('star-detail-ui', {
 
     this.frameMat = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load( "assets/images/star-detail-frame-atlas.jpg" ) })
 
+    let nTex = new THREE.TextureLoader().load( "assets/images/v3_perlin.png" );
+    nTex.wrapS = nTex.wrapT = THREE.RepeatWrapping;
+
+    let nTex2 = new THREE.TextureLoader().load( "assets/images/v3_perlin_1024.png" );
+    nTex2.wrapS = nTex2.wrapT = THREE.RepeatWrapping;
+
+    this.coronaMat = new THREE.ShaderMaterial({
+        uniforms: {
+          "cameraPosition": { type: "v3", value: new THREE.Vector3( 0, 0, 0 ) },
+          "noise1": { type: "t", value: nTex },
+          "noise2": { type: "t", value: nTex2 },
+          "uTime": { type: "f", value: 0.1 },
+          "uStarfieldTime": { type: "f", value: 0.0 },
+          "uStarColor": { type: "v4", value: new THREE.Vector4(1,1,1,1) },
+        },
+        vertexShader: require('../../glsl/corona.vert'),
+        fragmentShader: require('../../glsl/corona.frag'),
+        depthTest: false,
+        // depthWrite: false,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+      });
+
+    this.starMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff
+    })
+
     this.updateMaterials = this.updateMaterials.bind(this);
     this.updateMaterials();
+
+
+
     // this.el.addEventListener('html-ready', (evt) => {
     //   let self = evt.detail.target;
     //   let mats = evt.detail.target.sceneEl.systems.material.materials;
@@ -67,10 +98,16 @@ AFRAME.registerComponent('star-detail-ui', {
             // e.object3D.material = this.frameMat;
             // group.remove(c);
           }
-        } else
-        // all panel elements also share a single atlas
-        if(c.name.indexOf('frame') !== -1) {
+       // all panel elements also share a single atlas
+        } else if(c.name.indexOf('frame') !== -1) {
           c.material = this.frameMat;
+          pobj.add(c.clone());
+        } else if(c.name.indexOf('corona') !== -1) {
+          console.log("☀️ corona")
+          c.material = this.coronaMat;
+          pobj.add(c.clone());
+        } else if(c.name.indexOf('star') !== -1) {
+          c.material = this.starMat;
           pobj.add(c.clone());
         } else {
           pobj.add(c.clone());
@@ -85,12 +122,19 @@ AFRAME.registerComponent('star-detail-ui', {
   update: function (oldData) {
     if(!this.ready) return;
     if(oldData !== undefined && oldData.selectedStar !== this.data.selectedStar && this.data.selectedStar > -1) {
-      document.getElementById('panel-display0').emit('update-html-texture');
+      let d = document.getElementById('panel-display0');
+      if(d.emit !== undefined) {
+        d.emit('update-html-texture');
+      }
     }
-
+    let c = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.color;
+    // debugger;
+    // let cc = new THREE.Color(c);
+    // let cv = new THREE.Vector4(c.r, c.g, c.b, 1.0);
+    this.coronaMat.uniforms['uStarColor'].value = c;
   },
   tick: function(time, timeDelta) {
     // this.el.emit('update-html-texture');
-    // this.coronaMat.uniforms['uTime'].value = time;
+    this.coronaMat.uniforms['uTime'].value = time;
   }
 });

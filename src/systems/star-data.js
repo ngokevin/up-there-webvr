@@ -206,8 +206,8 @@ AFRAME.registerSystem('star-data', {
     let sd = Object.assign({}, s);
 
     // lookup star classes and types from dataset
-    sd.starClass = this.starMetaInfo.starTypes.starClasses[ this.starMetaInfo.starTypes.starClassValues[id] ];
-    sd.starType = this.starMetaInfo.starTypes.starTypes[ this.starMetaInfo.starTypes.starTypeValues[id] ]
+    sd.starClass = this.starMetaInfo.starTypes.starClasses[ this.starMetaInfo.starTypes.starClassValues[id] ].trim();
+    sd.starType = this.starMetaInfo.starTypes.starTypes[ this.starMetaInfo.starTypes.starTypeValues[id] ].trim();
 
     // lookup exoplanets
     sd.exoplanets = this.sceneEl.systems.exoplanet.getExoplanets(sd.id);

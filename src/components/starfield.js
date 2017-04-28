@@ -168,7 +168,6 @@ AFRAME.registerComponent('starfield', {
   },
 
   maskStar: function(id, mask) {
-    // debugger;
     let o = this.el.object3D.getObjectByName('starfieldPoints', true);
 
     o.geometry.attributes.starColor.setW(id, parseFloat(mask));
