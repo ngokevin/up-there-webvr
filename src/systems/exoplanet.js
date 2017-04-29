@@ -40,7 +40,7 @@ AFRAME.registerSystem('exoplanet', {
       let i = parseInt(p[this.exoplanetHeaders.indexOf('hip_name')].split(' ')[1]);
       let sid = this.sceneEl.systems['star-data'].starIdLookup[i];
 
-      if(sid !== undefined && this.sceneEl.systems['star-data'].getStarData(sid) !== undefined) {
+    if(sid !== undefined && this.sceneEl.systems['star-data'].getStarData(sid) !== undefined) {
         if(s.indexOf(sid) === -1) {
           s.push(sid);
         }
