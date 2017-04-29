@@ -54,7 +54,7 @@ AFRAME.registerComponent('star-detail-ui', {
     this.updateMaterials = this.updateMaterials.bind(this);
     this.updateMaterials();
 
-
+    this.camera = document.getElementById('acamera');
 
     // this.el.addEventListener('html-ready', (evt) => {
     //   let self = evt.detail.target;
@@ -131,17 +131,25 @@ AFRAME.registerComponent('star-detail-ui', {
       if(d.emit !== undefined) {
         d.emit('update-html-texture');
       }
+      this.el.setAttribute('look-at', `[camera]`);
+      setTimeout(() => {
+        this.el.removeAttribute('look-at');
+      },100)
     }
     let c = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.color;
     let r = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.radius;
-    // debugger;
-    // let cc = new THREE.Color(c);
-    // let cv = new THREE.Vector4(c.r, c.g, c.b, 1.0);
+
     this.coronaMat.uniforms['uStarColor'].value = c;
     let starScale = Math.max(0.1, Math.tanh(r*.5) * 2.0);//this.starScaleCurve(r/2000.0);
-    // debugger;
+
     this.starModel.scale.set(starScale,starScale,starScale);
     this.coronaModel.scale.set(starScale,starScale,starScale);
+
+    // this.el.object3D.lookAt(document.getElementById('acamera').object3D.position);
+    let p = document.getElementById('acamera').getAttribute('position');
+
+
+
   },
   tick: function(time, timeDelta) {
     // this.el.emit('update-html-texture');
