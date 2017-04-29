@@ -21,7 +21,7 @@
         <a-asset-item id="starTypes" src="assets/data/starTypes.json"></a-asset-item>
         <a-asset-item id="exoplanets" src="assets/data/exoplanets.csv"></a-asset-item>
         <a-asset-item id="star-detail-ui-asset" src="assets/models/star-detail-ui.json"></a-asset-item>
-
+        <img id="flimshaw-logo" src="assets/images/flimshaw-logo.png">
         <!-- mixins -->
         <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
       </a-assets>
@@ -31,7 +31,7 @@
         <a-entity>
           <a-entity mixin="crimson" text="value: Up There; align: center; width: 3; height: auto" position="0 .5 0"></a-entity>
           <a-entity mixin="crimson" text="value: Loading stardata...; align: center; width: 1; height: auto" position="0 .35 0"></a-entity>
-
+          <a-entity geometry="primitive: plane" position="0 .15 0" scale=".2 .2 .2"  material="src: #flimshaw-logo; transparent: true; depthWrite: false; depthTest: false"></a-entity>
           <a-entity position="0 0 0" >
             <a-entity mixin="crimson" text="align: center; width: 1; height: auto" position="0 -.05 0" redux-bind="worldSettings.recordCount: text.value"></a-entity>
             <a-entity mixin="crimson" text="value: records; align: center; width: 1; height: auto" position="0 -.1 0"></a-entity>
