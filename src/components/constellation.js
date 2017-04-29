@@ -47,8 +47,8 @@ var stardata = require('../../assets/data/stardata.json');
         // and each star id in each constellation
         let v = stardata[c].map( s => {
           // look up the star's position and velocity and toss it into the array
-          let i = this.starfield.components.starfield.starIdLookup[s];
-          let d = this.starfield.components.starfield.getStarData(i);
+          let i = this.el.sceneEl.systems['star-data'].starIdLookup[s];//this.starfield.components.starfield.starIdLookup[s];
+          let d = this.el.sceneEl.systems['star-data'].getStarData(i);
           if(d !== undefined) {
             vertArray.push([d.position.x, d.position.y, d.position.z])
             velArray.push([d.velocity.x, d.velocity.y, d.velocity.z])
