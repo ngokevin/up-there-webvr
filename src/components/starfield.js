@@ -172,6 +172,8 @@ AFRAME.registerComponent('starfield', {
 
     o.geometry.attributes.starColor.setW(id, parseFloat(mask));
     o.geometry.attributes.starColor.needsUpdate = true;
+    debugger;
+
   },
 
   buildStarfieldGeometry: function() {
@@ -251,7 +253,7 @@ AFRAME.registerComponent('starfield', {
 
     // get the current scale to tween from
     var scale = { v: this.scaleParent.scale.x };
-
+    var id = id;
     // tween the scaleparent scale back to 1
     this.tween.stop();
     this.tween = new AFRAME.TWEEN.Tween(scale)
@@ -270,7 +272,7 @@ AFRAME.registerComponent('starfield', {
                   })
                   .start();
   },
-  setView: function(view) {
+  setView: function(view, id) {
     switch(view) {
       case DETAIL_VIEW:
         let s = this.el.sceneEl.systems.redux.store.getState().worldSettings.ui.selectedStar;
@@ -278,7 +280,7 @@ AFRAME.registerComponent('starfield', {
         console.log(`Zooming to ${s}`);
         break;
       case MACRO_VIEW:
-        this.clearScaleParent();
+        this.clearScaleParent(id);
         console.log(`Returning to macro view.`);
         break;
     }
@@ -404,10 +406,10 @@ AFRAME.registerComponent('starfield', {
         if(this.data.zoomLevel !== oldData.zoomLevel) {
           switch(this.data.zoomLevel) {
             case 'MACRO_VIEW':
-              this.setView(MACRO_VIEW);
+              this.setView(MACRO_VIEW, oldData.selectedStar);
               break;
             case 'DETAIL_VIEW':
-              this.setView(DETAIL_VIEW);
+              this.setView(DETAIL_VIEW, this.data.selectedStar);
               break;
           }
         }
