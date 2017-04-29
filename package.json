@@ -45,6 +45,7 @@
     "aframe-stats-in-vr-component": "^0.1.7",
     "csv": "^1.1.1",
     "csv-string": "^2.3.2",
+    "cubic-bezier": "^0.1.2",
     "debounce": "^1.0.0",
     "extract-text-webpack-plugin": "^2.0.0",
     "fast-csv": "^2.4.0",

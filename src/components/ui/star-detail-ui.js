@@ -1,4 +1,5 @@
 var detailTemplate = require("./templates/star-detail.ejs");
+var bezier = require('cubic-bezier');
 
 // Component to change to random color on click.
 AFRAME.registerComponent('star-detail-ui', {
@@ -43,6 +44,8 @@ AFRAME.registerComponent('star-detail-ui', {
         transparent: true,
         blending: THREE.AdditiveBlending
       });
+
+    this.starScaleCurve = bezier(0., 0., 0., 1., 1000);
 
     this.starMat = new THREE.MeshBasicMaterial({
       color: 0xffffff
@@ -105,10 +108,12 @@ AFRAME.registerComponent('star-detail-ui', {
         } else if(c.name.indexOf('corona') !== -1) {
           console.log("☀️ corona")
           c.material = this.coronaMat;
-          pobj.add(c.clone());
+          this.coronaModel = c.clone()
+          pobj.add(this.coronaModel);
         } else if(c.name.indexOf('star') !== -1) {
           c.material = this.starMat;
-          pobj.add(c.clone());
+          this.starModel = c.clone()
+          pobj.add(this.starModel);
         } else {
           pobj.add(c.clone());
         }
@@ -128,10 +133,15 @@ AFRAME.registerComponent('star-detail-ui', {
       }
     }
     let c = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.color;
+    let r = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.radius;
     // debugger;
     // let cc = new THREE.Color(c);
     // let cv = new THREE.Vector4(c.r, c.g, c.b, 1.0);
     this.coronaMat.uniforms['uStarColor'].value = c;
+    let starScale = Math.max(0.1, Math.tanh(r*.5) * 2.0);//this.starScaleCurve(r/2000.0);
+    // debugger;
+    this.starModel.scale.set(starScale,starScale,starScale);
+    this.coronaModel.scale.set(starScale,starScale,starScale);
   },
   tick: function(time, timeDelta) {
     // this.el.emit('update-html-texture');
