@@ -22,6 +22,8 @@
         <a-asset-item id="exoplanets" src="assets/data/exoplanets.csv"></a-asset-item>
         <a-asset-item id="star-detail-ui-asset" src="assets/models/star-detail-ui.json"></a-asset-item>
         <img id="flimshaw-logo" src="assets/images/flimshaw-logo.png">
+        <img id="starmap" src="assets/images/starmap_1024.png">
+        <img id="ra-dec-reticle" src="assets/images/ra-dec-reticle.png">
         <!-- mixins -->
         <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
       </a-assets>
@@ -90,7 +92,7 @@
         </a-entity>
       </a-entity>
 
-      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 1.6 1" gearvr-fly-controls look-controls wasd-controls>
+      <a-entity id="acamera" camera="near: 10e-4; far: 10e10" position="0 1.6 0" gearvr-fly-controls look-controls wasd-controls="fly: true">
         <a-entity id="acursor"
           visible="false"
           cursor="fuse: false; fuseTimeout: 1000"

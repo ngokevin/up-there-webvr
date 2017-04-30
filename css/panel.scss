@@ -160,3 +160,31 @@ $starDiameter: 25px;
     }
   }
 }
+
+.location-generator {
+  background-color: #000;
+  svg {
+    transform: scale(1.024);
+    transform-origin: top left;
+  }
+}
+
+.location {
+  img.starmap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+  .reticle-parent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    img.reticle {
+      position: relative;
+      top: -50px;
+      left: -50px;
+    }
+  }
+}

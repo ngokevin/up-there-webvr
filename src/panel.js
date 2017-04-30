@@ -4,8 +4,8 @@ var worldSettings = require('./reducers/worldSettings').reducer(null, { type: "N
 
 // // load templates
 var templates = {
-  overviewTemplate: require('./components/ui/templates/overview.ejs'),
-  planetsTemplate: require('./components/ui/templates/planets.ejs'),
+  // overviewTemplate: require('./components/ui/templates/overview.ejs'),
+  // planetsTemplate: require('./components/ui/templates/planets.ejs'),
   locationTemplate: require('./components/ui/templates/location.ejs')
 }
 
@@ -16,3 +16,12 @@ let divs = Object.keys( templates ).map( k => {
   d.innerHTML = templates[k](worldSettings);
   document.body.appendChild(d);
 })
+
+setInterval( () => {
+
+  let e = document.getElementsByTagName('text');
+  for(let i = 0; i < e.length; i += 1) {
+    e[i].remove();
+  }
+
+}, 250);

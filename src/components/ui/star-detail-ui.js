@@ -39,8 +39,8 @@ AFRAME.registerComponent('star-detail-ui', {
         },
         vertexShader: require('../../glsl/corona.vert'),
         fragmentShader: require('../../glsl/corona.frag'),
-        depthTest: false,
-        // depthWrite: false,
+        // depthTest: false,
+        depthWrite: false,
         transparent: true,
         blending: THREE.AdditiveBlending
       });

@@ -78,6 +78,7 @@ var reducer = module.exports = {
       name: "Vega",
       radius: 12.01,
       temperature: 5800,
+      position: { x: 0, y: 0, z: 0},
       mass: 1,
       type: 'Dwarf',
       class: 'V',

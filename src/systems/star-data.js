@@ -165,6 +165,7 @@ AFRAME.registerSystem('star-data', {
 
         // generate the proper star details and update the store
         let details = this.getStarDetails(this.data.selectedStar);
+        console.log(`${details.name}: ra${details.ra}, dec${details.dec}, ${details.position.x},${details.position.y},${details.position.z}`);
         this.store.dispatch({
           type: 'STAR_DETAILS',
           value: details
@@ -211,6 +212,16 @@ AFRAME.registerSystem('star-data', {
 
     // lookup exoplanets
     sd.exoplanets = this.sceneEl.systems.exoplanet.getExoplanets(sd.id);
+
+    // calculate RA and DEC from location
+    let p = new THREE.Vector3(sd.position.x, sd.position.y, sd.position.z).normalize();
+    sd.dec = 90 - (180/Math.PI) * Math.atan2(Math.sqrt(Math.pow(sd.position.x,2)+Math.pow(sd.position.y,2)),sd.position.z);
+    let ra = (180/Math.PI) * Math.atan2(sd.position.y, sd.position.x);
+    ra = ra / 15;
+    if(ra < 0) {
+      ra += 24;
+    }
+    sd.ra = ra;
 
     // lookup the star name
     sd.name = this.starMetaInfo.starNames[id];
@@ -289,7 +300,6 @@ AFRAME.registerSystem('star-data', {
     let tempRound = Math.floor((temp/100))*100;
     tempRound = Math.max(1000, Math.min(40000, tempRound));
     let i = Math.floor(tempRound/100) - 10;
-      // console.log(i);
     let c = colorTable[i];
 
     return new THREE.Vector4(c[1], c[2], c[3], 1.0);

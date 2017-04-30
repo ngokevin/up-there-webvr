@@ -172,7 +172,6 @@ AFRAME.registerComponent('starfield', {
 
     o.geometry.attributes.starColor.setW(id, parseFloat(mask));
     o.geometry.attributes.starColor.needsUpdate = true;
-    debugger;
 
   },
 

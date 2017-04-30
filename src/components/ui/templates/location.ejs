@@ -1,9 +1,8 @@
-<div class="panel container planets">
-  <div class="full-width header border-bottom">
-    <h1><%= starDetails.name %></h1>
-    <h2>Class <%= starDetails.starClass %> <%= starDetails.starType %></h2>
-  </div>
-  <div class="bottom_3-of-4 full-width">
-    <h1>👩‍🚀 under construction</h1>
+<div class="panel container location">
+  <div class="bottom_4-of-4 full-width">
+    <img src="assets/images/starmap_1024.png" class="starmap" alt="">
+    <div class="reticle-parent" style="left: <%=1024-(1024*(starDetails.ra/24))%>px; top: <%=512*(1-((starDetails.dec+90)/180))%>px">
+      <img src="assets/images/ra-dec-reticle.png" class="reticle" alt="">
+    </div>
   </div>
 </div>
