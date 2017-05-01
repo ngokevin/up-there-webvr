@@ -127,6 +127,8 @@ $starDiameter: 25px;
     .planetOrbit {
       position: absolute;
       top: -$planetOrbitDiameter*.5;
+      left: 0;
+      box-sizing: border-box;
       border-radius: 1000px;
       border: 2px solid #aaccff;
       width: $planetOrbitDiameter;
@@ -139,22 +141,41 @@ $starDiameter: 25px;
         position: absolute;
         right: -$planetDiameter*.5;
         top: ($planetOrbitDiameter*.5)-($starDiameter*.5);
+        box-sizing: border-box;
         z-index: 1003;
         .info {
           position: absolute;
-          left: 50px;
-          width: 200px;
+          left: 0px;
+          top: 30px;
+          line-height: 1.25em;
+          min-width: 100px;
+          background-color: rgba(0,0,0,.75);
           h3,h4 {
             margin: 0;
             padding: 0;
-            line-height: 1em;
+
           }
           h3 {
-            font-size: 1.25em;
+            font-size: 1.5em;
+            margin-bottom: .25em;
           }
           h4 {
             font-family: $sansFont;
+            font-size: 1em;
           }
+        }
+      }
+      $spacing: 30;
+      $rowA: -90px;
+      $rowB: 40px;
+      &.planetb,&.planetd {
+        .info {
+          top: $rowA;
+        }
+      }
+      &.planetc,&.planete {
+        .info {
+          top: $rowB;
         }
       }
     }

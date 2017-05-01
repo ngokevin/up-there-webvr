@@ -49,7 +49,7 @@
       </a-entity>
 
       <!-- STARFIELD -->
-      <a-entity id="starfield" position="0 0 -2" starfield redux-bind="worldSettings.starDataState: starfield.starDataState; worldSettings.zoomLevel: starfield.zoomLevel; worldSettings.ui.selectedStar: starfield.selectedStar; worldSettings.starDetails: starfield.starDetails">
+      <a-entity id="starfield" position="0 0 -2" rotation="-90 0 0" starfield redux-bind="worldSettings.starDataState: starfield.starDataState; worldSettings.zoomLevel: starfield.zoomLevel; worldSettings.ui.selectedStar: starfield.selectedStar; worldSettings.starDetails: starfield.starDetails">
         <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
         <a-entity id="star-set-highlighter" star-set-indicator redux-bind="worldSettings.currentStarSet: star-set-indicator.currentStarSet; worldSettings.selectedStar: star-set-indicator.selectedStar" visible="false"></a-entity>
         <a-entity id="sun-indicator" redux-bind="worldSettings.sunIndicator: visible" geometry="primitive: sphere; radius: 1; segmentsWidth: 12; segmentsHeight: 24" material="shader: flat; wireframe: true; color: #aaedff; transparent: true" rotation="90 0 0" visible="false">

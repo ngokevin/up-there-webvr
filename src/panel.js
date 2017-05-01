@@ -5,8 +5,8 @@ var worldSettings = require('./reducers/worldSettings').reducer(null, { type: "N
 // // load templates
 var templates = {
   // overviewTemplate: require('./components/ui/templates/overview.ejs'),
-  // planetsTemplate: require('./components/ui/templates/planets.ejs'),
-  locationTemplate: require('./components/ui/templates/location.ejs')
+  planetsTemplate: require('./components/ui/templates/planets.ejs'),
+  // locationTemplate: require('./components/ui/templates/location.ejs')
 }
 
 worldSettings.helpers = require('./helpers');

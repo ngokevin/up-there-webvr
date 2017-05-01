@@ -9,16 +9,27 @@
       <h1 style="color: #fff">No Planets.</h1>
       <% } else { %>
       <div class="planetContainer">
-        <div class="star">
 
-        </div>
-        <% starDetails.exoplanets.map( function(f) { %>
-        <div class="planetOrbit" style="transform: scale(<%=f.pl_orbsmax%>)">
-          <div class="planet" style="transform: scale(<%=1/f.pl_orbsmax%>)">
+        <%
+        var maxScale = starDetails.exoplanets.sort( (a,b) => { return parseFloat(a.pl_orbsmax) > parseFloat(b.pl_orbsmax) ? -1 : 1 })[0].pl_orbsmax;
+        maxScale = (maxScale*300)/1024;
+        starDetails.exoplanets.map( function(f) {
+          var orbsMax = Math.max(.1, f.pl_orbsmax);
+          var planR = Math.max(.05, f.pl_radj);
+        %>
+        <div class="planetOrbit planet<%=f.pl_letter%>" style="transform: scale(<%=f.pl_orbsmax/maxScale%>); border: <%=(1/(f.pl_orbsmax/maxScale))*2%>px solid #aaccff;">
+          <%
+            var planetDiameter = 90;
+            var planetOrbitDiameter = 500;
+            var starDiameter = 25;
+            var diameter = planetDiameter*planR;
+            var s = (1/(f.pl_orbsmax/maxScale));
+          %>
+          <div class="planet" style="transform: scale(<%=(1/(f.pl_orbsmax/maxScale))%>); width: <%=diameter%>px; height: <%=diameter%>px; right: <%=(-diameter/2)%>px; top: <%=(planetOrbitDiameter*.5)-(starDiameter*.5)%>px;">
             <div class="info">
               <h3><%= f.pl_name %></h3>
               <h4><%= parseFloat(f.pl_orbsmax).toFixed(1) %> AU</h4>
-              <h4><%= parseFloat(f.pl_orbsmax).toFixed(1) %> days</h4>
+              <h4><%= parseFloat(f.pl_orbper).toFixed(1) %> days</h4>
             </div>
           </div>
         </div>
