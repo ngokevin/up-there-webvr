@@ -75,13 +75,13 @@ var reducer = module.exports = {
       time: false
     },
     starDetails: {
-      name: "Vega",
+      name: "Sol",
       radius: 12.01,
       temperature: 5800,
       position: { x: 0, y: 0, z: 0},
       mass: 1,
-      type: 'Dwarf',
-      class: 'V',
+      starType: 'Dwarf',
+      starClass: 'V',
       distance: 1,
       distanceParsecs: 1.3,
       hexColor: 1,
