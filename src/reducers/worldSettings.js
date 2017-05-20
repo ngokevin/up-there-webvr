@@ -23,6 +23,7 @@ var reducer = module.exports = {
     SPEED_UP: 'SPEED_UP',
     TIME_DOWN: 'TIME_DOWN',
     TIME_UP: 'TIME_UP',
+    SET_TIME: 'SET_TIME',
     STARFIELD_READY: 'STARFIELD_READY',
     UPDATE_CURSOR_POSITION: 'UPDATE_CURSOR_POSITION',
     SELECT_STAR: 'SELECT_STAR',
@@ -54,7 +55,7 @@ var reducer = module.exports = {
   initialState: {
     scale: .0005,
     speed: 50,
-    time: 0,
+    time: 0, // the time in years to offset the current view
     starDataState: STARDATA_NEW,
     currentStarSet: false,
     starfieldReady: false,
@@ -238,6 +239,12 @@ var reducer = module.exports = {
       case this.actions.SET_STAR_DATA_STATE: {
         var newState = Object.assign({}, state);
         newState.starDataState = action.value;
+        return newState;
+      }
+
+      case this.actions.SET_TIME: {
+        var newState = Object.assign({}, state);
+        newState.time = action.value;
         return newState;
       }
 

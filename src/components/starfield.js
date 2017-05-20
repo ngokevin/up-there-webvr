@@ -317,9 +317,9 @@ AFRAME.registerComponent('starfield', {
         verts[(i * 3) + 2] = 0.0;
       }
 
-      velocity[(i * 3) + 0] = star.position.x;
-      velocity[(i * 3) + 1] = star.position.y;
-      velocity[(i * 3) + 2] = star.position.z;
+      velocity[(i * 3) + 0] = star.velocity.x;
+      velocity[(i * 3) + 1] = star.velocity.y;
+      velocity[(i * 3) + 2] = star.velocity.z;
 
       absmag[i] = star.mag;
       temp[i] = star.temp;

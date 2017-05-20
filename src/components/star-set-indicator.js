@@ -4,7 +4,8 @@
 AFRAME.registerComponent('star-set-indicator', {
   schema: {
     currentStarSet: { type: 'string', default: 'false'},
-    selectedStar: { type: 'int', default: -1 }
+    selectedStar: { type: 'int', default: -1 },
+    time: { type: 'float', default: 0 }
   },
   init: function() {
     // starfield
@@ -48,7 +49,6 @@ AFRAME.registerComponent('star-set-indicator', {
     this.update();
   },
   maskStar: function(id, mask) {
-    // debugger;
     let o = this.el.object3D.getObjectByName('mesh');
     let sid = this.store.getState().worldSettings.starSets[this.data.currentStarSet].indexOf(id);
     console.log(`🚗 ${sid}`);
@@ -61,6 +61,7 @@ AFRAME.registerComponent('star-set-indicator', {
       && this.data.selectedStar !== oldData.selectedStar
       && (this.store.getState().worldSettings.starSets[this.data.currentStarSet].indexOf(this.data.selectedStar) !== -1 || this.store.getState().worldSettings.starSets[this.data.currentStarSet].indexOf(oldData.selectedStar) !== -1)
     ) {
+      // this.mat.uniforms['uStarfieldTime'].value = this.data.time;
       // if transitioning in, mask selected star
       if(this.data.selectedStar > -1) {
         this.maskStar(this.data.selectedStar, 0);
