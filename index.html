@@ -56,11 +56,11 @@
           <a-animation attribute="scale" dur="2000" from="0 0 0" to="1 1 1" easing="linear" repeat="indefinite"></a-animation>
           <a-animation attribute="material.opacity" dur="2000" from="1" to="0" repeat="indefinite" fill="backward"></a-animation>
         </a-entity>
-        <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.ui.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady; worldSettings.zoomLevel: star-detail-spawner.zoomLevel"></a-entity>
+        <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.ui.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady; worldSettings.zoomLevel: star-detail-spawner.zoomLevel; worldSettings.time: star-detail-spawner.time"></a-entity>
       </a-entity>
 
       <a-entity id="right-hand" gearvr-controls></a-entity>
-      <a-entity keyboard-time-controls time-controls></a-entity>
+      <a-entity keyboard-time-controls gearvr-time-controls time-controls></a-entity>
 
       <!-- parent object for everything following the user around -->
       <a-entity follow-entity redux-bind="worldSettings.starfieldReady: visible">

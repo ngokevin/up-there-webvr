@@ -15,7 +15,8 @@ AFRAME.registerComponent('time-controls', {
     maxVelocity: {type: 'float', default: 30000.0},
     state: {type: 'string', default: TIME_IDLE},
     waitTime: {type: 'float', default: 0},
-    waitDuration: {type: 'float', default: 100}
+    waitDuration: {type: 'float', default: 100},
+    minVelocity: { type: 'float', default: 0.05}
   },
 
   init: function () {
@@ -44,6 +45,7 @@ AFRAME.registerComponent('time-controls', {
     const f = Math.min(2., Math.pow(Math.abs(Math.min(brakeRange, Math.max(-brakeRange, t)) / brakeRange), .02));
     this.data.velocity += parseFloat(dir) * this.data.speed * delta * .01;
     this.data.velocity = Math.min(this.data.maxVelocity, Math.max(-this.data.maxVelocity, this.data.velocity)) * f;
+
     this.el.setAttribute('time-controls', { velocity: this.data.velocity });
   },
 
@@ -86,18 +88,25 @@ AFRAME.registerComponent('time-controls', {
         if(this.data.direction !== 0) {
           this.el.setAttribute('time-controls', { state: TIME_ACTIVE } );
           this.updateVelocity(timeDelta);
+          return;
         }
         this.rewindVelocity(timeDelta);
         break;
     }
 
     if(this.data.velocity !== 0) {
-      this.el.sceneEl.systems.redux.store.dispatch({
-        type: 'SET_TIME',
-        value: t + this.data.velocity
-      })
-    } else {
-      // this.el.setAttribute('time-controls', { state: TIME_IDLE } );
+      if(Math.abs(this.data.velocity) < this.data.minVelocity && Math.abs(t) < this.data.minVelocity) {
+        this.data.velocity = 0.0;
+        this.el.sceneEl.systems.redux.store.dispatch({
+          type: 'SET_TIME',
+          value: 0
+        })
+      } else {
+        this.el.sceneEl.systems.redux.store.dispatch({
+          type: 'SET_TIME',
+          value: t + this.data.velocity
+        })
+      }
     }
 
   }

@@ -18,26 +18,14 @@ AFRAME.registerComponent('gearvr-time-controls', {
 
     this.cursor = document.getElementById('acursor');
 
-    this.tick = this.tick.bind(this);
   },
 
   handleControlChange(state, evt) {
     if(this.data.active !== (state !== 0)) {
       this.data.active = state !== 0;
       this.data.direction = -state;
-      this.cursor.setAttribute('material', 'color', state ? "#0066ff" : "#ffffff" );
-    }
-  },
-
-  update: function (oldData) {
-
-  },
-
-  tick: function(time, timeDelta) {
-    if(this.data.active) {
-      this.el.sceneEl.systems.redux.store.dispatch({
-        type: this.data.direction === -1 ? "TIME_DOWN" : "TIME_UP"
-      })
+      this.el.setAttribute('time-controls', { direction: this.data.direction } );
+      // this.cursor.setAttribute('material', 'color', state ? "#0066ff" : "#ffffff" );
     }
   }
 

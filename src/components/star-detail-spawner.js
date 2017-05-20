@@ -33,7 +33,8 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       starsPerFrame: { type: 'float', default: 3},
       selectedStar: { type: 'int', default: -1 },
       zoomLevel: { type: 'string', default: 'MACRO_VIEW'},
-      starfieldReady: { type: 'boolean', default: false }
+      starfieldReady: { type: 'boolean', default: false },
+      time: { type: 'float', default: 0.0 }
     },
     init: function() {
       this.pool = this.el.sceneEl.components.pool__star;
@@ -53,6 +54,11 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       return this.starfield.components.starfield.getStarsNearWorldLocation(this.target.object3D.getWorldPosition(), this.data.radius);
     },
     update: function(oldData) {
+      if(this.data.time !== oldData.time && this.data.time !== 0) {
+        this.el.setAttribute('visible', 'false');
+      } else if(this.data.time == 0) {
+        this.el.setAttribute('visible', 'true');
+      }
       this.target = document.getElementById(this.data.target);
       if(this.data.selectedStar != oldData.selectedStar) {
         if(this.data.selectedStar >= 0) {

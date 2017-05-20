@@ -44,6 +44,7 @@ require('./components/controls/gearvr-fly-controls.js');
 // require('./components/controls/player-controls.js');
 require('./components/controls/time-controls.js');
 require('./components/controls/keyboard-time-controls.js');
+require('./components/controls/gearvr-time-controls.js');
 // require('./components/controls/scale-ui-controls.js');
 // require('./components/controls/starfield-controls.js');
 //
