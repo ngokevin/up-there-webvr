@@ -42,7 +42,6 @@ AFRAME.registerComponent('time-controls', {
     // calculate distance from end point to add friction as starts reapproach their present day location
     const brakeRange = 100000.;
     const f = Math.min(2., Math.pow(Math.abs(Math.min(brakeRange, Math.max(-brakeRange, t)) / brakeRange), .02));
-    // console.log(f);
     this.data.velocity += parseFloat(dir) * this.data.speed * delta * .01;
     this.data.velocity = Math.min(this.data.maxVelocity, Math.max(-this.data.maxVelocity, this.data.velocity)) * f;
     this.el.setAttribute('time-controls', { velocity: this.data.velocity });
