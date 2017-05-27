@@ -42,9 +42,6 @@
             <a-entity mixin="crimson" text="align: center; width: 1; height: auto" position="0 -.05 0" redux-bind="worldSettings.starCount: text.value"></a-entity>
             <a-entity mixin="crimson" text="value: stars; align: center; width: 1; height: auto" position="0 -.1 0"></a-entity>
           </a-entity>
-          <!-- <a-entity mixin="wirecube" position="0 -.42 0" scale=".025 .025 .025">
-            <a-animation attribute="rotation" dur="2000" fill="forwards" to="180 360 0" repeat="indefinite"></a-animation>
-          </a-entity> -->
         </a-entity>
       </a-entity>
 
@@ -120,7 +117,12 @@
 
       <a-entity id="star-detail-parent">
         <a-entity id="star-detail-ui" star-detail-ui scale="0 0 0" visible="false" redux-bind="worldSettings.ui.selectedStar: star-detail-ui.selectedStar; worldSettings.selectedPanel: star-detail-ui.selectedPanel" look-at>
-          <a-entity geometry="primitive: box" position="-1 .15 -1" scale=".4 .2 .1" class="clickable" action-dispatcher="type: SELECT_STAR; value: -1" material="color: #cc0000"></a-entity>
+          <a-entity position="-1 .15 -1" >
+            <a-entity geometry="primitive: box" scale=".4 .2 .1" class="clickable" action-dispatcher="type: SELECT_STAR; value: -1" material="color: #cc0000">
+            </a-entity>
+            <a-entity position="0 0 .05" text="value: < BACK; align: center; width: 2; height: auto; anchor: center;">
+            </a-entity>
+          </a-entity>
         </a-entity>
       </a-entity>
     </a-scene>
