@@ -54,6 +54,8 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       return this.starfield.components.starfield.getStarsNearWorldLocation(this.target.object3D.getWorldPosition(), this.data.radius);
     },
     update: function(oldData) {
+      // hide data when scrolling through time
+      // TODO this should probably live on the time updater...?
       if(this.data.time !== oldData.time && this.data.time !== 0) {
         this.el.setAttribute('visible', 'false');
       } else if(this.data.time == 0) {
@@ -165,6 +167,7 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       if(this.pool === undefined) {
         this.pool = this.el.sceneEl.components.pool__star;
       }
+      debugger;
 
       if(this.target != null && this.ready === true && this.pool !== undefined && this.data.selectedStar == -1) {
         let p = this.target.getAttribute('position');
@@ -176,7 +179,7 @@ const SOLS_TO_PARSECS = 2.25461e-8;
         // moving is true if any of the values doesn't equal the last posiition
         let m = r.indexOf(false) !== -1;
 
-        if(this.moving) {
+        if(this.moving || this.active.length == 0) {
           if(!m) {
             this.moving = false;
             this.refreshIndicators();

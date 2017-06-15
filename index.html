@@ -5,7 +5,7 @@
     <title>Up There WebVR by flimshaw.net</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="img/icon-256.png">
-    <meta name="description" content="Paint in VR in your browser. Powered by A-Frame.">
+    <meta name="description" content="Explore the universe in your browser or VR/AR/MR helmet via WebVR.">
     <link href="https://fonts.googleapis.com/css?family=Crimson+Text|Ubuntu" rel="stylesheet">
     <script src="build.js"></script>
 
@@ -67,14 +67,14 @@
           <!-- EXOPLANET CONTROLS -->
           <a-entity id="exoplanet-controls" position="-.25 0 0">
             <a-entity position="0 .15 0" text="align: center; value: exoplanets; width: 1"></a-entity>
-            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="highlight stars with planets" toggle-switch="morph: On" action-dispatcher="type: SELECT_STAR_SET; value: exoplanets" entity-visibility-toggle="target: star-set-highlighter" class="clickable">
+            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="highlight stars with planets" toggle-switch="morph: On" action-dispatcher="type: SELECT_STAR_SET; value: exoplanets" keyboard-click-controls="key: x" entity-visibility-toggle="target: star-set-highlighter" class="clickable">
               <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
             </a-entity>
           </a-entity>
 
           <a-entity id="sun-indicator-controls" position="0 0 0">
             <a-entity position="0 .15 0" text="align: center; value: show sun; width: 1"></a-entity>
-            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="show sun/earth location" toggle-switch="morph: On" entity-visibility-toggle="target: sun-indicator" class="clickable">
+            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="show sun/earth location" toggle-switch="morph: On" entity-visibility-toggle="target: sun-indicator" keyboard-click-controls="key: v" class="clickable">
               <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
             </a-entity>
           </a-entity>
@@ -82,7 +82,7 @@
           <!-- CONSTELLATION CONTROLS -->
           <a-entity id="constellation-controls" position=".25 0 0">
             <a-entity position="0 .15 0" text="align: center; value: constellations; width: 1"></a-entity>
-            <a-entity rotation="90 0 0" id="constellationToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="toggle constellation lines" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" class="clickable">
+            <a-entity rotation="90 0 0" id="constellationToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="toggle constellation lines" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" keyboard-click-controls="key: c" class="clickable">
               <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
             </a-entity>
           </a-entity>
@@ -126,6 +126,35 @@
         </a-entity>
       </a-entity>
     </a-scene>
+
+    <div id="help">
+      <a href="#" id="helpToggle" onclick="document.getElementById('helpData').classList.remove('hidden');">?</a>
+    </div>
+
+    <div id="helpData" class="hidden">
+      <a href="#" onclick="document.getElementById('helpData').classList.add('hidden');" class="close">X</a>
+      <h1>Up There VR by <a href="http://flimshaw.net">flimshaw</a></h1>
+      <p>A scale 3D version of our galaxy. Well... .001% of it. WebVR enabled. <a href="https://github.com/flimshaw/up-there-webvr">github</a></p>
+      <h2>Keyboard Controls:</h2>
+      <ul>
+        <li>W - forward</li>
+        <li>A - strafe left</li>
+        <li>S - back</li>
+        <li>D - strafe right</li>
+        <br />
+        <li>E - rewind time</li>
+        <li>R - forward time</li>
+        <br />
+        <li>X - toggle exoplanet labels</li>
+        <li>C - toggle constellation lines</li>
+        <li>V - toggle sun highlight</li>
+      </ul>
+      <h2>Mouse Controls</h2>
+      <ul>
+        <li>Click and drag to look</li>
+        <li>Position reticle and click to activate targeted object</li>
+      </ul>
+    </div>
 
     <div id="star-detail">
     </div>

@@ -153,6 +153,7 @@ AFRAME.registerComponent('star-detail-ui', {
   },
   tick: function(time, timeDelta) {
     // this.el.emit('update-html-texture');
+    // this.coronaModel.lookAt(document.getElementById('acamera').object3D.position);
     this.coronaMat.uniforms['uTime'].value = time;
   }
 });

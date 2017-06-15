@@ -83,6 +83,53 @@ ul {
   }
 }
 
+#help {
+  position: absolute;
+  bottom: 60px;
+  right: 35px;
+  > a {
+    color: #fff;
+    font-size: 3em;
+    text-decoration: none!important;
+    font-weight: bold
+  }
+  .hidden {
+
+  }
+}
+
+#helpData {
+  position: absolute;
+  top: 5em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 40px;
+  border: 1px solid #ccf;
+  background-color: rgba(0,0,0,.75);
+  h1 {
+    margin: 0 1em 0 0;
+  }
+  a.close {
+    position: absolute;
+    top: -46px;
+    left: -1px;
+    font-size: 2em;
+    border: 1px solid #ccf;
+    padding: 0 15px;
+    background-color: rgba(0,0,0,.75);
+  }
+  a {
+    color: #ccf;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  &.hidden {
+    display: none;
+  }
+}
+
 .data-list {
   > div {
     box-sizing: border-box;
