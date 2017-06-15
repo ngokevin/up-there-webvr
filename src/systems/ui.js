@@ -7,6 +7,10 @@ AFRAME.registerSystem('ui', {
     console.log("🙉 UI system started.")
     this.graphicsSettings();
     window.thescene = this.sceneEl;
+
+    if(AFRAME.utils.isGearVR()) {
+      document.getElementById('help').classList.add('hidden');
+    }
   },
   graphicsSettings: function() {
     if(!AFRAME.utils.device.isMobile()) {

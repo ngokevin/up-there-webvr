@@ -93,8 +93,8 @@ ul {
     text-decoration: none!important;
     font-weight: bold
   }
-  .hidden {
-
+  &.hidden {
+    display: none;
   }
 }
 
