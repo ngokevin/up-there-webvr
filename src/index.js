@@ -49,6 +49,8 @@ require('./components/controls/time-controls.js');
 require('./components/controls/keyboard-time-controls.js');
 require('./components/controls/keyboard-click-controls.js');
 require('./components/controls/gearvr-time-controls.js');
+var GamepadControls = require('aframe-gamepad-controls');
+AFRAME.registerComponent('gamepad-controls', GamepadControls);
 
 // require('./components/controls/scale-ui-controls.js');
 // require('./components/controls/starfield-controls.js');
