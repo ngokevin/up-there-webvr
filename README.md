@@ -4,13 +4,13 @@ Up There is a three-dimensional VR planetarium, which contains true 3D positions
 
 ## How To Try It Now
 
-*GearVR*
+### GearVR
 Install the Carmel browser, and then click the GearVR link on the [Up There website](http://uptherevr.com/). It should prompt you to insert your phone into the GearVR, and then the app will load. Use the controls on the side of your headset to move forward and back, interact with switches, or scroll forward and backward in time.
 
-*Cardboard*
+### Cardboard
 Open the [Up There site](http://uptherevr.com/) in Chrome and hit the goggles icon in the bottom right, and then place the phone in your Cardboard compatible headset. A bluetooth gamepad is required for control. No time controls currently enabled.
 
-*Desktop* (limited support)
+### Desktop (limited support)
 If you're using an Oculus or Vive, get a copy of Firefox Nightly or Chromium that has WebVR enabled and visit [the website](http://uptherevr.com/). Limited controller support currently but many possibilities in the future.
 
 ## Development
