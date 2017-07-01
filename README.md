@@ -1,23 +1,49 @@
 # Up There - WebVR edition
 
-Up There is a three-dimensional VR planetarium, which contains true 3D positions of over 100,000k nearby stars. You can fly through them at warp speeds, and each star rendered with proportional scaling and coloring based on its magnitude (apparent) and surface temperature.
+Up There is a three-dimensional VR planetarium, which contains true 3D positions of over 100k nearby stars. You can fly through them at warp speeds, and each star rendered with proportional scaling and coloring based on its magnitude (apparent) and surface temperature.
 
-# Where's the code from?
+## How To Try It Now
 
-I forked the wonderful [A-Painter](https://blog.mozvr.com/a-painter/) from Mozilla when I started porting this project over from Unreal Engine 4. It is wonderful boilerplate, and is a good structure to start with. They get a lot done with not a lot of code.
+*GearVR*
+Install the Carmel browser, and then click the GearVR link on the [Up There website](http://uptherevr.com/). It should prompt you to insert your phone into the GearVR, and then the app will load. Use the controls on the side of your headset to move forward and back, interact with switches, or scroll forward and backward in time.
 
-## Usage
+*Cardboard*
+Open the [Up There site](http://uptherevr.com/) in Chrome and hit the goggles icon in the bottom right, and then place the phone in your Cardboard compatible headset. A bluetooth gamepad is required for control. No time controls currently enabled.
 
-- Grab a [WebVR-enabled browser](https://webvr.info/get-chrome/). Currently only the experimental Chromium build on Windows supports the Vive controllers. (You will need to enable these flags for WebVR and Gamepad Extensions: `chrome://flags#enable-webvr` and `chrome://flags#enable-gamepad-extensions`.)
-- Head to [https://aframe.io/a-painter/](https://aframe.io/a-painter/) and start painting. See the [blog post](https://blog.mozvr.com/a-painter/) for some instructions.
-- Painted something beautiful? Share it on [this GitHub issue](https://github.com/aframevr/a-painter/issues/99)!
+*Desktop* (limited support)
+If you're using an Oculus or Vive, get a copy of Firefox Nightly or Chromium that has WebVR enabled and visit [the website](http://uptherevr.com/). Limited controller support currently but many possibilities in the future.
 
-## Local Development
+## Development
 
-```bash
-git clone git@github.com:aframevr/a-painter && cd a-painter
+### Installation
+
+```
 npm install
+```
+
+### Local dev server
+
+```
 npm start
 ```
 
 Then, load [`http://localhost:8080`](http://localhost:8080) in your browser.
+
+### Building Documentation
+
+```
+npm run docs
+```
+
+Note: docs are *INCOMPLETE* at the moment, I'm chipping away at them when I can. They're being generated with [docco](https://github.com/jashkenas/docco).
+
+
+### Origins in A-Painter
+
+I forked the wonderful [A-Painter](https://blog.mozvr.com/a-painter/) from Mozilla when I started porting this project over from Unreal Engine 4. It is wonderful boilerplate, and is a good structure to start with. They get a lot done with not a lot of code.
+
+### Sources
+
+Star position and velocity data is sourced from the [HYG Database](https://github.com/astronexus/HYG-Database), and it was processed through scripts to calculate radius, temperature, color etc. These are yet to be documented but will be included in this repository at a later date.
+
+Exoplanet data was sourced from the [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/) and cross referenced with stars in the HYG Database where possible.
