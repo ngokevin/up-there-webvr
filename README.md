@@ -2,7 +2,7 @@
 
 ![Screenshot](assets/images/screenshot.png)
 
-Up There is a three-dimensional VR planetarium, which contains true 3D positions of over 100k nearby stars. You can fly through them at warp speeds, and each star rendered with proportional scaling and coloring based on its magnitude (apparent) and surface temperature.
+Up There is a VR planetarium that contains true 3D positions and other information for over 100k nearby stars. Interact with any star to learn more about it, about any planets we've discovered orbiting it, and to see what the sky looks like from its point of view. Toggle constellation lines or highlights for stars with known exoplanets. See if you can find the sun without cheating.
 
 ## How To Try It Now
 
