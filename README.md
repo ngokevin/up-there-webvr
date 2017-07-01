@@ -6,6 +6,8 @@ Up There is a VR planetarium that contains true 3D positions and other informat
 
 ## How To Try It Now
 
+### TL;DR [Visit the website](http://uptherevr.com)
+
 ### GearVR
 Install the [Carmel browser](https://www.oculus.com/experiences/gear-vr/1290985657630933/), and then click the GearVR link on the [Up There website](http://uptherevr.com/). It should prompt you to insert your phone into the GearVR, and then the app will load. Use the controls on the side of your headset to move forward and back, interact with switches, or scroll forward and backward in time.
 
@@ -16,6 +18,8 @@ Open the [Up There site](http://uptherevr.com/) in Chrome and hit the goggles ic
 If you're using an Oculus or Vive, get a copy of Firefox Nightly or Chromium that has WebVR enabled and visit [the website](http://uptherevr.com/). Limited controller support currently but many possibilities in the future.
 
 ## Development
+
+This is a side project for me, so I have made it public and open source under the [MIT License](https://en.wikipedia.org/wiki/MIT_License). There's a lot I wish it did that it doesn't do yet. I'll create tickets for new features I would like to implement, and if you'd like to help please get in touch in the comments on an feature you find interesting and I'll try to help you get started.
 
 ### Installation
 
