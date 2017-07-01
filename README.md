@@ -47,3 +47,7 @@ I forked the wonderful [A-Painter](https://blog.mozvr.com/a-painter/) from Mozil
 Star position and velocity data is sourced from the [HYG Database](https://github.com/astronexus/HYG-Database), and it was processed through scripts to calculate radius, temperature, color etc. These are yet to be documented but will be included in this repository at a later date.
 
 Exoplanet data was sourced from the [NASA Exoplanet Archive](https://exoplanetarchive.ipac.caltech.edu/) and cross referenced with stars in the HYG Database where possible.
+
+## More info
+
+For bugs or feature requests, please submit an issue above. Pull requests and new ideas are welcome, and please create an issue when you start working on a new feature so I can help or let you know if it's already in the works. Additional questions can be sent to [Charlie](mailto:me@charliehoey.com).
