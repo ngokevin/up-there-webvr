@@ -1,5 +1,7 @@
 # Up There - WebVR edition
 
+![Screenshot](assets/images/screenshot.png)
+
 Up There is a three-dimensional VR planetarium, which contains true 3D positions of over 100k nearby stars. You can fly through them at warp speeds, and each star rendered with proportional scaling and coloring based on its magnitude (apparent) and surface temperature.
 
 ## How To Try It Now
