@@ -1,7 +1,7 @@
 {
-  "name": "a-painter",
+  "name": "up-there-webvr",
   "version": "0.1.0",
-  "description": "A-Painter",
+  "description": "Up There - A 3D planetarium for WebVR by charliehoey.com",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack; gzip -fk build.js;",
     "start": "webpack-dev-server --host 0.0.0.0",
@@ -9,7 +9,7 @@
     "panel": "webpack-dev-server --config panel.webpack.config.js --host 0.0.0.0",
     "lint": "semistandard -v | snazzy"
   },
-  "repository": "aframevr/a-painter",
+  "repository": "flimshaw/up-there-webvr",
   "license": "MIT",
   "semistandard": {
     "ignore": [
