@@ -167,7 +167,6 @@ const SOLS_TO_PARSECS = 2.25461e-8;
       if(this.pool === undefined) {
         this.pool = this.el.sceneEl.components.pool__star;
       }
-      debugger;
 
       if(this.target != null && this.ready === true && this.pool !== undefined && this.data.selectedStar == -1) {
         let p = this.target.getAttribute('position');
