@@ -1,17 +1,17 @@
 <div class="panel container planets">
   <div class="full-width header border-bottom">
-    <h1><%= starDetails.name %></h1>
-    <h2>Class <%= starDetails.starClass %> <%= starDetails.starType %></h2>
+    <h1><%= data.starDetails.name %></h1>
+    <h2>Class <%= data.starDetails.starClass %> <%= data.starDetails.starType %></h2>
   </div>
   <div class="bottom_3-of-4 full-width">
-    <% if(starDetails.exoplanets.length === 0) { %>
+    <% if(data.starDetails.exoplanets.length === 0) { %>
     <h1 style="color: #fff" class="no-planets">No Planets.</h1>
     <% } else { %>
     <div class="planetContainer">
       <%
-      var maxScale = starDetails.exoplanets.sort( (a,b) => { return parseFloat(a.pl_orbsmax) > parseFloat(b.pl_orbsmax) ? -1 : 1 })[0].pl_orbsmax;
+      var maxScale = data.starDetails.exoplanets.sort( (a,b) => { return parseFloat(a.pl_orbsmax) > parseFloat(b.pl_orbsmax) ? -1 : 1 })[0].pl_orbsmax;
       maxScale = (maxScale*270)/1024;
-      starDetails.exoplanets.map( function(f) {
+      data.starDetails.exoplanets.map( function(f) {
         var orbsMax = Math.max(.1, f.pl_orbsmax);
         var planR = Math.max(.035, f.pl_radj);
       %>

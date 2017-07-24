@@ -11,3 +11,4 @@ build.js.gz
 .sass-cache
 *.blend*
 docs/
+deploy.sh

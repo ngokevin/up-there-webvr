@@ -149,7 +149,7 @@ AFRAME.registerComponent('star-detail-ui', {
 
     let p = document.getElementById('acamera').getAttribute('position');
 
-    debugger;
+    // debugger;
 
   },
   tick: function(time, timeDelta) {

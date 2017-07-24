@@ -39,6 +39,6 @@ module.exports = {
       },
       { test: /\.(glsl|frag|vert)$/, loader: 'raw-loader', exclude: /node_modules/ },
       { test: /\.(glsl|frag|vert)$/, loader: 'glslify-loader', exclude: /node_modules/ },
-      { test: /\.ejs$/, loader: 'ejs-loader' }
+      { test: /\.ejs$/, loader: 'ejs-loader?variable=data' }
     ]}
 };

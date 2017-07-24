@@ -1,28 +1,28 @@
 
 <img src="assets/images/panel1-layout.jpg" class="panel top-left top" />
       <div id="header" class="stats panel bottom-left">
-        <h1><%=name%></h1>
-        <h2>Type <%=stats.starType%> <%=stats.starClass%></h2>
+        <h1><%=data.name%></h1>
+        <h2>Type <%=data.stats.starType%> <%=data.stats.starClass%></h2>
       </div>
 
       <div class="stats data-list panel top-left">
-        <h1><%=name%></h1>
-        <h2>Type <%=stats.starType%> <%=stats.starClass%></h2>
+        <h1><%=data.name%></h1>
+        <h2>Type <%=data.stats.starType%> <%=data.stats.starClass%></h2>
         <div>
           <label>Radius:</label>
-          <span><%=stats.radius.toFixed(2)%> sols</span>
+          <span><%=data.stats.radius.toFixed(2)%> sols</span>
         </div>
         <div>
           <label>Mass:</label>
-          <span><%=stats.mass.toFixed(2)%> sols</span>
+          <span><%=data.stats.mass.toFixed(2)%> sols</span>
         </div>
         <div>
           <label>Density:</label>
-          <span><%=stats.density.toFixed(2)%> sols</span>
+          <span><%=data.stats.density.toFixed(2)%> sols</span>
         </div>
         <div>
           <label>Surface Temperature:</label>
-          <span><%=parseInt(stats.temp)%> kelvin</span>
+          <span><%=parseInt(data.stats.temp)%> kelvin</span>
         </div>
         <div class="hr-location">
           <img src="assets/images/hr-background.jpg" />
@@ -33,25 +33,25 @@
 
         <div>
           <label>Distance:</label>
-          <span><%=time.distance.toFixed(1)%> lightyears</span>
+          <span><%=data.time.distance.toFixed(1)%> lightyears</span>
         </div>
         <div>
           <label>Current earth date:</label>
-          <span><%=time.currentDate%></span>
+          <span><%=data.time.currentDate%></span>
         </div>
         <div>
           <label>In radio range:</label>
-          <span><%=time.radioRange ? 'Yes' : 'No'%></span>
+          <span><%=data.time.radioRange ? 'Yes' : 'No'%></span>
         </div>
         <div>
           <label>Date of first radio contact:</label>
-          <span><%=time.radioContactDate%></span>
+          <span><%=data.time.radioContactDate%></span>
         </div>
 
         <div class="planetary-systems">
-          <h2><%=planets.length%> planet<%=planets.length > 1 ? 's' : ''%></h2>
+          <h2><%=data.planets.length%> planet<%=data.planets.length > 1 ? 's' : ''%></h2>
           <div class="planets">
-            <% planets.map( (p) => { %>
+            <% data.planets.map( (p) => { %>
              <div class="planet" style="transform: scale(<%=p.orbitalDistance%>);"></div>
             <% }) %>
           </div>

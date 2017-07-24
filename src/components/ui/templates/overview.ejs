@@ -1,29 +1,29 @@
 <div class="panel container overview">
   <div class="full-width header border-bottom">
-    <h1><%= starDetails.name %></h1>
-    <h2>Class <%= starDetails.starClass %> <%= starDetails.starType %></h2>
+    <h1><%= data.starDetails.name %></h1>
+    <h2>Class <%= data.starDetails.starClass %> <%= data.starDetails.starType %></h2>
   </div>
   <div class="bottom_3-of-4 full-width">
     <div class="half-width full-height left_1-of-4">
       <div class="high_1-of-3 full-width spec">
         <h3>Radius</h3>
-        <h4><%= starDetails.radius.toFixed(2) %> Solar Radii</h4>
+        <h4><%= data.starDetails.radius.toFixed(2) %> Solar Radii</h4>
       </div>
       <div class="high_2-of-3 full-width spec">
         <h3>Temperature</h3>
-        <h4><%= Math.floor(starDetails.temperature) %> Kelvin</h4>
+        <h4><%= Math.floor(data.starDetails.temperature) %> Kelvin</h4>
       </div>
       <div class="high_3-of-3 full-width spec">
         <h3>Mass</h3>
-        <h4><%= starDetails.mass.toFixed(2) %> Solar Masses</h4>
+        <h4><%= data.starDetails.mass.toFixed(2) %> Solar Masses</h4>
       </div>
     </div>
     <div class="half-width border-left left_3-of-4 full-height star-comparison">
-      <div class="targetStar<%= starDetails.radius > 3 ? ' star-bigger' : ' star-smaller'%>">
-        <div class="starWrapper" style="transform: scale(<%=starDetails.radius%>);">
+      <div class="targetStar<%= data.starDetails.radius > 3 ? ' star-bigger' : ' star-smaller'%>">
+        <div class="starWrapper" style="transform: scale(<%=data.starDetails.radius%>);">
           <div class="star"></div>
         </div>
-        <label><%= starDetails.name %></label>
+        <label><%= data.starDetails.name %></label>
       </div>
       <div class="sol">
         <div class="star"></div>
