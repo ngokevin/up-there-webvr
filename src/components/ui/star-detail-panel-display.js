@@ -16,13 +16,13 @@ AFRAME.registerComponent('star-detail-panel-display', {
       location: locationTemplate
     }
     console.log(`🔭 star detail panel display initialized`);
-    // debugger;
   },
   update: function() {
     if(this.templates[this.data.selectedPanel] !== undefined) {
       let o = this.templates[this.data.selectedPanel](this.el.sceneEl.systems.redux.store.getState().worldSettings);
       document.getElementById(this.data.name).innerHTML = o;
       this.el.emit('update-html-texture');
+      this.el.components.material.shader.__render();
     }
   }
 });

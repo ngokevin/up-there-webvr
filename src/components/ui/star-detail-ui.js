@@ -1,6 +1,9 @@
 var detailTemplate = require("./templates/star-detail.ejs");
 var bezier = require('cubic-bezier');
 
+// The *star-detail-ui* component renders a display panel and model for the
+// currentStar as set in the worldSettings store.
+
 // Component to change to random color on click.
 AFRAME.registerComponent('star-detail-ui', {
   schema: {
@@ -16,7 +19,6 @@ AFRAME.registerComponent('star-detail-ui', {
 
     this.objectLoader = new THREE.ObjectLoader();
     this.modelJson = document.getElementById('star-detail-ui-asset');
-    // debugger;
     this.targetEl = document.getElementById(this.data.targetEl);
     this.ready = false;
 
@@ -56,13 +58,13 @@ AFRAME.registerComponent('star-detail-ui', {
 
     this.camera = document.getElementById('acamera');
 
-    // this.el.addEventListener('html-ready', (evt) => {
-    //   let self = evt.detail.target;
-    //   let mats = evt.detail.target.sceneEl.systems.material.materials;
-    //   let m = mats[Object.keys(mats)[0]];
-    //   this.htmlMat = m;
-    //   this.updateMaterials();
-    // })
+    this.el.addEventListener('html-ready', (evt) => {
+      let self = evt.detail.target;
+      let mats = evt.detail.target.sceneEl.systems.material.materials;
+      let m = mats[Object.keys(mats)[0]];
+      this.htmlMat = m;
+      this.updateMaterials();
+    })
   },
   updateMaterials: function() {
     if(this.modelJson.hasLoaded) {
@@ -140,15 +142,14 @@ AFRAME.registerComponent('star-detail-ui', {
     let r = this.el.sceneEl.systems.redux.store.getState().worldSettings.starDetails.radius;
 
     this.coronaMat.uniforms['uStarColor'].value = c;
-    let starScale = Math.max(0.1, Math.tanh(r*.5) * 2.0);//this.starScaleCurve(r/2000.0);
+    let starScale = Math.max(0.1, Math.tanh(r*.5) * 2.0);
 
     this.starModel.scale.set(starScale,starScale,starScale);
     this.coronaModel.scale.set(starScale,starScale,starScale);
 
-    // this.el.object3D.lookAt(document.getElementById('acamera').object3D.position);
     let p = document.getElementById('acamera').getAttribute('position');
 
-
+    debugger;
 
   },
   tick: function(time, timeDelta) {

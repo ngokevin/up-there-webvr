@@ -400,13 +400,16 @@ AFRAME.registerComponent('starfield', {
   update: function (oldData) {
 
     switch(this.data.state) {
-
+      // if the starfield is ready
       case STARFIELD_READY:
+        // and the zoomLevel has changed
         if(this.data.zoomLevel !== oldData.zoomLevel) {
           switch(this.data.zoomLevel) {
+            // if it has become MACRO_VIEW
             case 'MACRO_VIEW':
               this.setView(MACRO_VIEW, oldData.selectedStar);
               break;
+            // if it has become DETAIL_VIEW
             case 'DETAIL_VIEW':
               this.setView(DETAIL_VIEW, this.data.selectedStar);
               break;
@@ -426,7 +429,6 @@ AFRAME.registerComponent('starfield', {
 
       case STARFIELD_NEW:
         // initialize the starfield geometry
-        // this.buildStarfieldGeometry();
         this.el.setAttribute('starfield', { state: STARFIELD_BUILDING });
         this.data.state = STARFIELD_BUILDING;
         console.log("Building starfield... ✨")
@@ -449,7 +451,9 @@ AFRAME.registerComponent('starfield', {
           type: 'STAR_COUNT',
           val: this.spawnedStars
         })
-
+        // ok, this feels like a complete mess. i'm not sure why I'm micromanaging
+        // state across all these different things from one central place, but I
+        // guess the initial loading process became complicated and here we are.
         if(res) {
           console.log(`🐝 Starfield ready. Processed ${this.spawnedStars} stars.`)
           this.el.setAttribute('starfield', { state: STARFIELD_READY });
