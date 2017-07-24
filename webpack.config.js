@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-// import path from 'path';
 var ClosureCompilerPlugin = require('webpack-closure-compiler');
 
 var PLUGINS = [];

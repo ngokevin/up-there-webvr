@@ -8,7 +8,7 @@
     "docs": "docco src/**/*.js",
     "panel": "webpack-dev-server --config panel.webpack.config.js",
     "lint": "semistandard -v | snazzy",
-    "rsync": "rsync -avh --exclude-from=./exclusions ./ dh_exzygv@app.uptherevr.com:app.uptherevr.com/",
+    "rsync": "rsync --delete -avh --exclude-from=./exclusions ./ dh_exzygv@app.uptherevr.com:app.uptherevr.com/",
     "deploy": "npm run docs; npm run build; npm run rsync;"
   },
   "repository": "flimshaw/up-there-webvr",

@@ -8,7 +8,7 @@ AFRAME.registerSystem('ui', {
     this.graphicsSettings();
     window.thescene = this.sceneEl;
 
-    if(AFRAME.utils.isGearVR()) {
+    if(AFRAME.utils.device.isGearVR()) {
       document.getElementById('help').classList.add('hidden');
     }
   },
