@@ -13,7 +13,7 @@
   </head>
   <body>
     <audio src="assets/sounds/Lazenbee_Industries_-_ammunition.mp3" loop autoplay></audio>
-    <a-scene redux="reducers: worldSettings" pool__star="mixin: star; size: 100;">
+    <a-scene camera-scaler="enabled: true" redux="reducers: worldSettings" pool__star="mixin: star; size: 100;">
 
       <a-assets>
         <!-- assets -->
@@ -55,8 +55,6 @@
         </a-entity>
         <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.ui.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady; worldSettings.zoomLevel: star-detail-spawner.zoomLevel; worldSettings.time: star-detail-spawner.time"></a-entity>
       </a-entity>
-
-      <a-entity keyboard-time-controls gearvr-time-controls time-controls></a-entity>
 
       <!-- parent object for everything following the user around -->
       <a-entity follow-entity redux-bind="worldSettings.starfieldReady: visible">
@@ -116,8 +114,12 @@
         </a-entity>
 
         <a-entity id="left-hand" laser-controls="hand: left"
-                  controller-hover-text-display></a-entity>
+                  camera-scaler-hand="hand: left"
+                  controller-hover-text-display
+                  keyboard-time-controls
+                  controller-time-controls time-controls></a-entity>
         <a-entity id="right-hand" laser-controls="hand: right"
+                  camera-scaler-hand="hand: right"
                   controller-hover-text-display></a-entity>
       </a-entity>
 

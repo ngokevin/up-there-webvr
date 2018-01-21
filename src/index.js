@@ -10,13 +10,10 @@ require('aframe-look-at-component');
 require('aframe-redux-component');
 
 // // systems
-requireAll(require.context('./systems/', true, /\.js$/));
+requireAll(require.context('./systems/', false, /\.js$/));
 
 // // reducers
 require('./reducers/worldSettings.js');
 
-// // controls
-requireAll(require.context('./components/controls/', true, /\.js$/));
-
-// // ui elements
+// // components
 requireAll(require.context('./components/', true, /\.js$/));
