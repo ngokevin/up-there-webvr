@@ -475,7 +475,10 @@ AFRAME.registerComponent('starfield', {
               time: true
             }
           })
-          document.getElementById('acursor').setAttribute('visible', 'true')
+
+          if (document.getElementById('acursor')) {
+            document.getElementById('acursor').setAttribute('visible', 'true')
+          }
         }
 
         break;

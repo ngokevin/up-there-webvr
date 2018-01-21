@@ -59,7 +59,7 @@
       <!-- parent object for everything following the user around -->
       <a-entity follow-entity redux-bind="worldSettings.starfieldReady: visible">
         <!-- control panel -->
-        <a-entity id="control-panel" position="0 -0.8 -.55" rotation="-75 0 0">
+        <a-entity id="control-panel" position="0 -0.8 -.55" rotation="-75 0 0" control-panel>
 
           <!-- EXOPLANET CONTROLS -->
           <a-entity id="exoplanet-controls" position="-.25 0 0">
@@ -113,13 +113,22 @@
           </a-entity>
         </a-entity>
 
-        <a-entity id="left-hand" laser-controls="hand: left"
+        <a-entity id="left-hand"
                   camera-scaler-hand="hand: left"
                   controller-hover-text-display
+                  vive-controls="hand: left"
+                  oculus-touch-controls="hand: left"
+                  windows-motion-controls="hand: left"
                   keyboard-time-controls
+                  control-panel-toggle
+                  sprite-toggle
+                  hide-cursor-if-connected
                   controller-time-controls time-controls></a-entity>
         <a-entity id="right-hand" laser-controls="hand: right"
                   camera-scaler-hand="hand: right"
+                  control-panel-toggle
+                  sprite-toggle
+                  hide-cursor-if-connected
                   controller-hover-text-display></a-entity>
       </a-entity>
 
