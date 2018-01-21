@@ -1,0 +1,215 @@
+.panel {
+  // border: 1px solid #fff;
+}
+
+.header {
+  height: 25%;
+  position: absolute;
+  background-color: #000;
+  z-index: 1001;
+  h1, h2 {
+    text-align: center;
+    margin: 0;
+    letter-spacing: 5px;
+    font-family: $serifFont
+  }
+  h1 {
+    font-size: 4em;
+    // margin-top: -4px;
+  }
+  h2 {
+    font-family: $sansFont;
+    letter-spacing: 2px;
+    font-size: 1.25em;
+  }
+}
+
+.overview {
+  // top: 770px;
+  .spec {
+    padding: 30px 20px;
+    box-sizing: border-box;
+    background-color: #000;
+    z-index: 1000;
+    h3 {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0;
+      font-family: $sansFont;
+    }
+    h4 {
+      font-size: 3em;
+      margin: -10px 0 0 0;
+      padding: 0;
+    }
+  }
+  .star-comparison {
+    overflow: hidden;
+    label {
+      font-family: $sansFont;
+      text-align: center;
+      text-transform: uppercase;
+      display: block;
+      width: 100px;
+      mix-blend-mode: difference;
+    }
+    .star {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 100%;
+      width: 100px;
+      height: 100px;
+    }
+    .targetStar {
+      position: absolute;
+      &.star-bigger {
+        top: 60%;
+        left: 15%;
+        .starWrapper {
+          position: absolute;
+          top: -70px;
+          left: 100px;
+          .star {
+            left: -100px;
+            top: -50px;
+          }
+        }
+        label {
+          position: relative;
+          left: -40px;
+        }
+      }
+      &.star-smaller {
+        top: 60%;
+        left: 15%;
+        .starWrapper {
+          position: absolute;
+          top: -120px;
+          width: 100px;
+          height: 100px;
+          .star {
+
+          }
+        }
+      }
+    }
+    .sol {
+      position: absolute;
+      top: 60%;
+      left: 60%;
+      .star {
+        top: -120px;
+        left: 0;
+      }
+    }
+  }
+}
+
+$planetOrbitDiameter: 500px;
+$planetDiameter: 20px;
+$starDiameter: 25px;
+
+.planets {
+  h1.no-planets {
+    padding: 20px;
+  }
+  .planetContainer {
+    position: absolute;
+    top: 512*.75*.5px;
+    left: -$planetOrbitDiameter*.5;
+    .star {
+      border-radius: 1000px;
+      background-color: #fff;
+      width: $starDiameter;
+      height: $starDiameter;
+      position: absolute;
+      top: -$starDiameter*.5+2px;
+      left: ($planetOrbitDiameter*.5)-($starDiameter*.5);
+      z-index: 1003;
+    }
+    .planetOrbit {
+      position: absolute;
+      top: -$planetOrbitDiameter*.5;
+      left: 0;
+      box-sizing: border-box;
+      border-radius: 1000px;
+      border: 2px solid #aaccff;
+      width: $planetOrbitDiameter;
+      height: $planetOrbitDiameter;
+      .planet {
+        border-radius: 1000px;
+        background-color: #fff;
+        width: $planetDiameter;
+        height: $planetDiameter;
+        position: absolute;
+        right: -$planetDiameter*.5;
+        top: ($planetOrbitDiameter*.5)-($planetDiameter*.5);
+        box-sizing: border-box;
+        z-index: 1003;
+        .info {
+          display: none;
+          position: absolute;
+          left: 0px;
+          top: 0px;
+          line-height: 1.25em;
+          min-width: 100px;
+          background-color: rgba(0,0,0,.75);
+          h3,h4 {
+            margin: 0;
+            padding: 0;
+
+          }
+          h3 {
+            font-size: 1.5em;
+            margin-bottom: .25em;
+          }
+          h4 {
+            font-family: $sansFont;
+            font-size: 1em;
+          }
+        }
+      }
+      $spacing: 30;
+      $rowA: -140px;
+      $rowB: 80px;
+      &.planetb,&.planetd,&.planetf,&.planeth {
+        .info {
+          top: $rowA;
+        }
+      }
+      &.planetc,&.planete,&.planetg,&.planeti {
+        .info {
+          top: $rowB;
+        }
+      }
+    }
+  }
+}
+
+.location-generator {
+  background-color: #000;
+  svg {
+    transform: scale(1.024);
+    transform-origin: top left;
+  }
+}
+
+.location {
+  img.starmap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+  .reticle-parent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    img.reticle {
+      position: relative;
+      top: -50px;
+      left: -50px;
+    }
+  }
+}

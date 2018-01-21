@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Up There WebVR by charliehoey.com</title>
+    <link rel="icon" href="favicon.ico">
+    <meta name="description" content="Explore the universe in your browser or VR/AR/MR helmet via WebVR.">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text|Ubuntu" rel="stylesheet">
+    <script src="https://rawgit.com/ngokevin/aframe/bestframe/dist/aframe-master.min.js"></script>
+    <script src="build.js"></script>
+    <link rel="icon" type="image/png" href="img/icon-32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="img/icon-16.png" sizes="16x16" />
+  </head>
+  <body>
+    <audio src="assets/sounds/Lazenbee_Industries_-_ammunition.mp3" loop autoplay></audio>
+    <a-scene camera-scaler="enabled: true" redux="reducers: worldSettings" pool__star="mixin: star; size: 100;">
+
+      <a-assets>
+        <!-- assets -->
+        <a-asset-item id="starNames" src="assets/data/starNames.json"></a-asset-item>
+        <a-asset-item id="starTypes" src="assets/data/starTypes.json"></a-asset-item>
+        <a-asset-item id="exoplanets" src="assets/data/exoplanets.csv"></a-asset-item>
+        <a-asset-item id="star-detail-ui-asset" src="assets/models/star-detail-ui.json"></a-asset-item>
+        <img id="flimshaw-logo" src="assets/images/flimshaw-logo.png">
+        <img id="starmap" src="assets/images/starmap_1024.png">
+        <img id="ra-dec-reticle" src="assets/images/ra-dec-reticle.png">
+        <!-- mixins -->
+        <a-mixin id="star" reticle class="star" scale=".25 .25 .25" action-dispatcher="type: SELECT_STAR; value: -1" hover-text="star"></a-mixin>
+      </a-assets>
+
+      <!-- LOADING INDICATOR -->
+      <a-entity id="loading" redux-bind="worldSettings.busy: visible" position="0 1.6 -1.6" scale="2 2 2">
+        <a-entity>
+          <a-entity mixin="crimson" text="value: Up There; align: center; width: 3; height: auto" position="0 .5 0"></a-entity>
+          <a-entity mixin="crimson" text="value: Loading stardata...; align: center; width: 1; height: auto" position="0 .35 0"></a-entity>
+          <a-entity geometry="primitive: plane" position="0 .15 0" scale=".2 .2 .2"  material="src: #flimshaw-logo; transparent: true; depthTest: false"></a-entity>
+          <a-entity position="0 0 0" >
+            <a-entity mixin="crimson" text="align: center; width: 1; height: auto" position="0 -.05 0" redux-bind="worldSettings.recordCount: text.value"></a-entity>
+            <a-entity mixin="crimson" text="value: records; align: center; width: 1; height: auto" position="0 -.1 0"></a-entity>
+          </a-entity>
+          <a-entity position="0 -.25 0" >
+            <a-entity mixin="crimson" text="align: center; width: 1; height: auto" position="0 -.05 0" redux-bind="worldSettings.starCount: text.value"></a-entity>
+            <a-entity mixin="crimson" text="value: stars; align: center; width: 1; height: auto" position="0 -.1 0"></a-entity>
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <!-- STARFIELD -->
+      <a-entity id="starfield" position="0 0 -2" rotation="-90 0 0" starfield redux-bind="worldSettings.starDataState: starfield.starDataState; worldSettings.zoomLevel: starfield.zoomLevel; worldSettings.ui.selectedStar: starfield.selectedStar; worldSettings.starDetails: starfield.starDetails; worldSettings.time: starfield.time">
+        <a-entity id="constellations" constellations redux-bind="worldSettings.time: constellations.time" visible="false"></a-entity>
+        <a-entity id="star-set-highlighter" star-set-indicator redux-bind="worldSettings.currentStarSet: star-set-indicator.currentStarSet; worldSettings.selectedStar: star-set-indicator.selectedStar; worldSettings.time: star-set-indicator.time" visible="false"></a-entity>
+        <a-entity id="sun-indicator" redux-bind="worldSettings.sunIndicator: visible" geometry="primitive: sphere; radius: 1; segmentsWidth: 12; segmentsHeight: 24" material="shader: flat; wireframe: true; color: #aaedff; transparent: true" rotation="90 0 0" visible="false">
+          <a-animation attribute="scale" dur="2000" from="0 0 0" to="1 1 1" easing="linear" repeat="indefinite"></a-animation>
+          <a-animation attribute="material.opacity" dur="2000" from="1" to="0" repeat="indefinite" fill="backward"></a-animation>
+        </a-entity>
+        <a-entity id="star-detail-spawner" star-detail-spawner redux-bind="worldSettings.ui.selectedStar: star-detail-spawner.selectedStar; worldSettings.starfieldReady: star-detail-spawner.starfieldReady; worldSettings.zoomLevel: star-detail-spawner.zoomLevel; worldSettings.time: star-detail-spawner.time"></a-entity>
+      </a-entity>
+
+      <!-- parent object for everything following the user around -->
+      <a-entity follow-entity redux-bind="worldSettings.starfieldReady: visible">
+        <!-- control panel -->
+        <a-entity id="control-panel" position="0 -0.8 -.55" rotation="-75 0 0" control-panel>
+
+          <!-- EXOPLANET CONTROLS -->
+          <a-entity id="exoplanet-controls" position="-.25 0 0">
+            <a-entity position="0 .15 0" text="align: center; value: exoplanets; width: 1"></a-entity>
+            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="highlight stars with planets" toggle-switch="morph: On" action-dispatcher="type: SELECT_STAR_SET; value: exoplanets" keyboard-click-controls="key: x" entity-visibility-toggle="target: star-set-highlighter" class="clickable">
+              <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
+            </a-entity>
+          </a-entity>
+
+          <a-entity id="sun-indicator-controls" position="0 0 0">
+            <a-entity position="0 .15 0" text="align: center; value: show sun; width: 1"></a-entity>
+            <a-entity rotation="90 0 0" id="exoplanetsToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="show sun/earth location" toggle-switch="morph: On" entity-visibility-toggle="target: sun-indicator" keyboard-click-controls="key: v" class="clickable">
+              <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
+            </a-entity>
+          </a-entity>
+
+          <!-- CONSTELLATION CONTROLS -->
+          <a-entity id="constellation-controls" position=".25 0 0">
+            <a-entity position="0 .15 0" text="align: center; value: constellations; width: 1"></a-entity>
+            <a-entity rotation="90 0 0" id="constellationToggle" blend-model="src: assets/models/toggle-switch.json; morphTargets: true; targetObjectName: ToggleSwitch" hover-text="toggle constellation lines" toggle-switch="morph: On" entity-visibility-toggle="target: constellations" keyboard-click-controls="key: c" class="clickable">
+              <a-animation attribute="toggle-switch.morphValue" dur="250" begin="stateUpdated" from=0 to=1 direction="alternate"></a-animation>
+            </a-entity>
+          </a-entity>
+
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="cameraRig">
+        <a-entity id="acamera" camera="near: 10e-4; far: 10e10" look-controls>
+          <a-entity id="acursor"
+            visible="false"
+            cursor="fuse: false; fuseTimeout: 1000"
+            raycaster="objects: .clickable; recursive: true; far: 100; near: 0"
+            position="0 0 0">
+                <a-entity id="cursorIndicator"
+                  geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015; segmentsPhi: 1; segmentsTheta: 24;"
+                  position="0 0 -1"
+                  material="color: #ffffff; shader: flat; transparent: true; opacity: .5;"
+                ></a-entity>
+                <a-entity id="cursorHoverText"
+                  position="0 -.125 -1"
+                  text="value: ; align: center; width: 2; height: auto; anchor: center"
+                  hover-text-display
+                ></a-entity>
+                <a-entity id="cursorTimeText"
+                  position="0 .125 -1"
+                  text="value: ; align: center; width: 2; height: auto; anchor: center"
+                  redux-bind="worldSettings.time: time-display.time"
+                  time-display
+                ></a-entity>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="left-hand"
+                  camera-scaler-hand="hand: left"
+                  controller-hover-text-display
+                  vive-controls="hand: left"
+                  oculus-touch-controls="hand: left"
+                  windows-motion-controls="hand: left"
+                  keyboard-time-controls
+                  control-panel-toggle
+                  sprite-toggle
+                  hide-cursor-if-connected
+                  controller-time-controls time-controls></a-entity>
+        <a-entity id="right-hand" laser-controls="hand: right"
+                  camera-scaler-hand="hand: right"
+                  control-panel-toggle
+                  sprite-toggle
+                  hide-cursor-if-connected
+                  controller-hover-text-display></a-entity>
+      </a-entity>
+
+      <a-entity id="star-detail-parent">
+        <a-entity id="star-detail-ui" star-detail-ui scale="0 0 0" visible="false" redux-bind="worldSettings.ui.selectedStar: star-detail-ui.selectedStar; worldSettings.selectedPanel: star-detail-ui.selectedPanel" look-at>
+          <a-entity position="-1 .15 -1" >
+            <a-entity geometry="primitive: box" scale=".4 .2 .1" class="clickable" action-dispatcher="type: SELECT_STAR; value: -1" material="color: #cc0000">
+            </a-entity>
+            <a-entity position="0 0 .05" text="value: < BACK; align: center; width: 2; height: auto; anchor: center;">
+            </a-entity>
+          </a-entity>
+        </a-entity>
+      </a-entity>
+    </a-scene>
+
+    <div id="help">
+      <a href="#" id="helpToggle" onclick="document.getElementById('helpData').classList.remove('hidden');">?</a>
+    </div>
+
+    <div id="helpData" class="hidden">
+      <a href="#" onclick="document.getElementById('helpData').classList.add('hidden');" class="close">X</a>
+      <h1>Up There VR by <a href="http://flimshaw.net">flimshaw</a></h1>
+      <p>A scale 3D version of our galaxy (well... .001% of it). WebVR enabled by <a href="https://aframe.io/">A-Frame</a>. Fork it on <a href="https://github.com/flimshaw/up-there-webvr">github</a>. Follow me on <a href="http://twitter.com/flimshaw">twitter</a>.</p>
+      <h2>Keyboard Controls:</h2>
+      <ul>
+        <li>W - forward</li>
+        <li>A - strafe left</li>
+        <li>S - back</li>
+        <li>D - strafe right</li>
+        <br />
+        <li>E - rewind time</li>
+        <li>R - forward time</li>
+        <br />
+        <li>X - toggle exoplanet labels</li>
+        <li>C - toggle constellation lines</li>
+        <li>V - toggle sun highlight</li>
+      </ul>
+      <h2>Mouse Controls</h2>
+      <ul>
+        <li>Click and drag to look</li>
+        <li>Position reticle and click to activate targeted object</li>
+      </ul>
+    </div>
+
+    <div id="star-detail">
+    </div>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-608903-20', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

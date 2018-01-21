@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+$serifFont: 'Crimson Text', serif;
+$sansFont: 'Ubuntu', sans-serif;
+
+@import 'grid.scss';
+@import 'panel.scss';
+
+body {
+  background-color: #000;
+  color: #fff;
+  // font-family: 'Source Sans Pro', sans-serif;
+  font-family: $serifFont;
+}
+
+.a-canvas {
+  background-color: #000;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.star-detail, #star-detail {
+  width: 1024px;
+  height: 512px;
+  top: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.top {
+  z-index: 1000;
+}
+
+.panel {
+  position: absolute;
+  width: 1024px;
+  height: 512px;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: #fff;
+  background-color: rgba(0,0,0,1);
+  &.top-left {
+    top: 0;
+    left: 0;
+  }
+
+  &.top-right {
+    top: 0;
+    left: 512px;
+  }
+
+  &.bottom-left {
+    left: 0;
+    top: 512px;
+  }
+
+  &.bottom-right {
+    top: 512px;
+    left: 512px;
+  }
+}
+
+#header {
+  width: 512px;
+  text-align: center;
+  background-color: transparent;
+  h1 {
+    font-size: 5em;
+    margin: .5em 0 0 0;
+  },
+  h2 {
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+#help {
+  position: absolute;
+  bottom: 60px;
+  right: 35px;
+  > a {
+    color: #fff;
+    font-size: 3em;
+    text-decoration: none!important;
+    font-weight: bold
+  }
+  &.hidden {
+    display: none;
+  }
+}
+
+#helpData {
+  position: absolute;
+  top: 5em;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 40px;
+  border: 1px solid #ccf;
+  background-color: rgba(0,0,0,.75);
+  h1 {
+    margin: 0 1em 0 0;
+  }
+  a.close {
+    position: absolute;
+    top: -46px;
+    left: -1px;
+    font-size: 2em;
+    border: 1px solid #ccf;
+    padding: 0 15px;
+    background-color: rgba(0,0,0,.75);
+  }
+  a {
+    color: #ccf;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  &.hidden {
+    display: none;
+  }
+}
+
+.data-list {
+  > div {
+    box-sizing: border-box;
+    padding: 5px;
+  }
+  label {
+    font-style: italic;
+    display: block;
+    clear: both;
+  }
+  span {
+    display: block;
+    font-size: 2em;
+  }
+}
+
+
+
+// .planets svg {
+//   width: 512px;
+// }
+
+.hr-location, .sky-location {
+  img {
+    width: 512px;
+  }
+}

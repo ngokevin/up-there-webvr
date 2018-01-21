@@ -1,0 +1,10 @@
+node_modules/*
+src/*
+vendor/*
+css/*
+.gitignore
+package.json
+webpack*
+.git/*
+.sass-cache/*
+deploy.sh

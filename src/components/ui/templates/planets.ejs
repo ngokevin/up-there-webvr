@@ -1,0 +1,38 @@
+<div class="panel container planets">
+  <div class="full-width header border-bottom">
+    <h1><%= data.starDetails.name %></h1>
+    <h2>Class <%= data.starDetails.starClass %> <%= data.starDetails.starType %></h2>
+  </div>
+  <div class="bottom_3-of-4 full-width">
+    <% if(data.starDetails.exoplanets.length === 0) { %>
+    <h1 style="color: #fff" class="no-planets">No Planets.</h1>
+    <% } else { %>
+    <div class="planetContainer">
+      <%
+      var maxScale = data.starDetails.exoplanets.sort( (a,b) => { return parseFloat(a.pl_orbsmax) > parseFloat(b.pl_orbsmax) ? -1 : 1 })[0].pl_orbsmax;
+      maxScale = (maxScale*270)/1024;
+      data.starDetails.exoplanets.map( function(f) {
+        var orbsMax = Math.max(.1, f.pl_orbsmax);
+        var planR = Math.max(.035, f.pl_radj);
+      %>
+      <div class="planetOrbit planet<%=f.pl_letter%>" style="transform: scale(<%=f.pl_orbsmax/maxScale%>); border: <%=(1/Math.min(2, (f.pl_orbsmax/maxScale)))%>px solid #cce;">
+        <%
+          var planetDiameter = 90;
+          var planetOrbitDiameter = 500;
+          var starDiameter = 25;
+          var diameter = planetDiameter*planR;
+          var s = (1/(f.pl_orbsmax/maxScale));
+        %>
+        <div class="planet" style="transform: scale(<%=(1/(f.pl_orbsmax/maxScale))%>); width: <%=diameter%>px; height: <%=diameter%>px; right: <%=(-diameter/2)%>px; top: <%=(planetOrbitDiameter*.5)-(diameter*.5)%>px;">
+          <div class="info">
+            <h3><%= f.pl_name %></h3>
+            <h4><%= parseFloat(f.pl_orbsmax).toFixed(1) %> AU</h4>
+            <h4><%= parseFloat(f.pl_orbper).toFixed(1) %> days</h4>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+  </div>
+</div>
